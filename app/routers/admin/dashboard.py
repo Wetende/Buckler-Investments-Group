@@ -13,7 +13,7 @@ from models.user import User
 from models.property import Property, PropertyStatus
 from models.article import Article
 
-router = APIRouter(prefix="/api/v1/admin/dashboard", tags=["Dashboard (Admin)"])
+router = APIRouter(prefix="/api/v1/admin/dashboard", tags=["Dashboard"])
 
 
 @router.get("/stats", response_model=Dict[str, int])

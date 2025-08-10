@@ -10,7 +10,29 @@ from core.database import Base
 from core.config import settings
 # Import models to ensure they are registered with Base.metadata
 # Import models to ensure they are registered with Base.metadata
-from models import Property, PropertyDetails, PropertyStatusLog, PropertyType, Favorite, User
+from models import (
+    Property,
+    PropertyDetails,
+    PropertyStatusLog,
+    PropertyType,
+    Favorite,
+    User,
+    AreaProfile,
+    Developer,
+    Project,
+    StListing,
+    StAvailability,
+    StBooking,
+    StMessage,
+    StPayout,
+    StTaxJurisdiction,
+    StTaxRecord,
+    InvProduct,
+    InvNavSnapshot,
+    InvOrder,
+    InvPosition,
+    KycRecord,
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

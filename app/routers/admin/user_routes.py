@@ -20,7 +20,7 @@ from core.dependencies import require_admin
 from models.user import User, UserRole
 from schemas.user import AdminUserCreateUpdate, UserRead
 
-router = APIRouter(prefix="/api/v1/admin/users", tags=["Users (Admin)"])
+router = APIRouter(prefix="/api/v1/admin/users", tags=["Users"])
 
 
 @router.get("/", response_model=List[UserRead])

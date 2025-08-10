@@ -23,6 +23,15 @@ class Settings(BaseSettings):
     MAIL_STARTTLS: bool = True
     MAIL_SSL_TLS: bool = False
 
+    # FX settings
+    KES_PER_USD: float = 130.0
+
+    # CORS
+    CORS_ALLOW_ORIGINS: str = "*"  # comma-separated origins; set to specific hosts in production
+
+    # Analytics/Webhooks
+    ANALYTICS_WEBHOOK_URL: str | None = None
+
     model_config = SettingsConfigDict(env_file=ENV_FILE_PATH, extra="ignore")
 
 settings = Settings()

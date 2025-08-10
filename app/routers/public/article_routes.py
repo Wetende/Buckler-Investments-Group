@@ -9,7 +9,7 @@ from core.database import get_async_session
 from models.article import Article
 from schemas.article import ArticleSummary, ArticleDetail
 
-router = APIRouter(prefix="/api/v1/public/articles", tags=["Articles (Public)"])
+router = APIRouter(prefix="/api/v1/public/articles", tags=["Articles"])
 
 DEFAULT_PAGE_SIZE = 20
 MAX_PAGE_SIZE = 100

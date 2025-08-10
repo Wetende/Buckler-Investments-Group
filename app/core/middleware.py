@@ -25,7 +25,17 @@ from models.audit_log import AuditLog, AuditAction
 # Rate limiting setup
 # ---------------------------------------------------------------------------
 # In-memory backend by default; can be switched to Redis by setting env var
-limiter = Limiter(key_func=lambda request: request.client.host)
+def _key_func(request: Request) -> str:
+    # Prefer user id if available for authenticated routes; fallback to client host
+    try:
+        uid = getattr(request.state, "user", None)
+        if uid and getattr(uid, "id", None):
+            return f"user:{uid.id}"
+    except Exception:
+        pass
+    return request.client.host
+
+limiter = Limiter(key_func=_key_func)
 
 rate_limit_middleware = SlowAPIMiddleware
 

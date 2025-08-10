@@ -21,3 +21,9 @@ def start_scheduler() -> None:
 @scheduler.scheduled_job(CronTrigger(hour=3, minute=0))
 async def nightly_maintenance():  # pragma: no cover
     logger.info("Running nightly maintenance job")
+
+
+@scheduler.scheduled_job(CronTrigger(hour=4, minute=0))
+async def schedule_payouts_job():  # pragma: no cover
+    """Placeholder to aggregate completed bookings and schedule payouts."""
+    logger.info("BNB payout scheduler tick")

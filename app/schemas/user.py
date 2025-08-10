@@ -50,9 +50,12 @@ class AdminUserCreateUpdate(BaseModel):
 
 
 class FavoriteCreate(BaseModel):
-    property_id: int
+    property_id: int = Field(..., ge=1)
 
 class FavoriteResponse(BaseModel):
     user_id: int
     property_id: int
     created_at: datetime
+
+    class Config:
+        from_attributes = True

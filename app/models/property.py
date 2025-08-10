@@ -11,6 +11,8 @@ from enum import Enum
 if TYPE_CHECKING:
     from .user import User
     from .favorite import Favorite
+    from .property_type import PropertyType
+    from .media import Media
 
 from sqlalchemy import (
     Integer, String, Text, Numeric, Float, DateTime, JSON, 
@@ -48,6 +50,7 @@ class Property(Base):
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     price: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=2), nullable=False)
     property_type_id: Mapped[int] = mapped_column(Integer, ForeignKey("property_types.id", ondelete="RESTRICT"), nullable=False)
+    project_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("projects.id", ondelete="SET NULL"), nullable=True)
     
     # Relationships
     favorited_by: Mapped[List["Favorite"]] = relationship("Favorite", back_populates="property", cascade="all, delete-orphan")

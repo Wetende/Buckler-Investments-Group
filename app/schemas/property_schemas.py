@@ -8,6 +8,7 @@ class PropertySummaryResponse(BaseModel):
     id: int
     title: str
     price: Decimal
+    price_usd: Optional[Decimal] = None
     address: str
     main_image_url: Optional[str] = None
     bedrooms: Optional[int] = None
@@ -35,6 +36,7 @@ class PropertyCreateUpdate(BaseModel):
     square_footage: Optional[int] = Field(None, ge=0)
     amenities: Optional[dict] = None
     images: Optional[list] = None
+    project_id: Optional[int] = None
 
 class PropertyDetailResponse(PropertySummaryResponse):
     description: Optional[str] = None
