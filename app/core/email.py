@@ -7,6 +7,10 @@ from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
 from pydantic import EmailStr
 
 from core.config import settings
+from pathlib import Path
+
+# Resolve template folder absolutely for serverless environments
+TEMPLATE_FOLDER = str((Path(__file__).resolve().parents[2] / "app" / "templates" / "email").resolve())
 
 conf = ConnectionConfig(
     MAIL_USERNAME=settings.MAIL_USERNAME,
@@ -18,7 +22,7 @@ conf = ConnectionConfig(
     MAIL_SSL_TLS=settings.MAIL_SSL_TLS,
     USE_CREDENTIALS=True,
     VALIDATE_CERTS=True,
-    TEMPLATE_FOLDER="./templates/email",
+    TEMPLATE_FOLDER=TEMPLATE_FOLDER,
 )
 
 fm = FastMail(conf)

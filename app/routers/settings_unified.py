@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.database import get_async_session
 from core.dependencies import require_admin
 from models.system_setting import SystemSetting
-from models.provider_config import ProviderConfig
 from schemas.settings import SystemSettingsUpdate, SystemSettingsOut
 
 
@@ -25,7 +24,10 @@ async def get_settings(session: AsyncSession = Depends(get_async_session), _: ob
 async def update_settings(payload: SystemSettingsUpdate, session: AsyncSession = Depends(get_async_session), _: object = Depends(require_admin)):
     # naive apply
     for item in payload.items:
-        setting = await session.get(SystemSetting, item.key)
+        res = await session.execute(
+            select(SystemSetting).where(SystemSetting.key == item.key)
+        )
+        setting = res.scalar_one_or_none()
         if setting is None:
             setting = SystemSetting(key=item.key, value=item.value)
             session.add(setting)

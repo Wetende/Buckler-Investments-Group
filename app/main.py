@@ -120,9 +120,12 @@ app.include_router(sitemap_router)
 app.add_middleware(rate_limit_middleware)
 app.add_middleware(AuditLoggingMiddleware, critical_paths={"/api/v1/admin", "/api/v1/auth"})
 
-# Start background scheduler
-from core.tasks import start_scheduler
-start_scheduler()
+# Start background scheduler only when explicitly enabled (avoid serverless runtimes like Vercel)
+import os
+
+if os.getenv("ENABLE_SCHEDULER") == "1":
+    from core.tasks import start_scheduler
+    start_scheduler()
 
 if __name__ == "__main__":
     import uvicorn
