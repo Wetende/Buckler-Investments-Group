@@ -1,0 +1,3 @@
+from .bnb import SqlAlchemyBnbRepository, SqlAlchemyBookingRepository
+from .tours import SqlAlchemyTourRepository, SqlAlchemyTourBookingRepository
+from .cars import SqlAlchemyVehicleRepository, SqlAlchemyCarRentalRepository

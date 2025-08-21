@@ -1,0 +1,161 @@
+"""
+FastAPI Property Listing Platform Backend
+
+Main application entry point with CORS, middleware, and router configuration.
+"""
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import JSONResponse
+
+from infrastructure.config.middleware import (
+    limiter,
+    rate_limit_middleware,
+    AuditLoggingMiddleware,
+    _rate_limit_exceeded_handler,
+)
+
+from infrastructure.config.config import settings
+from fastapi.openapi.utils import get_openapi
+
+from .containers import AppContainer
+from .v1.api import api_router
+from .v1.auth import router as auth_router
+from .v1.favorites import router as favorites_router
+
+# Create FastAPI application
+app = FastAPI(
+    title="Property Listing Platform API",
+    description="Backend API for property listing platform connecting agents, landlords, buyers, and tenants",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+# Create and wire container
+container = AppContainer()
+app.container = container
+container.wire(modules=[
+    "app.api.v1.bnb.routes",
+    "app.api.v1.tours.routes",
+    "app.api.v1.cars.routes",
+    "app.api.v1.property.routes",
+    "app.api.v1.investment.routes",
+    "app.api.v1.user.routes",
+    "app.api.v1.bundle.routes",
+])
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await container.shutdown_resources()
+
+# Always generate a fresh OpenAPI schema (avoids stale cached schemas in long-running dev sessions)
+def _fresh_openapi():  # pragma: no cover
+    return get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+
+app.openapi = _fresh_openapi  # type: ignore[assignment]
+
+# Rate limiting setup
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Configure CORS
+allowlist = [o.strip() for o in settings.CORS_ALLOW_ORIGINS.split(",") if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowlist or ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return JSONResponse(
+        content={
+            "status": "healthy",
+            "message": "Property Listing Platform API is running"
+        }
+    )
+
+# Root endpoint
+@app.get("/")
+async def root():
+    """Root endpoint with API information"""
+    return JSONResponse(
+        content={
+            "message": "Property Listing Platform API",
+            "version": "1.0.0",
+            "docs": "/docs",
+            "health": "/health"
+        }
+    )
+
+# Include authentication router
+app.include_router(auth_router)
+
+# Property routers
+from .v1.admin.user_routes import router as admin_user_router
+
+from .v1.properties_all import router as properties_all_router
+from .v1.catalog import router as catalog_router
+from .v1.media import router as media_router
+from .v1.profile import router as profile_router
+from .v1.public.article_routes import router as public_article_router
+from .v1.admin.dashboard import router as admin_dashboard_router
+from .v1.settings_unified import router as settings_router
+from .v1.gdpr import router as gdpr_router
+from .v1.notifications_unified import router as notifications_router
+from .v1.invest import router as invest_router
+from .v1.public.sitemap import router as sitemap_router
+from .v1.areas import router as areas_router
+from .v1.developers import router as developers_router
+from .v1.projects_unified import router as projects_router
+
+app.include_router(admin_user_router)
+
+app.include_router(properties_all_router)
+app.include_router(catalog_router)
+app.include_router(public_article_router)
+app.include_router(media_router)
+app.include_router(profile_router)
+app.include_router(admin_dashboard_router)
+app.include_router(settings_router)
+app.include_router(gdpr_router)
+app.include_router(notifications_router)
+app.include_router(favorites_router)
+app.include_router(areas_router)
+app.include_router(developers_router)
+app.include_router(projects_router)
+app.include_router(api_router, prefix="/api/v1")
+app.include_router(invest_router)
+app.include_router(sitemap_router)
+
+# Add middlewares (order matters)
+app.add_middleware(rate_limit_middleware)
+app.add_middleware(AuditLoggingMiddleware, critical_paths={"/api/v1/admin", "/api/v1/auth"})
+
+# Start background scheduler only when explicitly enabled (avoid serverless runtimes like Vercel)
+import os
+
+if os.getenv("ENABLE_SCHEDULER") == "1":
+    from ..infrastructure.config.tasks import start_scheduler
+    start_scheduler()
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="info"
+    )
