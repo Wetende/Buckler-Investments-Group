@@ -6,7 +6,7 @@ This module configures fastapi-mail and provides a utility function for sending 
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
 from pydantic import EmailStr
 
-from core.config import settings
+from .config import settings
 from pathlib import Path
 
 # Resolve template folder absolutely for serverless environments

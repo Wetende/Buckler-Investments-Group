@@ -1,7 +1,7 @@
 from typing import List
 
-from app.application.dto.property import PropertyResponseDTO, SearchPropertiesRequestDTO
-from app.domain.repositories.property import PropertyRepository
+from application.dto.property import PropertyResponseDTO, SearchPropertiesRequestDTO
+from domain.repositories.property import PropertyRepository
 
 class SearchPropertiesUseCase:
     def __init__(self, property_repository: PropertyRepository):

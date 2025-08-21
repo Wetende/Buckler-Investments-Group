@@ -7,18 +7,18 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import current_active_user, require_admin
-from models import (
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import current_active_user, require_admin
+from infrastructure.database.models import (
     InvProduct,
     InvNavSnapshot,
     InvOrder,
     InvPosition,
     KycRecord,
 )
-from models.investment import OrderStatus, KycStatus
-from models.user import User
-from schemas.invest import (
+from infrastructure.database.models.investment import OrderStatus, KycStatus
+from infrastructure.database.models.user import User
+from application.dto.invest import (
     ProductRead,
     ProductCU,
     NavSnapshotRead,

@@ -1,7 +1,7 @@
 from typing import List
 from datetime import date
-from ....domain.repositories.bnb import BnbRepository
-from ....domain.entities.bnb import ShortTermListing
+from domain.repositories.bnb import BnbRepository
+from domain.entities.bnb import ShortTermListing
 from ...dto.bnb import SearchListingsRequest, ListingResponse
 
 class SearchListingsUseCase:

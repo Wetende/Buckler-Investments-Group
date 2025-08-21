@@ -2,14 +2,14 @@ from typing import List
 from fastapi import APIRouter, Depends, status
 from dependency_injector.wiring import inject, Provide
 
-from app.application.dto.property import (
+from application.dto.property import (
     PropertyResponseDTO, 
     CreatePropertyRequestDTO, 
     SearchPropertiesRequestDTO
 )
-from app.application.use_cases.property.create_property import CreatePropertyUseCase
-from app.application.use_cases.property.search_properties import SearchPropertiesUseCase
-from app.api.containers import AppContainer
+from application.use_cases.property.create_property import CreatePropertyUseCase
+from application.use_cases.property.search_properties import SearchPropertiesUseCase
+from ...containers import AppContainer
 
 router = APIRouter()
 

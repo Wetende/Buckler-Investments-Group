@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
-from ....domain.entities.cars import Vehicle, CarRental
-from ....domain.value_objects.money import Money
+from domain.entities.cars import Vehicle, CarRental
+from domain.value_objects.money import Money
 
 class SearchVehiclesRequest(BaseModel):
     start_date: datetime

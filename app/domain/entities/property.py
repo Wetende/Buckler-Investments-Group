@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from app.domain.entities.base import DomainEntity
-from app.domain.value_objects.money import Money
+from .base import DomainEntity
+from ..value_objects.money import Money
 
 @dataclass(frozen=True)
 class PropertyFeatures:

@@ -1,11 +1,11 @@
 from datetime import datetime
 from decimal import Decimal
 
-from app.application.dto.investment import MakeInvestmentRequestDTO, InvestmentHoldingResponseDTO
-from app.domain.entities.investment import InvestmentHolding
-from app.domain.repositories.investment import InvestmentRepository, InvestmentHoldingRepository
-from app.domain.value_objects.money import Money
-from app.shared.exceptions.investment import (
+from application.dto.investment import MakeInvestmentRequestDTO, InvestmentHoldingResponseDTO
+from domain.entities.investment import InvestmentHolding
+from domain.repositories.investment import InvestmentRepository, InvestmentHoldingRepository
+from domain.value_objects.money import Money
+from shared.exceptions.investment import (
     InvestmentNotFoundError,
     InvestmentClosedError,
     InvalidInvestmentAmountError,

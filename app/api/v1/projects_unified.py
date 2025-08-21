@@ -7,11 +7,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import require_agent_or_admin
-from core.config import settings
-from models import Project, Developer
-from schemas.projects import ProjectRead, PaginatedProjects, ProjectCU
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import require_agent_or_admin
+from infrastructure.config.config import settings
+from infrastructure.database.models import Project, Developer
+from application.dto.projects import ProjectRead, PaginatedProjects, ProjectCU
 
 
 router = APIRouter(prefix="/api/v1/projects", tags=["Projects"])

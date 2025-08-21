@@ -1,5 +1,5 @@
 from typing import List
-from ....domain.repositories.tours import TourRepository
+from domain.repositories.tours import TourRepository
 from ...dto.tours import SearchToursRequest, TourResponse
 
 class SearchToursUseCase:

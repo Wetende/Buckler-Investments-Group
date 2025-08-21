@@ -2,16 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from dependency_injector.wiring import inject, Provide
 from typing import List
 
-from app.api.containers import AppContainer
-from ....application.use_cases.bnb.search_listings import SearchListingsUseCase
-from ....application.use_cases.bnb.create_booking import CreateBookingUseCase
-from ....application.dto.bnb import (
+from ...containers import AppContainer
+from application.use_cases.bnb.search_listings import SearchListingsUseCase
+from application.use_cases.bnb.create_booking import CreateBookingUseCase
+from application.dto.bnb import (
     SearchListingsRequest,
     ListingResponse,
     CreateBookingRequest,
     BookingResponse,
 )
-from ....shared.exceptions.bnb import ListingNotFoundError, InvalidNightsError
+from shared.exceptions.bnb import ListingNotFoundError, InvalidNightsError
 
 router = APIRouter()
 

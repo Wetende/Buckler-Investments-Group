@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Optional
 
-from app.domain.entities.user import User
-from app.domain.repositories.base import BaseRepository
+from ..entities.user import User
+from .base import BaseRepository
 
 class UserRepository(BaseRepository[User]):
     @abstractmethod

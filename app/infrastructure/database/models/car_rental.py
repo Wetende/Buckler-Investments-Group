@@ -7,7 +7,7 @@ from sqlalchemy import (
     ForeignKey,
     func
 )
-from ....core.database import Base
+from ...config.database import Base
 
 class CarRental(Base):
     __tablename__ = "car_rentals"

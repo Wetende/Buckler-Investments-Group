@@ -2,15 +2,15 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from dependency_injector.wiring import inject, Provide
 
-from app.application.dto.investment import (
+from application.dto.investment import (
     InvestmentResponseDTO,
     InvestmentHoldingResponseDTO,
     MakeInvestmentRequestDTO,
 )
-from app.application.use_cases.investment.list_investments import ListInvestmentsUseCase
-from app.application.use_cases.investment.make_investment import MakeInvestmentUseCase
-from app.api.containers import AppContainer
-from app.shared.exceptions.investment import (
+from application.use_cases.investment.list_investments import ListInvestmentsUseCase
+from application.use_cases.investment.make_investment import MakeInvestmentUseCase
+from ...containers import AppContainer
+from shared.exceptions.investment import (
     InvestmentNotFoundError,
     InvestmentClosedError,
     InvalidInvestmentAmountError,

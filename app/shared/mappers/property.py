@@ -1,6 +1,6 @@
-from app.domain.entities.property import Property, PropertyFeatures
-from app.domain.value_objects.money import Money
-from app.infrastructure.database.models.property import Property as PropertyModel
+from domain.entities.property import Property, PropertyFeatures
+from domain.value_objects.money import Money
+from infrastructure.database.models.property import Property as PropertyModel
 
 class PropertyMapper:
     @staticmethod

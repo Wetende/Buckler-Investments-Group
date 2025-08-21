@@ -1,6 +1,6 @@
-from ...domain.entities.bundle_booking import BundleBooking
-from ...domain.value_objects.money import Money
-from ...infrastructure.database.models.bundle_booking import BundleBookingModel
+from domain.entities.bundle_booking import BundleBooking
+from domain.value_objects.money import Money
+from infrastructure.database.models.bundle_booking import BundleBookingModel
 
 class BundleBookingMapper:
     @staticmethod

@@ -2,11 +2,11 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from decimal import Decimal
 
-from app.application.use_cases.bundle.create_bundle import CreateBundleUseCase
-from app.application.dto.bundle import CreateBundleRequestDTO, BundledItemRequestDTO
-from app.domain.entities.bundle import Bundle, BundledItem
-from app.domain.value_objects.money import Money
-from app.shared.exceptions.bundle import BundledItemNotFoundError
+from application.use_cases.bundle.create_bundle import CreateBundleUseCase
+from application.dto.bundle import CreateBundleRequestDTO, BundledItemRequestDTO
+from domain.entities.bundle import Bundle, BundledItem
+from domain.value_objects.money import Money
+from shared.exceptions.bundle import BundledItemNotFoundError
 
 # A simple mock for products to avoid importing full domain entities
 class BaseProduct:

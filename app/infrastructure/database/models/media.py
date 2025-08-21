@@ -7,7 +7,7 @@ from sqlalchemy import Integer, String, DateTime, Enum as SQLEnum, ForeignKey, I
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from core.database import Base
+from ...config.database import Base
 
 class MediaType(str, Enum):
     """Enumeration of supported media types."""

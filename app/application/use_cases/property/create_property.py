@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from app.application.dto.property import CreatePropertyRequestDTO, PropertyResponseDTO
-from app.domain.entities.property import Property, PropertyFeatures
-from app.domain.repositories.property import PropertyRepository
-from app.domain.value_objects.money import Money
+from application.dto.property import CreatePropertyRequestDTO, PropertyResponseDTO
+from domain.entities.property import Property, PropertyFeatures
+from domain.repositories.property import PropertyRepository
+from domain.value_objects.money import Money
 
 class CreatePropertyUseCase:
     def __init__(self, property_repository: PropertyRepository):

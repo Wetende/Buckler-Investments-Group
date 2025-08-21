@@ -1,8 +1,8 @@
 import pytest
 from decimal import Decimal
 
-from app.domain.entities.property import Property, PropertyFeatures
-from app.domain.value_objects.money import Money
+from domain.entities.property import Property, PropertyFeatures
+from domain.value_objects.money import Money
 
 @pytest.mark.asyncio
 async def test_search_properties_api(client):

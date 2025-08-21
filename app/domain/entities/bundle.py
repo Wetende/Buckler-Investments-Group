@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Any, Dict
 from decimal import Decimal
 
-from .base import BaseEntity
+from .base import DomainEntity
 from ..value_objects.money import Money
 
 @dataclass
@@ -13,7 +13,7 @@ class BundledItem:
     details: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass
-class Bundle(BaseEntity):
+class Bundle(DomainEntity):
     user_id: int
     items: List[BundledItem] = field(default_factory=list)
     total_price: Money = field(init=False)

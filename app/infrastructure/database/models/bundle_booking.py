@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, Numeric, ForeignKey, DateTime, E
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from .base import Base
-from ....domain.entities.bundle_booking import BookingStatus
+from ...config.database import Base
+from domain.entities.bundle_booking import BookingStatus
 
 class BundleBookingModel(Base):
     __tablename__ = "bundle_bookings"

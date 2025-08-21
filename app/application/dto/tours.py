@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from datetime import date
 from typing import Optional
-from ....domain.entities.tours import Tour, TourBooking
-from ....domain.value_objects.money import Money
+from domain.entities.tours import Tour, TourBooking
+from domain.value_objects.money import Money
 
 class SearchToursRequest(BaseModel):
     location: str

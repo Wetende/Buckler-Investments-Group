@@ -2,11 +2,11 @@ from typing import List, Optional
 from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
-from ....domain.repositories.tours import TourRepository, TourBookingRepository
-from ....domain.entities.tours import Tour, TourBooking
-from ..models.tours import Tour as TourModel
-from ..models.tour_booking import TourBooking as TourBookingModel
-from ....shared.mappers.tours import TourMapper
+from domain.repositories.tours import TourRepository, TourBookingRepository
+from domain.entities.tours import Tour, TourBooking
+from infrastructure.database.models.tours import Tour as TourModel
+from infrastructure.database.models.tour_booking import TourBooking as TourBookingModel
+from shared.mappers.tours import TourMapper
 
 class SqlAlchemyTourRepository(TourRepository):
     def __init__(self, session: AsyncSession):

@@ -1,8 +1,8 @@
-from app.application.dto.user import UserCreateDTO, UserResponseDTO
-from app.core.auth import get_password_hash
-from app.domain.entities.user import User
-from app.domain.repositories.user import UserRepository
-from app.shared.exceptions.user import UserAlreadyExistsError
+from application.dto.user import UserCreateDTO, UserResponseDTO
+from infrastructure.config.auth import get_password_hash
+from domain.entities.user import User
+from domain.repositories.user import UserRepository
+from shared.exceptions.user import UserAlreadyExistsError
 
 class CreateUserUseCase:
     def __init__(self, user_repository: UserRepository):

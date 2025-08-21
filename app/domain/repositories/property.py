@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import List, Optional
 
-from app.domain.entities.property import Property
-from app.domain.repositories.base import BaseRepository
+from ..entities.property import Property
+from .base import BaseRepository
 
 class PropertyRepository(BaseRepository[Property]):
     @abstractmethod

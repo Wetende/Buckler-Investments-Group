@@ -2,10 +2,10 @@ import pytest
 from unittest.mock import AsyncMock
 from datetime import datetime
 
-from app.application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
-from app.application.dto.cars import SearchVehiclesRequest, VehicleResponse
-from app.domain.entities.cars import Vehicle
-from app.domain.value_objects.money import Money
+from application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
+from application.dto.cars import SearchVehiclesRequest, VehicleResponse
+from domain.entities.cars import Vehicle
+from domain.value_objects.money import Money
 
 @pytest.fixture
 def mock_vehicle_repository():

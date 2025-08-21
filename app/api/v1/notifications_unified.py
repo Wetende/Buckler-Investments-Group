@@ -5,11 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import require_admin
-from models.notification_template import NotificationTemplate
-from models.provider_config import ProviderConfig
-from schemas.notifications import (
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import require_admin
+from infrastructure.database.models.notification_template import NotificationTemplate
+from infrastructure.database.models.provider_config import ProviderConfig
+from application.dto.notifications import (
     NotificationTemplateCU,
     NotificationTemplateOut,
     ProviderConfigCU,

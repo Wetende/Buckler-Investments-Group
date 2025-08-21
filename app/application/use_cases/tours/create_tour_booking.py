@@ -1,8 +1,8 @@
 from datetime import datetime
-from ....domain.repositories.tours import TourRepository, TourBookingRepository
-from ....domain.entities.tours import TourBooking
+from domain.repositories.tours import TourRepository, TourBookingRepository
+from domain.entities.tours import TourBooking
 from ...dto.tours import CreateTourBookingRequest, TourBookingResponse
-from ....shared.exceptions.tours import TourNotFoundError
+from shared.exceptions.tours import TourNotFoundError
 
 class CreateTourBookingUseCase:
     def __init__(self, tour_repository: TourRepository, tour_booking_repository: TourBookingRepository):

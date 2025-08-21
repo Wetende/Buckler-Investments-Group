@@ -3,10 +3,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from ....domain.entities.bundle import Bundle
-from ....domain.repositories.bundle import BundleRepository
-from ..models.bundle import BundleModel
-from ....shared.mappers.bundle import BundleMapper
+from domain.entities.bundle import Bundle
+from domain.repositories.bundle import BundleRepository
+from infrastructure.database.models.bundle import BundleModel
+from shared.mappers.bundle import BundleMapper
 
 class SqlAlchemyBundleRepository(BundleRepository):
     def __init__(self, session: AsyncSession):

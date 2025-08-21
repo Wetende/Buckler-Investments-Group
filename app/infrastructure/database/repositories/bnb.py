@@ -2,11 +2,11 @@ from typing import List, Optional
 from datetime import date
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
-from ....domain.repositories.bnb import BnbRepository, BookingRepository
-from ....domain.entities.bnb import ShortTermListing, Booking
-from ..models.bnb import StListing as StListingModel
-from ..models.booking import Booking as BookingModel
-from ....shared.mappers.bnb import BnbMapper
+from domain.repositories.bnb import BnbRepository, BookingRepository
+from domain.entities.bnb import ShortTermListing, Booking
+from infrastructure.database.models.bnb_listing import StListing as StListingModel
+from infrastructure.database.models.booking import Booking as BookingModel
+from shared.mappers.bnb import BnbMapper
 
 class SqlAlchemyBnbRepository(BnbRepository):
     def __init__(self, session: AsyncSession):

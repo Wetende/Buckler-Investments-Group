@@ -7,18 +7,18 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import require_agent_or_admin
-from core.config import settings
-from models import Property, PropertyStatusLog, PropertyStatus
-from schemas.property_schemas import (
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import require_agent_or_admin
+from infrastructure.config.config import settings
+from infrastructure.database.models import Property, PropertyStatusLog, PropertyStatus
+from application.dto.property_schemas import (
     PaginatedPropertyResponse,
     PropertySummaryResponse,
     PropertyDetailResponse,
     PropertyCreateUpdate as AdminPropertyCU,
 )
-from schemas.property import PropertyCreateUpdate as AgentPropertyCU
-from models.user import User, UserRole
+from application.dto.property import PropertyCreateUpdate as AgentPropertyCU
+from infrastructure.database.models.user import User, UserRole
 
 
 router = APIRouter(tags=["Properties"])

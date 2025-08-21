@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .config import settings
 from .database import get_async_session
-from app.infrastructure.database.models.user import User, Role as UserRole
+from infrastructure.database.models.user import User, UserRole
 
 __all__ = [
     "pwd_context",

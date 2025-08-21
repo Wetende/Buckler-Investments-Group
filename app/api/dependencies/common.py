@@ -3,8 +3,8 @@ from typing import AsyncIterator, Optional
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...infrastructure.config.config import settings
-from ...infrastructure.config.database import get_async_session
+from infrastructure.config.config import settings
+from infrastructure.config.database import get_async_session
 
 
 def get_settings():

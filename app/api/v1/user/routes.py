@@ -5,13 +5,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 from dependency_injector.wiring import inject, Provide
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.application.dto.user import UserCreateDTO, UserResponseDTO, Token
-from app.application.use_cases.user.create_user import CreateUserUseCase
-from app.api.containers import AppContainer
-from app.infrastructure.config.auth import authenticate_user, create_access_token, get_current_active_user
-from app.infrastructure.config.database import get_async_session
-from app.domain.entities.user import User
-from app.shared.exceptions.user import UserAlreadyExistsError
+from application.dto.user import UserCreateDTO, UserResponseDTO, Token
+from application.use_cases.user.create_user import CreateUserUseCase
+from ...containers import AppContainer
+from infrastructure.config.auth import authenticate_user, create_access_token, get_current_active_user
+from infrastructure.config.database import get_async_session
+from domain.entities.user import User
+from shared.exceptions.user import UserAlreadyExistsError
 
 router = APIRouter()
 

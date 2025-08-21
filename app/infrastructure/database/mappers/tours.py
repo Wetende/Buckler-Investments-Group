@@ -1,7 +1,7 @@
-from ....domain.entities.tours import Tour, TourBooking
-from ....infrastructure.database.models.tours import Tour as TourModel
-from ....infrastructure.database.models.tour_booking import TourBooking as TourBookingModel
-from ....domain.value_objects.money import Money
+from domain.entities.tours import Tour, TourBooking
+from infrastructure.database.models.tours import Tour as TourModel
+from infrastructure.database.models.tour_booking import TourBooking as TourBookingModel
+from domain.value_objects.money import Money
 
 class TourMapper:
     @staticmethod

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from datetime import datetime
 
-from .base import BaseEntity
+from .base import DomainEntity
 from ..value_objects.money import Money
 
 class BookingStatus(str, Enum):
@@ -11,7 +11,7 @@ class BookingStatus(str, Enum):
     CANCELLED = "cancelled"
 
 @dataclass
-class BundleBooking(BaseEntity):
+class BundleBooking(DomainEntity):
     bundle_id: int
     user_id: int
     total_price: Money

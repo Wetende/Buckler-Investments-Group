@@ -7,11 +7,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import require_admin
-from models.user import User
-from models.property import Property, PropertyStatus
-from models.article import Article
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import require_admin
+from infrastructure.database.models.user import User
+from infrastructure.database.models.property import Property, PropertyStatus
+from infrastructure.database.models.article import Article
 
 router = APIRouter(prefix="/api/v1/admin/dashboard", tags=["Dashboard"])
 

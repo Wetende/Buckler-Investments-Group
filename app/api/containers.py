@@ -1,51 +1,51 @@
 from dependency_injector import containers, providers
 
-from ..infrastructure.config.database import AsyncSessionLocal
+from infrastructure.config.database import AsyncSessionLocal
 
 # Repositories
-from ..domain.repositories.bnb import BnbRepository, BookingRepository
-from ..domain.repositories.tours import TourRepository, TourBookingRepository
-from ..domain.repositories.cars import VehicleRepository, CarRentalRepository
-from ..domain.repositories.property import PropertyRepository
-from ..domain.repositories.investment import InvestmentRepository, InvestmentHoldingRepository
-from ..domain.repositories.user import UserRepository
-from ..domain.repositories.bundle import BundleRepository
-from ..domain.repositories.bundle_booking import BundleBookingRepository
-from ..infrastructure.database.repositories.bnb import (
+from domain.repositories.bnb import BnbRepository, BookingRepository
+from domain.repositories.tours import TourRepository, TourBookingRepository
+from domain.repositories.cars import VehicleRepository, CarRentalRepository
+from domain.repositories.property import PropertyRepository
+from domain.repositories.investment import InvestmentRepository, InvestmentHoldingRepository
+from domain.repositories.user import UserRepository
+from domain.repositories.bundle import BundleRepository
+from domain.repositories.bundle_booking import BundleBookingRepository
+from infrastructure.database.repositories.bnb import (
     SqlAlchemyBnbRepository,
     SqlAlchemyBookingRepository,
 )
-from ..infrastructure.database.repositories.tours import (
+from infrastructure.database.repositories.tours import (
     SqlAlchemyTourRepository,
     SqlAlchemyTourBookingRepository,
 )
-from ..infrastructure.database.repositories.cars import (
+from infrastructure.database.repositories.cars import (
     SqlAlchemyVehicleRepository,
     SqlAlchemyCarRentalRepository,
 )
-from ..infrastructure.database.repositories.property import SqlAlchemyPropertyRepository
-from ..infrastructure.database.repositories.investment import (
+from infrastructure.database.repositories.property import SqlAlchemyPropertyRepository
+from infrastructure.database.repositories.investment import (
     SqlAlchemyInvestmentRepository,
     SqlAlchemyInvestmentHoldingRepository,
 )
-from ..infrastructure.database.repositories.user import SqlAlchemyUserRepository
-from ..infrastructure.database.repositories.bundle import SqlAlchemyBundleRepository
-from ..infrastructure.database.repositories.bundle_booking import SqlAlchemyBundleBookingRepository
+from infrastructure.database.repositories.user import SqlAlchemyUserRepository
+from infrastructure.database.repositories.bundle import SqlAlchemyBundleRepository
+from infrastructure.database.repositories.bundle_booking import SqlAlchemyBundleBookingRepository
 
 # Use Cases
-from ..application.use_cases.bnb.search_listings import SearchListingsUseCase
-from ..application.use_cases.bnb.create_booking import CreateBookingUseCase
-from ..application.use_cases.tours.search_tours import SearchToursUseCase
-from ..application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
-from ..application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
-from ..application.use_cases.cars.create_rental import CreateRentalUseCase
-from ..application.use_cases.property.search_properties import SearchPropertiesUseCase
-from ..application.use_cases.property.create_property import CreatePropertyUseCase
-from ..application.use_cases.investment.list_investments import ListInvestmentsUseCase
-from ..application.use_cases.investment.make_investment import MakeInvestmentUseCase
-from ..application.use_cases.user.create_user import CreateUserUseCase
-from ..application.use_cases.bundle.create_bundle import CreateBundleUseCase
-from ..application.use_cases.bundle.book_bundle import BookBundleUseCase
+from application.use_cases.bnb.search_listings import SearchListingsUseCase
+from application.use_cases.bnb.create_booking import CreateBookingUseCase
+from application.use_cases.tours.search_tours import SearchToursUseCase
+from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
+from application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
+from application.use_cases.cars.create_rental import CreateRentalUseCase
+from application.use_cases.property.search_properties import SearchPropertiesUseCase
+from application.use_cases.property.create_property import CreatePropertyUseCase
+from application.use_cases.investment.list_investments import ListInvestmentsUseCase
+from application.use_cases.investment.make_investment import MakeInvestmentUseCase
+from application.use_cases.user.create_user import CreateUserUseCase
+from application.use_cases.bundle.create_bundle import CreateBundleUseCase
+from application.use_cases.bundle.book_bundle import BookBundleUseCase
 
 
 class BundleUseCases(containers.DeclarativeContainer):
@@ -117,13 +117,13 @@ class AppContainer(containers.DeclarativeContainer):
 
     wiring_config = containers.WiringConfiguration(
         modules=[
-            "app.api.v1.bnb.routes",
-            "app.api.v1.tours.routes",
-            "app.api.v1.cars.routes",
-            "app.api.v1.property.routes",
-            "app.api.v1.investment.routes",
-            "app.api.v1.user.routes",
-            "app.api.v1.bundle.routes",
+            "api.v1.bnb.routes",
+            "api.v1.tours.routes",
+            "api.v1.cars.routes",
+            "api.v1.property.routes",
+            "api.v1.investment.routes",
+            "api.v1.user.routes",
+            "api.v1.bundle.routes",
         ]
     )
 

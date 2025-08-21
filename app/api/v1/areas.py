@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import require_admin
-from models import AreaProfile
-from schemas.areas import AreaRead, AreaCU
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import require_admin
+from infrastructure.database.models import AreaProfile
+from application.dto.areas import AreaRead, AreaCU
 
 
 router = APIRouter(prefix="/api/v1/areas", tags=["Areas"])

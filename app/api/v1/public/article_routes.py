@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from models.article import Article
-from schemas.article import ArticleSummary, ArticleDetail
+from infrastructure.config.database import get_async_session
+from infrastructure.database.models.article import Article
+from application.dto.article import ArticleSummary, ArticleDetail
 
 router = APIRouter(prefix="/api/v1/public/articles", tags=["Articles"])
 

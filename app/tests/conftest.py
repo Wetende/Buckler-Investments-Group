@@ -2,8 +2,8 @@ import pytest
 from unittest.mock import AsyncMock
 from fastapi.testclient import TestClient
 
-from app.main import app
-from app.containers import AppContainer
+from main import app
+from containers import AppContainer
 
 @pytest.fixture(scope="module")
 def client():

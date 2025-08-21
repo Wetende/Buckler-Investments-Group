@@ -1,9 +1,9 @@
 from datetime import datetime
-from ....domain.repositories.cars import VehicleRepository, CarRentalRepository
-from ....domain.entities.cars import CarRental
-from ....domain.value_objects.money import Money
+from domain.repositories.cars import VehicleRepository, CarRentalRepository
+from domain.entities.cars import CarRental
+from domain.value_objects.money import Money
 from ...dto.cars import CreateRentalRequest, RentalResponse
-from ....shared.exceptions.cars import VehicleNotFoundError
+from shared.exceptions.cars import VehicleNotFoundError
 
 class CreateRentalUseCase:
     def __init__(self, vehicle_repository: VehicleRepository, car_rental_repository: CarRentalRepository):

@@ -6,7 +6,7 @@ from sqlalchemy import Integer, String, DateTime, JSON, Index
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
-from core.database import Base
+from ...config.database import Base
 
 
 class AreaProfile(Base):

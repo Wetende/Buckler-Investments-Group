@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import List
 
-from app.domain.entities.investment import Investment, InvestmentHolding
-from app.domain.repositories.base import BaseRepository
+from ..entities.investment import Investment, InvestmentHolding
+from .base import BaseRepository
 
 class InvestmentRepository(BaseRepository[Investment]):
     @abstractmethod

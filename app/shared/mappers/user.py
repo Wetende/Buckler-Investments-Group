@@ -1,5 +1,5 @@
-from app.domain.entities.user import User, UserRole
-from app.infrastructure.database.models.user import User as UserModel, Role as RoleModel
+from domain.entities.user import User, UserRole
+from infrastructure.database.models.user import User as UserModel, UserRole as RoleModel
 
 class UserMapper:
     @staticmethod

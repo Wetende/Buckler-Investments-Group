@@ -6,7 +6,7 @@ from secrets import token_urlsafe
 from sqlalchemy import Integer, String, DateTime, ForeignKey, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from core.database import Base
+from ...config.database import Base
 
 if TYPE_CHECKING:
     from .user import User

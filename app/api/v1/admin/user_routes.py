@@ -15,10 +15,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import require_admin
-from models.user import User, UserRole
-from schemas.user import AdminUserCreateUpdate, UserRead
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import require_admin
+from infrastructure.database.models.user import User, UserRole
+from application.dto.user import AdminUserCreateUpdate, UserRead
 
 router = APIRouter(prefix="/api/v1/admin/users", tags=["Users"])
 

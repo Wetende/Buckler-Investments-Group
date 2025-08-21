@@ -3,10 +3,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.domain.entities.user import User
-from app.domain.repositories.user import UserRepository
-from app.infrastructure.database.models.user import User as UserModel, Role as RoleModel
-from app.shared.mappers.user import UserMapper
+from domain.entities.user import User
+from domain.repositories.user import UserRepository
+from infrastructure.database.models.user import User as UserModel, UserRole as RoleModel
+from shared.mappers.user import UserMapper
 
 class SqlAlchemyUserRepository(UserRepository):
     def __init__(self, session: AsyncSession):

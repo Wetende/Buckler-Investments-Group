@@ -9,7 +9,7 @@ from sqlalchemy import Integer, ForeignKey, DateTime, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from core.database import Base
+from ...config.database import Base
 
 
 class Favorite(Base):

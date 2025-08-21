@@ -1,8 +1,8 @@
-from app.domain.entities.investment import Investment, InvestmentHolding
-from app.domain.value_objects.money import Money
-from app.infrastructure.database.models.investment import (
-    Investment as InvestmentModel,
-    InvestmentHolding as InvestmentHoldingModel,
+from domain.entities.investment import Investment, InvestmentHolding
+from domain.value_objects.money import Money
+from infrastructure.database.models.investment import (
+    InvProduct as InvestmentModel,
+    InvPosition as InvestmentHoldingModel,
 )
 
 class InvestmentMapper:

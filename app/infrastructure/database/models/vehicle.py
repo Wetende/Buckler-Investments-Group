@@ -7,7 +7,7 @@ from sqlalchemy import (
     JSON,
     func
 )
-from ....core.database import Base
+from ...config.database import Base
 
 class Vehicle(Base):
     __tablename__ = "vehicles"

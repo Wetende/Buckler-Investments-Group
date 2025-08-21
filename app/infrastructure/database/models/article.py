@@ -6,7 +6,7 @@ from sqlalchemy import Integer, String, Text, DateTime, Boolean, ForeignKey, Ind
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from core.database import Base
+from ...config.database import Base
 
 class Article(Base):
     """Article model representing informational posts."""

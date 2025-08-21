@@ -2,11 +2,11 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from datetime import datetime, timedelta
 
-from app.application.use_cases.cars.create_rental import CreateRentalUseCase
-from app.application.dto.cars import CreateRentalRequest
-from app.domain.entities.cars import Vehicle, CarRental
-from app.domain.value_objects.money import Money
-from app.shared.exceptions.cars import VehicleNotFoundError
+from application.use_cases.cars.create_rental import CreateRentalUseCase
+from application.dto.cars import CreateRentalRequest
+from domain.entities.cars import Vehicle, CarRental
+from domain.value_objects.money import Money
+from shared.exceptions.cars import VehicleNotFoundError
 
 @pytest.fixture
 def mock_vehicle_repository():

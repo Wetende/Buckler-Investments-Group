@@ -1,12 +1,12 @@
 from typing import Dict, Any
 
 from ...dto.bundle import CreateBundleRequestDTO, BundleResponseDTO
-from ....domain.entities.bundle import Bundle, BundledItem
-from ....domain.repositories.bundle import BundleRepository
-from ....domain.repositories.tours import TourRepository
-from ....domain.repositories.cars import VehicleRepository
-from ....domain.repositories.bnb import BnbRepository
-from ....shared.exceptions.bundle import BundledItemNotFoundError
+from domain.entities.bundle import Bundle, BundledItem
+from domain.repositories.bundle import BundleRepository
+from domain.repositories.tours import TourRepository
+from domain.repositories.cars import VehicleRepository
+from domain.repositories.bnb import BnbRepository
+from shared.exceptions.bundle import BundledItemNotFoundError
 
 
 class CreateBundleUseCase:

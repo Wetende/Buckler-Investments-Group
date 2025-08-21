@@ -1,0 +1,23 @@
+# Database Configuration
+DATABASE_URL=postgresql+asyncpg://postgres:root@localhost:5432/property
+
+# Security
+SECRET_KEY=your-secret-key-here-change-in-production
+
+# Email settings (optional for development)
+MAIL_USERNAME=test@example.com
+MAIL_PASSWORD=test-password
+MAIL_FROM=test@example.com
+MAIL_PORT=587
+MAIL_SERVER=smtp.example.com
+MAIL_STARTTLS=true
+MAIL_SSL_TLS=false
+
+# Currency settings
+KES_PER_USD=130.0
+
+# CORS settings (allow all for development)
+CORS_ALLOW_ORIGINS=*
+
+# Analytics (optional)
+ANALYTICS_WEBHOOK_URL=

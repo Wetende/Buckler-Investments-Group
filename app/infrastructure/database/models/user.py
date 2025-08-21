@@ -15,7 +15,7 @@ from .favorite import Favorite
 from .property import Property
 from .article import Article
 
-from core.database import Base
+from ...config.database import Base
 
 
 class UserRole(str, Enum):

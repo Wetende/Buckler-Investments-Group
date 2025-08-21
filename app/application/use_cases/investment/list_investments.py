@@ -1,7 +1,7 @@
 from typing import List, Optional
 
-from app.application.dto.investment import InvestmentResponseDTO
-from app.domain.repositories.investment import InvestmentRepository
+from application.dto.investment import InvestmentResponseDTO
+from domain.repositories.investment import InvestmentRepository
 
 class ListInvestmentsUseCase:
     def __init__(self, investment_repository: InvestmentRepository):

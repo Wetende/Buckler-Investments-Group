@@ -7,7 +7,13 @@ from typing import Optional, List
 
 from pydantic import BaseModel, Field, constr, condecimal, conint, ConfigDict
 
-from models.property import PropertyStatus
+from infrastructure.database.models.property import PropertyStatus
+
+
+class MoneyDTO(BaseModel):
+    """DTO for money values with currency."""
+    amount: Decimal
+    currency: str = "KES"
 
 
 class PropertyBase(BaseModel):
@@ -61,3 +67,51 @@ class PropertySummaryResponse(BaseModel):
     bathrooms: Optional[int] = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Use case DTOs
+class SearchPropertiesRequestDTO(BaseModel):
+    location: Optional[str] = None
+    min_price: Optional[Decimal] = None
+    max_price: Optional[Decimal] = None
+    min_bedrooms: Optional[int] = None
+    min_bathrooms: Optional[int] = None
+    property_type: Optional[str] = None
+
+
+class PropertyResponseDTO(BaseModel):
+    id: int
+    title: str
+    description: str
+    price: Decimal
+    address: str
+    location: str
+    bedrooms: Optional[int] = None
+    bathrooms: Optional[int] = None
+    area_sqm: Optional[int] = None
+    
+    @classmethod
+    def from_entity(cls, entity) -> 'PropertyResponseDTO':
+        return cls(
+            id=entity.id,
+            title=entity.title,
+            description=entity.description,
+            price=entity.price.amount,
+            address=entity.address,
+            location=entity.location,
+            bedrooms=entity.features.bedrooms if entity.features else None,
+            bathrooms=entity.features.bathrooms if entity.features else None,
+            area_sqm=entity.features.area_sqm if entity.features else None
+        )
+
+
+class CreatePropertyRequestDTO(BaseModel):
+    title: str
+    description: str
+    price: Decimal
+    address: str
+    location: str
+    property_type: str
+    bedrooms: Optional[int] = None
+    bathrooms: Optional[int] = None
+    area_sqm: Optional[int] = None

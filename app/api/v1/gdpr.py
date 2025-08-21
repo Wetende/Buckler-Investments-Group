@@ -6,9 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from sqlalchemy import select
 
-from core.database import get_async_session
-from core.dependencies import current_active_user
-from models.user import User
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import current_active_user
+from infrastructure.database.models.user import User
 
 router = APIRouter(prefix="/api/v1/gdpr", tags=["GDPR"])
 

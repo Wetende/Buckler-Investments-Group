@@ -2,10 +2,10 @@ from typing import List, Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ....domain.entities.bundle_booking import BundleBooking
-from ....domain.repositories.bundle_booking import BundleBookingRepository
-from ..models.bundle_booking import BundleBookingModel
-from ....shared.mappers.bundle_booking import BundleBookingMapper
+from domain.entities.bundle_booking import BundleBooking
+from domain.repositories.bundle_booking import BundleBookingRepository
+from infrastructure.database.models.bundle_booking import BundleBookingModel
+from shared.mappers.bundle_booking import BundleBookingMapper
 
 class SqlAlchemyBundleBookingRepository(BundleBookingRepository):
     def __init__(self, session: AsyncSession):

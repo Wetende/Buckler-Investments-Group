@@ -1,8 +1,8 @@
 from datetime import datetime
-from ....domain.repositories.bnb import BnbRepository, BookingRepository
-from ....domain.entities.bnb import Booking
+from domain.repositories.bnb import BnbRepository, BookingRepository
+from domain.entities.bnb import Booking
 from ...dto.bnb import CreateBookingRequest, BookingResponse
-from ....shared.exceptions.bnb import ListingNotFoundError, InvalidNightsError
+from shared.exceptions.bnb import ListingNotFoundError, InvalidNightsError
 
 class CreateBookingUseCase:
     def __init__(self, bnb_repository: BnbRepository, booking_repository: BookingRepository):

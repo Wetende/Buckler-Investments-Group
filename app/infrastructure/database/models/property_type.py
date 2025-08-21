@@ -2,7 +2,7 @@
 from sqlalchemy import Integer, String, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from core.database import Base
+from ...config.database import Base
 from typing import List, TYPE_CHECKING
 
 if TYPE_CHECKING:

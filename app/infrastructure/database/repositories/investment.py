@@ -2,13 +2,13 @@ from typing import List, Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.domain.entities.investment import Investment, InvestmentHolding
-from app.domain.repositories.investment import InvestmentRepository, InvestmentHoldingRepository
-from app.infrastructure.database.models.investment import (
-    Investment as InvestmentModel,
-    InvestmentHolding as InvestmentHoldingModel,
+from domain.entities.investment import Investment, InvestmentHolding
+from domain.repositories.investment import InvestmentRepository, InvestmentHoldingRepository
+from infrastructure.database.models.investment import (
+    InvProduct as InvestmentModel,
+    InvPosition as InvestmentHoldingModel,
 )
-from app.shared.mappers.investment import InvestmentMapper
+from shared.mappers.investment import InvestmentMapper
 
 class SqlAlchemyInvestmentRepository(InvestmentRepository):
     def __init__(self, session: AsyncSession):

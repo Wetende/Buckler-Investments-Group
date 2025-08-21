@@ -1,8 +1,8 @@
 import pytest
 from datetime import datetime, timedelta
 
-from app.domain.entities.cars import Vehicle
-from app.domain.value_objects.money import Money
+from domain.entities.cars import Vehicle
+from domain.value_objects.money import Money
 
 @pytest.mark.asyncio
 async def test_search_vehicles_api(client):

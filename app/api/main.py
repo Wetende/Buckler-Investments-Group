@@ -26,8 +26,11 @@ from .v1.favorites import router as favorites_router
 
 # Create FastAPI application
 app = FastAPI(
-    title="Property Listing Platform API",
-    description="Backend API for property listing platform connecting agents, landlords, buyers, and tenants",
+    title="Buckler Investment Group API",
+    description=(
+        "Buckler Investment Group: unified marketplace for short-term rentals,  tour packages, "
+        "property listings, Investment opportunities, and car rentals."
+    ),
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -37,13 +40,13 @@ app = FastAPI(
 container = AppContainer()
 app.container = container
 container.wire(modules=[
-    "app.api.v1.bnb.routes",
-    "app.api.v1.tours.routes",
-    "app.api.v1.cars.routes",
-    "app.api.v1.property.routes",
-    "app.api.v1.investment.routes",
-    "app.api.v1.user.routes",
-    "app.api.v1.bundle.routes",
+    "api.v1.bnb.routes",
+    "api.v1.tours.routes",
+    "api.v1.cars.routes",
+    "api.v1.property.routes",
+    "api.v1.investment.routes",
+    "api.v1.user.routes",
+    "api.v1.bundle.routes",
 ])
 
 @app.on_event("shutdown")
@@ -82,7 +85,7 @@ async def health_check():
     return JSONResponse(
         content={
             "status": "healthy",
-            "message": "Property Listing Platform API is running"
+            "message": "Buckler Investment Group API is running"
         }
     )
 
@@ -92,10 +95,11 @@ async def root():
     """Root endpoint with API information"""
     return JSONResponse(
         content={
-            "message": "Property Listing Platform API",
+            "message": "Buckler Investment Group API",
             "version": "1.0.0",
             "docs": "/docs",
-            "health": "/health"
+            "health": "/health",
+            "vision_doc": "super_platform_plan.md"
         }
     )
 
@@ -147,7 +151,7 @@ app.add_middleware(AuditLoggingMiddleware, critical_paths={"/api/v1/admin", "/ap
 import os
 
 if os.getenv("ENABLE_SCHEDULER") == "1":
-    from ..infrastructure.config.tasks import start_scheduler
+    from infrastructure.config.tasks import start_scheduler
     start_scheduler()
 
 if __name__ == "__main__":

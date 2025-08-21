@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Numeric, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 
-from .base import Base
+from ...config.database import Base
 
 class BundleModel(Base):
     __tablename__ = "bundles"

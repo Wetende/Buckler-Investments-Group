@@ -2,11 +2,11 @@ from typing import List, Optional
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
-from ....domain.repositories.cars import VehicleRepository, CarRentalRepository
-from ....domain.entities.cars import Vehicle, CarRental
-from ..models.vehicle import Vehicle as VehicleModel
-from ..models.car_rental import CarRental as CarRentalModel
-from ....shared.mappers.cars import CarMapper
+from domain.repositories.cars import VehicleRepository, CarRentalRepository
+from domain.entities.cars import Vehicle, CarRental
+from infrastructure.database.models.vehicle import Vehicle as VehicleModel
+from infrastructure.database.models.car_rental import CarRental as CarRentalModel
+from shared.mappers.cars import CarMapper
 
 class SqlAlchemyVehicleRepository(VehicleRepository):
     def __init__(self, session: AsyncSession):

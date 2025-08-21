@@ -2,11 +2,11 @@ import pytest
 from unittest.mock import AsyncMock
 from decimal import Decimal
 
-from app.application.dto.property import CreatePropertyRequestDTO, PropertyFeaturesDTO, SearchPropertiesRequestDTO
-from app.application.use_cases.property.create_property import CreatePropertyUseCase
-from app.application.use_cases.property.search_properties import SearchPropertiesUseCase
-from app.domain.entities.property import Property, PropertyFeatures
-from app.domain.value_objects.money import Money
+from application.dto.property import CreatePropertyRequestDTO, PropertyFeaturesDTO, SearchPropertiesRequestDTO
+from application.use_cases.property.create_property import CreatePropertyUseCase
+from application.use_cases.property.search_properties import SearchPropertiesUseCase
+from domain.entities.property import Property, PropertyFeatures
+from domain.value_objects.money import Money
 
 @pytest.mark.asyncio
 async def test_search_properties_use_case():

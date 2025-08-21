@@ -2,10 +2,10 @@ from typing import List, Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.domain.entities.property import Property
-from app.domain.repositories.property import PropertyRepository
-from app.infrastructure.database.models.property import Property as PropertyModel
-from app.shared.mappers.property import PropertyMapper
+from domain.entities.property import Property
+from domain.repositories.property import PropertyRepository
+from infrastructure.database.models.property import Property as PropertyModel
+from shared.mappers.property import PropertyMapper
 
 class SqlAlchemyPropertyRepository(PropertyRepository):
     def __init__(self, session: AsyncSession):

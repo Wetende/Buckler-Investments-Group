@@ -1,8 +1,8 @@
 from ...dto.bundle_booking import CreateBundleBookingRequestDTO, BundleBookingResponseDTO
-from ....domain.entities.bundle_booking import BundleBooking
-from ....domain.repositories.bundle import BundleRepository
-from ....domain.repositories.bundle_booking import BundleBookingRepository
-from ....shared.exceptions.bundle import BundleNotFoundError
+from domain.entities.bundle_booking import BundleBooking
+from domain.repositories.bundle import BundleRepository
+from domain.repositories.bundle_booking import BundleBookingRepository
+from shared.exceptions.bundle import BundleNotFoundError
 
 class BookBundleUseCase:
     def __init__(

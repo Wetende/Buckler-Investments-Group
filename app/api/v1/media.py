@@ -6,11 +6,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from core.dependencies import require_agent_or_admin
-from models import Property, Media
-from models.user import User, UserRole
-from schemas.media import MediaCreate, MediaResponse
+from infrastructure.config.database import get_async_session
+from infrastructure.config.dependencies import require_agent_or_admin
+from infrastructure.database.models import Property, Media
+from infrastructure.database.models.user import User, UserRole
+from application.dto.media import MediaCreate, MediaResponse
 
 router = APIRouter(prefix="/api/v1/media", tags=["Media"])
 

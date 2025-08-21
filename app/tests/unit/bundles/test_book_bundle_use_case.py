@@ -3,12 +3,12 @@ from unittest.mock import AsyncMock
 from decimal import Decimal
 from datetime import datetime
 
-from app.application.use_cases.bundle.book_bundle import BookBundleUseCase
-from app.application.dto.bundle_booking import CreateBundleBookingRequestDTO
-from app.domain.entities.bundle import Bundle
-from app.domain.entities.bundle_booking import BundleBooking, BookingStatus
-from app.domain.value_objects.money import Money
-from app.shared.exceptions.bundle import BundleNotFoundError
+from application.use_cases.bundle.book_bundle import BookBundleUseCase
+from application.dto.bundle_booking import CreateBundleBookingRequestDTO
+from domain.entities.bundle import Bundle
+from domain.entities.bundle_booking import BundleBooking, BookingStatus
+from domain.value_objects.money import Money
+from shared.exceptions.bundle import BundleNotFoundError
 
 @pytest.mark.asyncio
 async def test_book_bundle_use_case_success():

@@ -5,12 +5,16 @@ from sqlalchemy import engine_from_config, pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
+# Set Windows-compatible event loop policy for async PostgreSQL
+if hasattr(asyncio, 'WindowsSelectorEventLoopPolicy'):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 # Import our database base and models
-from core.database import Base
-from core.config import settings
+from infrastructure.config.database import Base
+from infrastructure.config.config import settings
 # Import models to ensure they are registered with Base.metadata
 # Import models to ensure they are registered with Base.metadata
-from models import (
+from infrastructure.database.models import (
     Property,
     PropertyDetails,
     PropertyStatusLog,

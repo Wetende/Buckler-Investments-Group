@@ -7,8 +7,8 @@ Exposes:
 
 from typing import Callable
 
-from core.auth import get_current_active_user, require_roles
-from models.user import UserRole
+from .auth import get_current_active_user, require_roles
+from infrastructure.database.models.user import UserRole
 
 # Base current-user dependency
 current_active_user = get_current_active_user

@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from decimal import Decimal
 
-from app.application.dto.property import MoneyDTO
-from app.domain.entities.investment import Investment, InvestmentHolding
+from application.dto.property import MoneyDTO
+from domain.entities.investment import Investment, InvestmentHolding
 
 class InvestmentResponseDTO(BaseModel):
     id: int

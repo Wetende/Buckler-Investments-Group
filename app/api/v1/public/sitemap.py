@@ -6,8 +6,8 @@ from fastapi.responses import Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.database import get_async_session
-from models import Property, Project, Article, AreaProfile
+from infrastructure.config.database import get_async_session
+from infrastructure.database.models import Property, Project, Article, AreaProfile
 
 
 router = APIRouter(tags=["Sitemap"])

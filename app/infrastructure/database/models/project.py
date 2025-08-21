@@ -7,7 +7,7 @@ from sqlalchemy import Integer, String, DateTime, Numeric, Float, JSON, ForeignK
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from core.database import Base
+from ...config.database import Base
 
 
 class Project(Base):

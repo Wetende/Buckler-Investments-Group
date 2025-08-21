@@ -1,5 +1,5 @@
 from typing import List
-from ....domain.repositories.cars import VehicleRepository
+from domain.repositories.cars import VehicleRepository
 from ...dto.cars import SearchVehiclesRequest, VehicleResponse
 
 class SearchVehiclesUseCase:

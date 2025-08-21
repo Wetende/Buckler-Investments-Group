@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Optional, List
 from pydantic import BaseModel, Field, ConfigDict
 
-from models.bnb_listing import StListingType, CancellationPolicy, BookingStatus
+from infrastructure.database.models.bnb_listing import StListingType, CancellationPolicy, BookingStatus
 
 
 class StListingRead(BaseModel):
@@ -109,6 +109,74 @@ class MessageRead(BaseModel):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Search and response DTOs for use cases
+class SearchListingsRequest(BaseModel):
+    check_in: date
+    check_out: date
+    guests: int
+    price_max: Optional[Decimal] = None
+    instant_book_only: bool = False
+    location: Optional[str] = None
+
+
+class ListingResponse(BaseModel):
+    id: int
+    title: str
+    type: str
+    capacity: int
+    nightly_price: Decimal
+    location: str
+    instant_book: bool
+    rating: Optional[float] = None
+    
+    @classmethod
+    def from_entity(cls, entity) -> 'ListingResponse':
+        return cls(
+            id=entity.id,
+            title=entity.title,
+            type=entity.type.value if hasattr(entity.type, 'value') else str(entity.type),
+            capacity=entity.capacity,
+            nightly_price=entity.nightly_price.amount,
+            location=entity.location,
+            instant_book=entity.instant_book,
+            rating=entity.rating
+        )
+
+
+class CreateBookingRequest(BaseModel):
+    listing_id: int
+    check_in: date
+    check_out: date
+    guests: int
+    guest_email: str
+    guest_phone: Optional[str] = None
+    special_requests: Optional[str] = None
+
+
+class BookingResponse(BaseModel):
+    id: int
+    listing_id: int
+    guest_id: int
+    check_in: date
+    check_out: date
+    guests: int
+    total_amount: Decimal
+    status: str
+    
+    @classmethod
+    def from_entity(cls, entity) -> 'BookingResponse':
+        return cls(
+            id=entity.id,
+            listing_id=entity.listing_id,
+            guest_id=entity.guest_id,
+            check_in=entity.check_in,
+            check_out=entity.check_out,
+            guests=entity.guests,
+            total_amount=entity.total_amount.amount,
+            status=entity.status.value if hasattr(entity.status, 'value') else str(entity.status)
+        )
 
 
 

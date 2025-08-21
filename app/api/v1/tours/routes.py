@@ -2,16 +2,16 @@ from typing import List
 from fastapi import APIRouter, Depends, status, HTTPException
 from dependency_injector.wiring import inject, Provide
 
-from app.api.containers import AppContainer
-from ....application.use_cases.tours.search_tours import SearchToursUseCase
-from ....application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
-from ....application.dto.tours import (
+from ...containers import AppContainer
+from application.use_cases.tours.search_tours import SearchToursUseCase
+from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
+from application.dto.tours import (
     SearchToursRequest,
     TourResponse,
     CreateTourBookingRequest,
     TourBookingResponse,
 )
-from ....shared.exceptions import TourNotFoundError
+from shared.exceptions import TourNotFoundError
 
 router = APIRouter()
 

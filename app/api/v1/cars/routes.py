@@ -2,16 +2,16 @@ from typing import List
 from fastapi import APIRouter, Depends, status, HTTPException
 from dependency_injector.wiring import inject, Provide
 
-from app.api.containers import AppContainer
-from ....application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
-from ....application.use_cases.cars.create_rental import CreateRentalUseCase
-from ....application.dto.cars import (
+from ...containers import AppContainer
+from application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
+from application.use_cases.cars.create_rental import CreateRentalUseCase
+from application.dto.cars import (
     SearchVehiclesRequest,
     VehicleResponse,
     CreateRentalRequest,
     RentalResponse,
 )
-from ....shared.exceptions import VehicleNotFoundError
+from shared.exceptions import VehicleNotFoundError
 
 router = APIRouter()
 

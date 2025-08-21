@@ -8,7 +8,7 @@ from typing import Optional
 from sqlalchemy import Integer, String, Text, DateTime, Enum as SQLEnum, UniqueConstraint, Index
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.database import Base
+from ...config.database import Base
 
 class ProviderType(str, Enum):
     EMAIL = "EMAIL"

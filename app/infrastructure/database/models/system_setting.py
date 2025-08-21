@@ -7,7 +7,7 @@ from typing import Optional
 from sqlalchemy import Integer, String, Text, DateTime, UniqueConstraint, Index
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.database import Base
+from ...config.database import Base
 
 
 class SystemSetting(Base):

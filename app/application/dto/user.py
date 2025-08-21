@@ -8,7 +8,7 @@ from fastapi_users import schemas
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
-from models.user import UserRole
+from infrastructure.database.models.user import UserRole
 
 
 class UserRead(schemas.BaseUser[int]):
@@ -59,3 +59,41 @@ class FavoriteResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# Use case DTOs
+class UserCreateDTO(BaseModel):
+    email: str
+    password: str
+    first_name: str
+    last_name: str
+    phone_number: Optional[str] = None
+
+
+class UserResponseDTO(BaseModel):
+    id: int
+    email: str
+    first_name: str
+    last_name: str
+    phone_number: Optional[str] = None
+    role: str
+    is_active: bool
+    created_at: datetime
+    
+    @classmethod
+    def from_entity(cls, entity) -> 'UserResponseDTO':
+        return cls(
+            id=entity.id,
+            email=entity.email,
+            first_name=entity.first_name,
+            last_name=entity.last_name,
+            phone_number=entity.phone_number,
+            role=entity.role.value if hasattr(entity.role, 'value') else str(entity.role),
+            is_active=entity.is_active,
+            created_at=entity.created_at
+        )
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from app.domain.entities.base import DomainEntity
+from .base import DomainEntity
 
 @dataclass
 class UserRole:

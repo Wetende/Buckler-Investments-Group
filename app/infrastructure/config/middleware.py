@@ -19,7 +19,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
 from .database import AsyncSessionLocal
-from ..database.models.audit_log import AuditLog, AuditAction
+from infrastructure.database.models.audit_log import AuditLog, AuditAction
 
 # ---------------------------------------------------------------------------
 # Rate limiting setup

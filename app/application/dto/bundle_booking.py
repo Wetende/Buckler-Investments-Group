@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 from .bundle import MoneyDTO
-from ...domain.entities.bundle_booking import BookingStatus
+from domain.entities.bundle_booking import BookingStatus
 
 class CreateBundleBookingRequestDTO(BaseModel):
     bundle_id: int

@@ -7,18 +7,18 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import and_, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import settings
-from core.database import get_async_session
-from models import AreaProfile, Developer, Project, Property
-from schemas.areas import AreaRead
-from schemas.developers import DeveloperRead
-from schemas.projects import ProjectRead, PaginatedProjects
-from schemas.property_schemas import (
+from infrastructure.config.config import settings
+from infrastructure.config.database import get_async_session
+from infrastructure.database.models import AreaProfile, Developer, Project, Property
+from application.dto.areas import AreaRead
+from application.dto.developers import DeveloperRead
+from application.dto.projects import ProjectRead, PaginatedProjects
+from application.dto.property_schemas import (
     PaginatedPropertyResponse,
     PropertySummaryResponse,
     PropertyDetailResponse,
 )
-from models import Property as PropertyModel, PropertyStatus
+from infrastructure.database.models import Property as PropertyModel, PropertyStatus
 
 
 router = APIRouter(tags=["Catalog"])
@@ -99,7 +99,7 @@ async def list_projects(
     badge: Optional[str] = Query(None, pattern="^(HOT|UPCOMING|BEST_VALUE)$"),
     session: AsyncSession = Depends(get_async_session),
 ):
-    from models import Project as ProjectModel
+    # Already imported at top
     conditions = []
     if developer_id is not None:
         conditions.append(ProjectModel.developer_id == developer_id)
@@ -170,7 +170,7 @@ async def list_projects(
 
 @router.get("/api/v1/public/projects/{slug}", response_model=ProjectRead)
 async def get_project(slug: str, session: AsyncSession = Depends(get_async_session)):
-    from models import Project as ProjectModel
+    # Already imported at top
     p = (await session.execute(select(ProjectModel).where(ProjectModel.slug == slug))).scalar_one_or_none()
     if not p:
         raise HTTPException(status_code=404, detail="Project not found")

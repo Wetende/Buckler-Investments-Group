@@ -1,7 +1,7 @@
-from ....domain.entities.cars import Vehicle, CarRental
-from ....infrastructure.database.models.vehicle import Vehicle as VehicleModel
-from ....infrastructure.database.models.car_rental import CarRental as CarRentalModel
-from ....domain.value_objects.money import Money
+from domain.entities.cars import Vehicle, CarRental
+from infrastructure.database.models.vehicle import Vehicle as VehicleModel
+from infrastructure.database.models.car_rental import CarRental as CarRentalModel
+from domain.value_objects.money import Money
 
 class CarMapper:
     @staticmethod
