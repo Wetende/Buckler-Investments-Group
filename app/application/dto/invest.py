@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Optional, List
 from pydantic import BaseModel, Field, ConfigDict
 
-from infrastructure.database.models.investment import OrderSide, OrderStatus
+from domain.value_objects.investment_enums import OrderSide, OrderStatus
 
 
 class ProductRead(BaseModel):

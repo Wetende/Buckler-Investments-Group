@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
 from decimal import Decimal
 from datetime import datetime
-from infrastructure.database.models.property import PropertyStatus
+from domain.value_objects.property_status import PropertyStatus
 
 class PropertySummaryResponse(BaseModel):
     id: int

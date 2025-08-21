@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Optional, List
 from pydantic import BaseModel, Field, ConfigDict
 
-from infrastructure.database.models.bnb_listing import StListingType, CancellationPolicy, BookingStatus
+from domain.value_objects.booking_status import StListingType, CancellationPolicy, BookingStatus
 
 
 class StListingRead(BaseModel):

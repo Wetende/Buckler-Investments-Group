@@ -16,18 +16,8 @@ from sqlalchemy.sql import func
 from ...config.database import Base
 
 
-class OrderSide(str, Enum):
-    BUY = "BUY"
-    SELL = "SELL"
-
-
-class OrderStatus(str, Enum):
-    PENDING = "PENDING"
-    SUBMITTED = "SUBMITTED"
-    FILLED = "FILLED"
-    CANCELED = "CANCELED"
-    REJECTED = "REJECTED"
-
+# Investment enums moved to domain.value_objects.investment_enums
+from domain.value_objects.investment_enums import OrderSide, OrderStatus
 
 class KycStatus(str, Enum):
     PENDING = "PENDING"

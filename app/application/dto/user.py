@@ -8,7 +8,7 @@ from fastapi_users import schemas
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
-from infrastructure.database.models.user import UserRole
+from domain.value_objects.user_role import UserRole
 
 
 class UserRead(schemas.BaseUser[int]):

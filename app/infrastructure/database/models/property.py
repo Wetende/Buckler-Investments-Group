@@ -24,16 +24,8 @@ from sqlalchemy.sql import func
 from ...config.database import Base
 
 
-class PropertyStatus(str, Enum):
-    """Property status enumeration."""
-    PENDING_APPROVAL = "PENDING_APPROVAL"
-    APPROVED = "APPROVED"
-    REJECTED = "REJECTED"
-    AVAILABLE = "AVAILABLE"
-    PENDING = "PENDING"
-    SOLD = "SOLD"
-    RENTED = "RENTED"
-    WITHDRAWN = "WITHDRAWN"
+# PropertyStatus moved to domain.value_objects.property_status
+from domain.value_objects.property_status import PropertyStatus
 
 
 class Property(Base):

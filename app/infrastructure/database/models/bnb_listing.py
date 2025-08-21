@@ -16,23 +16,8 @@ from sqlalchemy.sql import func
 from ...config.database import Base
 
 
-class StListingType(str, Enum):
-    ENTIRE = "ENTIRE"
-    PRIVATE = "PRIVATE"
-    SHARED = "SHARED"
-
-
-class CancellationPolicy(str, Enum):
-    FLEXIBLE = "FLEXIBLE"
-    MODERATE = "MODERATE"
-    STRICT = "STRICT"
-
-
-class BookingStatus(str, Enum):
-    PENDING = "PENDING"
-    CONFIRMED = "CONFIRMED"
-    CANCELED = "CANCELED"
-    COMPLETED = "COMPLETED"
+# Booking-related enums moved to domain.value_objects.booking_status
+from domain.value_objects.booking_status import StListingType, CancellationPolicy, BookingStatus
 
 
 class StListing(Base):

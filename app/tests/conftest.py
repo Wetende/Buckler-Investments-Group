@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock
 from fastapi.testclient import TestClient
 
 from main import app
-from containers import AppContainer
+from api.containers import AppContainer
 
 @pytest.fixture(scope="module")
 def client():

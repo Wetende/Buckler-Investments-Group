@@ -4,7 +4,6 @@ User model for the Property Listing Platform.
 This module defines the User model with role-based access control.
 """
 from datetime import datetime
-from enum import Enum
 from typing import List, Optional
 
 from sqlalchemy import Integer, String, DateTime, Enum as SQLEnum, Boolean
@@ -16,13 +15,7 @@ from .property import Property
 from .article import Article
 
 from ...config.database import Base
-
-
-class UserRole(str, Enum):
-    """User roles for the property listing platform."""
-    BUYER = "BUYER"
-    AGENT = "AGENT"
-    ADMIN = "ADMIN"
+from domain.value_objects.user_role import UserRole
 
 
 class User(Base):

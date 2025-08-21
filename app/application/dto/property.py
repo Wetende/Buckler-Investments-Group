@@ -7,7 +7,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel, Field, constr, condecimal, conint, ConfigDict
 
-from infrastructure.database.models.property import PropertyStatus
+from domain.value_objects.property_status import PropertyStatus
 
 
 class MoneyDTO(BaseModel):

@@ -44,6 +44,8 @@ from application.use_cases.property.create_property import CreatePropertyUseCase
 from application.use_cases.investment.list_investments import ListInvestmentsUseCase
 from application.use_cases.investment.make_investment import MakeInvestmentUseCase
 from application.use_cases.user.create_user import CreateUserUseCase
+from domain.services.password_service import PasswordService
+from infrastructure.services.bcrypt_password_service import BcryptPasswordService
 from application.use_cases.bundle.create_bundle import CreateBundleUseCase
 from application.use_cases.bundle.book_bundle import BookBundleUseCase
 
@@ -74,10 +76,12 @@ class BundleUseCases(containers.DeclarativeContainer):
 class UserUseCases(containers.DeclarativeContainer):
     """Container for user module use cases."""
     user_repository = providers.Dependency(instance_of=UserRepository)
+    password_service = providers.Dependency(instance_of=PasswordService)
 
     create_user_use_case = providers.Factory(
         CreateUserUseCase,
         user_repository=user_repository,
+        password_service=password_service,
     )
 
 
@@ -130,6 +134,11 @@ class AppContainer(containers.DeclarativeContainer):
     # Database
     db_session = providers.Resource(
         AsyncSessionLocal
+    )
+
+    # Services
+    password_service: providers.Factory[PasswordService] = providers.Factory(
+        BcryptPasswordService
     )
 
     # BNB Repositories
@@ -252,6 +261,7 @@ class AppContainer(containers.DeclarativeContainer):
     user_use_cases = providers.Container(
         UserUseCases,
         user_repository=user_repository,
+        password_service=password_service,
     )
 
     # Bundle Use Cases
