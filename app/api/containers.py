@@ -44,6 +44,10 @@ from application.use_cases.property.create_property import CreatePropertyUseCase
 from application.use_cases.investment.list_investments import ListInvestmentsUseCase
 from application.use_cases.investment.make_investment import MakeInvestmentUseCase
 from application.use_cases.user.create_user import CreateUserUseCase
+from application.use_cases.auth.refresh_token import RefreshTokenUseCase
+from application.use_cases.auth.logout import LogoutUseCase
+from application.use_cases.auth.password_reset import PasswordResetRequestUseCase, PasswordResetConfirmUseCase
+from application.use_cases.auth.change_password import ChangePasswordUseCase
 from domain.services.password_service import PasswordService
 from infrastructure.services.bcrypt_password_service import BcryptPasswordService
 from application.use_cases.bundle.create_bundle import CreateBundleUseCase
@@ -70,6 +74,39 @@ class BundleUseCases(containers.DeclarativeContainer):
         BookBundleUseCase,
         bundle_repo=bundle_repo,
         booking_repo=booking_repo,
+    )
+
+
+class AuthUseCases(containers.DeclarativeContainer):
+    """Container for authentication use cases."""
+    user_repository = providers.Dependency(instance_of=UserRepository)
+    password_service = providers.Dependency(instance_of=PasswordService)
+
+    refresh_token_use_case = providers.Factory(
+        RefreshTokenUseCase,
+        user_repository=user_repository,
+    )
+
+    logout_use_case = providers.Factory(
+        LogoutUseCase,
+        user_repository=user_repository,
+    )
+
+    password_reset_request_use_case = providers.Factory(
+        PasswordResetRequestUseCase,
+        user_repository=user_repository,
+    )
+
+    password_reset_confirm_use_case = providers.Factory(
+        PasswordResetConfirmUseCase,
+        user_repository=user_repository,
+        password_service=password_service,
+    )
+
+    change_password_use_case = providers.Factory(
+        ChangePasswordUseCase,
+        user_repository=user_repository,
+        password_service=password_service,
     )
 
 
@@ -124,10 +161,12 @@ class AppContainer(containers.DeclarativeContainer):
             "api.v1.bnb.routes",
             "api.v1.tours.routes",
             "api.v1.cars.routes",
-            "api.v1.property.routes",
-            "api.v1.investment.routes",
-            "api.v1.user.routes",
             "api.v1.bundle.routes",
+            "api.v1.property_listing.public_routes",
+            "api.v1.property_listing.admin_routes",
+            "api.v1.investment_platform.public_routes",
+            "api.v1.investment_platform.user_routes",
+            "api.v1.shared.user_routes",
         ]
     )
 
@@ -255,6 +294,13 @@ class AppContainer(containers.DeclarativeContainer):
         InvestmentUseCases,
         investment_repository=investment_repository,
         holding_repository=investment_holding_repository,
+    )
+
+    # Authentication Use Cases
+    auth_use_cases = providers.Container(
+        AuthUseCases,
+        user_repository=user_repository,
+        password_service=password_service,
     )
 
     # User Use Cases

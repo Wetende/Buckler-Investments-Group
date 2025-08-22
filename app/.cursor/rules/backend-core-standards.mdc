@@ -1,0 +1,58 @@
+---
+alwaysApply: true
+description: Core backend development standards for the super platform
+---
+
+# Super Platform Backend Standards
+
+## Project Overview
+This is a **super platform ecosystem** integrating Airbnb-style rentals, tour packages, property listings, investment opportunities, and car rentals into a unified marketplace targeting East Africa.
+
+## Architecture (Strict Onion Architecture)
+```
+API Layer → Application Layer → Domain Layer
+     ↑                ↑               ↑
+Infrastructure ──────┘              Core
+```
+
+## Core Principles
+- Follow **Onion Architecture** principles strictly
+- Use **dependency injection** for all external dependencies  
+- Maintain **clean separation** between layers
+- Write **type-safe** code with proper annotations
+- **ALL IDs must be integers (`int`)** - no UUIDs or strings
+- Only **GET** and **POST** HTTP methods allowed
+
+## HTTP Method Conventions
+- **POST**: All data mutations (create & update)
+  - Create: POST with `id: 0` in request body
+  - Update: POST with actual `id` in request body
+- **GET**: All data retrieval and deletion
+  - Retrieve: GET `/endpoint` or GET `/endpoint/{id}`
+  - Delete: GET `/endpoint/{id}/delete`
+
+## Required Dependencies
+```python
+# FastAPI core
+from fastapi import FastAPI, APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
+
+# Dependency injection
+from dependency_injector.wiring import inject, Provide
+from dependency_injector import containers, providers
+
+# Type hints
+from typing import List, Optional, Union
+from pydantic import BaseModel, ConfigDict
+
+# Async support
+import asyncio
+from sqlalchemy.ext.asyncio import AsyncSession
+```
+
+## FORBIDDEN Patterns
+- ❌ PUT, PATCH, DELETE HTTP methods
+- ❌ UUID or string IDs
+- ❌ Direct database access in API routes
+- ❌ Business logic in controllers
+- ❌ Cross-layer dependencies violations

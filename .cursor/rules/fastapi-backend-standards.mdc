@@ -1,0 +1,265 @@
+---
+alwaysApply: true
+description: FastAPI backend development standards and conventions
+---
+
+# FastAPI Backend Development Standards
+
+## Core Principles
+- Follow **Onion Architecture** principles strictly
+- Use **dependency injection** for all external dependencies
+- Maintain **clean separation** between layers
+- Write **type-safe** code with proper annotations
+
+## Architecture Layers (Onion Architecture)
+
+### 1. Domain Layer (Core - No Dependencies)
+```
+app/domain/
+├── entities/           # Pure business entities
+├── repositories/       # Abstract repository interfaces
+├── services/          # Domain services (business rules)
+└── value_objects/     # Value objects and enums
+```
+
+### 2. Application Layer (Use Cases)
+```
+app/application/
+├── use_cases/         # Business use cases
+├── dto/              # Data Transfer Objects
+└── interfaces/       # Service interfaces
+```
+
+### 3. Infrastructure Layer (External Dependencies)
+```
+app/infrastructure/
+├── database/         # SQLAlchemy models & repositories
+├── external_services/ # Third-party integrations
+└── config/          # Configuration
+```
+
+### 4. API Layer (Controllers - Outermost)
+```
+app/api/
+├── v1/              # Versioned API routes
+├── dependencies/    # FastAPI dependencies
+└── middleware/      # Request/response middleware
+```
+
+## ID Standards
+- **ALL IDs must be integers (`int`)** - no UUIDs or strings
+- Use `id: int` for all entity identifiers
+- Foreign keys must also be `int` type
+
+## HTTP Methods (Simplified Convention)
+We only use **GET** and **POST** methods:
+
+### POST Method Usage
+- **Create new record**: POST with `id: 0` in request body
+- **Update existing record**: POST with actual `id` in request body
+- All data mutations (create/update) use POST
+
+### GET Method Usage  
+- **Retrieve records**: GET `/endpoint` or GET `/endpoint/{id}`
+- **Delete records**: GET `/endpoint/{id}/delete`
+- All data retrieval and deletion use GET
+
+## FastAPI Route Structure
+
+### Path Operation Organization
+```python
+# Group routes by business domain
+from fastapi import APIRouter
+
+router = APIRouter(
+    prefix="/api/v1/domain",
+    tags=["domain"],
+    responses={404: {"description": "Not found"}},
+)
+```
+
+### Route Definition Standards
+```python
+# ✅ CORRECT: Use dependency injection from application layer
+@router.post("/", response_model=EntityResponseDTO)
+@inject
+async def create_or_update_entity(
+    request: EntityCreateUpdateDTO,
+    use_case: CreateEntityUseCase = Depends(Provide[AppContainer.entity_use_cases.create_entity_use_case]),
+) -> EntityResponseDTO:
+    return await use_case.execute(request)
+
+@router.get("/", response_model=List[EntityResponseDTO])
+@inject
+async def list_entities(
+    use_case: ListEntitiesUseCase = Depends(Provide[AppContainer.entity_use_cases.list_entities_use_case]),
+) -> List[EntityResponseDTO]:
+    return await use_case.execute()
+
+@router.get("/{entity_id}", response_model=EntityResponseDTO)
+@inject
+async def get_entity(
+    entity_id: int,
+    use_case: GetEntityUseCase = Depends(Provide[AppContainer.entity_use_cases.get_entity_use_case]),
+) -> EntityResponseDTO:
+    return await use_case.execute(entity_id)
+
+@router.get("/{entity_id}/delete", response_model=dict)
+@inject
+async def delete_entity(
+    entity_id: int,
+    use_case: DeleteEntityUseCase = Depends(Provide[AppContainer.entity_use_cases.delete_entity_use_case]),
+) -> dict:
+    await use_case.execute(entity_id)
+    return {"ok": True}
+```
+
+## Dependency Injection Requirements
+
+### Container Configuration
+```python
+# ✅ CORRECT: Proper layered dependency injection
+class AppContainer(containers.DeclarativeContainer):
+    # Infrastructure Layer
+    db_session = providers.Resource(AsyncSessionLocal)
+    entity_repository = providers.Factory(SqlAlchemyEntityRepository, session=db_session)
+    
+    # Application Layer  
+    entity_use_cases = providers.Container(
+        EntityUseCases,
+        entity_repository=entity_repository,  # Infrastructure → Application
+    )
+```
+
+### Route Dependency Injection
+```python
+# ✅ REQUIRED: All routes must use @inject decorator
+from dependency_injector.wiring import inject, Provide
+
+@router.post("/entities", response_model=EntityResponseDTO)
+@inject
+async def create_entity(
+    request: EntityCreateUpdateDTO,
+    use_case: CreateEntityUseCase = Depends(Provide[AppContainer.entity_use_cases.create_entity_use_case]),
+) -> EntityResponseDTO:
+    # Business logic is in use case, not in route
+    return await use_case.execute(request)
+```
+
+## Pydantic Models (DTOs)
+
+### Request Models
+```python
+# For create/update operations
+class EntityCreateUpdateDTO(BaseModel):
+    id: int = 0  # 0 for create, actual ID for update
+    name: str
+    description: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)
+```
+
+### Response Models
+```python
+class EntityResponseDTO(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    model_config = ConfigDict(from_attributes=True)
+```
+
+## Error Handling
+
+### Standard HTTP Exceptions
+```python
+from fastapi import HTTPException
+
+# 404 for not found
+if not entity:
+    raise HTTPException(status_code=404, detail="Entity not found")
+
+# 400 for bad request
+if entity_id <= 0:
+    raise HTTPException(status_code=400, detail="Invalid entity ID")
+```
+
+## Type Annotations
+
+### Function Signatures
+```python
+# ✅ REQUIRED: Full type annotations
+async def create_entity(
+    entity_data: EntityCreateUpdateDTO,
+    repository: EntityRepository
+) -> EntityResponseDTO:
+    # Implementation
+```
+
+### Database Models
+```python
+# ✅ REQUIRED: SQLAlchemy with type hints
+class EntityModel(Base):
+    __tablename__ = "entities"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+```
+
+## FORBIDDEN Patterns
+
+### ❌ DO NOT: Direct database access in routes
+```python
+# ❌ WRONG: Never access database directly in routes
+@router.post("/entities")
+async def create_entity(session: Session = Depends(get_session)):
+    # Direct database access - FORBIDDEN
+```
+
+### ❌ DO NOT: Business logic in routes
+```python
+# ❌ WRONG: Business logic belongs in use cases
+@router.post("/entities")
+async def create_entity(request: EntityDTO):
+    # Complex business logic here - FORBIDDEN
+    if complex_business_rule():
+        # This belongs in domain/use cases
+```
+
+### ❌ DO NOT: Non-integer IDs
+```python
+# ❌ WRONG: All IDs must be int
+class Entity(BaseModel):
+    id: str  # FORBIDDEN
+    id: UUID  # FORBIDDEN
+```
+
+### ❌ DO NOT: Other HTTP methods
+```python
+# ❌ WRONG: Only GET and POST allowed
+@router.put("/entities/{id}")  # FORBIDDEN
+@router.patch("/entities/{id}")  # FORBIDDEN 
+@router.delete("/entities/{id}")  # FORBIDDEN
+```
+
+## Required Dependencies
+```python
+# FastAPI core
+from fastapi import FastAPI, APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
+
+# Dependency injection
+from dependency_injector.wiring import inject, Provide
+from dependency_injector import containers, providers
+
+# Type hints
+from typing import List, Optional, Union
+from pydantic import BaseModel, ConfigDict
+
+# Async support
+import asyncio
+from sqlalchemy.ext.asyncio import AsyncSession
+```

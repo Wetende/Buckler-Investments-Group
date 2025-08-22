@@ -1,0 +1,108 @@
+---
+alwaysApply: true
+description: Infrastructure layer implementation patterns
+globs: infrastructure/**/*.py
+---
+
+# Infrastructure Layer - External Dependencies
+
+## Layer Purpose
+Infrastructure layer implements domain interfaces and handles all external dependencies (databases, APIs, services).
+
+## ✅ ALLOWED in Infrastructure Layer
+- Domain and Application layer imports
+- SQLAlchemy, databases, external APIs
+- Configuration and services
+- Implement domain interfaces
+- Third-party library integrations
+
+## ✅ CORRECT Repository Implementation
+```python
+# infrastructure/database/repositories/property_repository.py
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from domain.entities.property.property import Property
+from domain.repositories.property import PropertyRepository  # Abstract interface
+from infrastructure.database.models.property import PropertyModel
+
+class SqlAlchemyPropertyRepository(PropertyRepository):
+    def __init__(self, session: AsyncSession):
+        self._session = session
+    
+    async def create(self, property_entity: Property) -> Property:
+        # Convert domain entity to SQLAlchemy model
+        model = PropertyModel(
+            title=property_entity.title,
+            price=property_entity.price.amount,
+            location=property_entity.location
+        )
+        
+        self._session.add(model)
+        await self._session.commit()
+        await self._session.refresh(model)
+        
+        # Convert back to domain entity
+        return Property(
+            id=model.id,
+            title=model.title,
+            price=Money(model.price),
+            location=model.location
+        )
+```
+
+## Database Models
+```python
+# infrastructure/database/models/property.py
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Integer, String, Numeric
+
+class PropertyModel(Base):
+    __tablename__ = "properties"
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)        # ✅ Required
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    price: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))  # ✅ FK as int
+```
+
+## External Service Patterns
+```python
+# infrastructure/external_services/payment/stripe_service.py
+import stripe
+from domain.value_objects.money import Money
+
+class StripePaymentService:
+    def __init__(self, api_key: str):
+        stripe.api_key = api_key
+    
+    async def create_payment_intent(self, amount: Money, metadata: dict) -> str:
+        # Implement external API call
+        intent = stripe.PaymentIntent.create(
+            amount=int(amount.amount * 100),  # Convert to cents
+            currency=amount.currency.lower(),
+            metadata=metadata
+        )
+        return intent.id
+```
+
+## Configuration
+```python
+# infrastructure/config/database.py
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+
+class DatabaseConfig:
+    def __init__(self, database_url: str):
+        self.engine = create_async_engine(database_url)
+        self.session_factory = sessionmaker(
+            bind=self.engine,
+            class_=AsyncSession,
+            expire_on_commit=False
+        )
+```
+
+## ID Standards in Infrastructure
+- All primary keys must be `INTEGER` in database schema
+- Foreign keys must reference integer primary keys
+- No UUID columns allowed
+- Auto-increment for primary keys

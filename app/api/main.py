@@ -20,8 +20,6 @@ from infrastructure.config.config import settings
 from fastapi.openapi.utils import get_openapi
 
 from .containers import AppContainer
-from .v1.api import api_router
-from .v1.auth import router as auth_router
 from .v1.favorites import router as favorites_router
 
 # Create FastAPI application
@@ -39,15 +37,7 @@ app = FastAPI(
 # Create and wire container
 container = AppContainer()
 app.container = container
-container.wire(modules=[
-    "api.v1.bnb.routes",
-    "api.v1.tours.routes",
-    "api.v1.cars.routes",
-    "api.v1.property.routes",
-    "api.v1.investment.routes",
-    "api.v1.user.routes",
-    "api.v1.bundle.routes",
-])
+# Wiring is now configured in the container's wiring_config
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -103,44 +93,39 @@ async def root():
         }
     )
 
-# Include authentication router
-app.include_router(auth_router)
+# Import new business-focused router structure
+from .v1.property_listing import router as property_router
+from .v1.investment_platform import router as investment_router
+from .v1.shared import router as shared_router
 
-# Property routers
-from .v1.admin.user_routes import router as admin_user_router
+# Import additional business routers
+from .v1.tours import router as tours_router
+from .v1.cars import router as cars_router
+from .v1.bnb import router as bnb_router
 
-from .v1.properties_all import router as properties_all_router
-from .v1.catalog import router as catalog_router
-from .v1.media import router as media_router
-from .v1.profile import router as profile_router
+# Import remaining routers that are already well-organized
 from .v1.public.article_routes import router as public_article_router
-from .v1.admin.dashboard import router as admin_dashboard_router
-from .v1.settings_unified import router as settings_router
-from .v1.gdpr import router as gdpr_router
-from .v1.notifications_unified import router as notifications_router
-from .v1.invest import router as invest_router
 from .v1.public.sitemap import router as sitemap_router
-from .v1.areas import router as areas_router
-from .v1.developers import router as developers_router
-from .v1.projects_unified import router as projects_router
+from .v1.notifications_unified import router as notifications_router
+from .v1.settings_unified import router as settings_router
 
-app.include_router(admin_user_router)
+# Include business domain routers
+app.include_router(property_router, prefix="/api/v1/property")
+app.include_router(investment_router, prefix="/api/v1/investment")
+app.include_router(shared_router, prefix="/api/v1")
 
-app.include_router(properties_all_router)
-app.include_router(catalog_router)
-app.include_router(public_article_router)
-app.include_router(media_router)
-app.include_router(profile_router)
-app.include_router(admin_dashboard_router)
-app.include_router(settings_router)
-app.include_router(gdpr_router)
-app.include_router(notifications_router)
+# Include additional business routers
+app.include_router(tours_router, prefix="/api/v1/tours", tags=["Tours"])
+app.include_router(cars_router, prefix="/api/v1/cars", tags=["Cars"])
+app.include_router(bnb_router, prefix="/api/v1/bnb", tags=["BnB"])
+
+# Include favorites router
 app.include_router(favorites_router)
-app.include_router(areas_router)
-app.include_router(developers_router)
-app.include_router(projects_router)
-app.include_router(api_router, prefix="/api/v1")
-app.include_router(invest_router)
+
+# Include remaining standalone routers
+app.include_router(public_article_router)
+app.include_router(notifications_router)
+app.include_router(settings_router)
 app.include_router(sitemap_router)
 
 # Add middlewares (order matters)

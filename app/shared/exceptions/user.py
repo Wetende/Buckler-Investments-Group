@@ -5,3 +5,8 @@ class UserException(Exception):
 class UserAlreadyExistsError(UserException):
     """Raised when a user with the given email already exists."""
     pass
+
+
+class UserNotFoundError(UserException):
+    """Raised when a user is not found."""
+    pass

@@ -1,0 +1,146 @@
+---
+alwaysApply: true
+description: Shared utilities and cross-cutting concerns
+globs: shared/**/*.py
+---
+
+# Shared Utilities & Cross-cutting Concerns
+
+## Purpose
+The shared folder contains utilities, exceptions, events, and mappers used across all domains.
+
+## Structure
+```
+shared/
+├── constants/           # Business constants and enums
+├── events/             # Domain events for the event system
+├── exceptions/         # Custom exceptions by domain
+├── mappers/           # Entity-to-DTO conversion utilities
+└── utils/             # Utility functions
+```
+
+## Constants & Enums
+```python
+# shared/constants/booking_status.py
+class BookingStatus(str, Enum):
+    PENDING = "PENDING"
+    CONFIRMED = "CONFIRMED"
+    CANCELLED = "CANCELLED"
+    COMPLETED = "COMPLETED"
+
+class PaymentStatus(str, Enum):
+    PENDING = "PENDING"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    REFUNDED = "REFUNDED"
+```
+
+## Domain Events
+```python
+# shared/events/booking_events.py
+@dataclass
+class BookingCreatedEvent(DomainEvent):
+    booking_id: int
+    user_id: int
+    booking_type: str  # 'bnb', 'tour', 'vehicle', 'property'
+    item_id: int
+    total_amount: Decimal
+    currency: str
+    start_date: date
+```
+
+## Custom Exceptions
+```python
+# shared/exceptions/property.py
+class PropertyException(Exception):
+    """Base exception for property domain"""
+    pass
+
+class PropertyNotFoundError(PropertyException):
+    def __init__(self, property_id: int):
+        super().__init__(f"Property with ID {property_id} not found")
+        self.property_id = property_id
+```
+
+## Mappers
+```python
+# shared/mappers/property.py
+class PropertyMapper:
+    @staticmethod
+    def entity_to_dto(entity: Property) -> PropertyResponseDTO:
+        return PropertyResponseDTO(
+            id=entity.id,
+            title=entity.title,
+            price=entity.listing_price.amount,
+            currency=entity.listing_price.currency,
+            address=entity.address
+        )
+    
+    @staticmethod
+    def dto_to_entity(dto: PropertyCreateDTO) -> Property:
+        return Property(
+            id=dto.id,
+            title=dto.title,
+            listing_price=Money(dto.price, dto.currency or "KES"),
+            address=dto.address
+        )
+```
+
+## Utility Functions
+```python
+# shared/utils/slug_utils.py
+def create_slug(text: str, max_length: int = 50) -> str:
+    """Create URL-friendly slug from text"""
+    # Remove special characters, convert to lowercase
+    slug = re.sub(r'[^a-zA-Z0-9\s-]', '', text.lower())
+    slug = re.sub(r'\s+', '-', slug.strip())
+    return slug[:max_length].rstrip('-')
+
+# shared/utils/money_utils.py
+def calculate_total(amounts: List[Money]) -> Money:
+    """Calculate total of money amounts"""
+    if not amounts:
+        return Money(Decimal('0'), 'KES')
+    
+    currency = amounts[0].currency
+    total = sum(amount.amount for amount in amounts)
+    return Money(total, currency)
+```
+
+## Validation Utilities
+```python
+# shared/utils/validation.py
+def validate_kenyan_phone(phone: str) -> bool:
+    """Validate Kenyan phone number format"""
+    pattern = r'^(\+254|254|0)?[7][0-9]{8}$'
+    return bool(re.match(pattern, phone))
+
+def validate_coordinates(lat: float, lng: float) -> bool:
+    """Validate GPS coordinates for Kenya"""
+    # Kenya bounds: lat -4.7 to 5.0, lng 33.9 to 41.9
+    return -4.7 <= lat <= 5.0 and 33.9 <= lng <= 41.9
+```
+
+## Logging Utilities
+```python
+# shared/utils/logging.py
+import structlog
+
+def log_booking_event(event_type: str, booking_id: int, user_id: int):
+    """Log booking-related events"""
+    logger = structlog.get_logger()
+    logger.info(
+        "Booking event",
+        event_type=event_type,
+        booking_id=booking_id,
+        user_id=user_id,
+        timestamp=datetime.utcnow().isoformat()
+    )
+```
+
+## Usage Guidelines
+- Keep utilities pure functions when possible
+- Avoid dependencies on other layers
+- Make utilities testable and reusable
+- Use type hints for all utility functions
+- Follow single responsibility principle

@@ -63,20 +63,19 @@ class FavoriteResponse(BaseModel):
 
 # Use case DTOs
 class UserCreateDTO(BaseModel):
-    email: str
+    email: EmailStr
     password: str
-    first_name: str
-    last_name: str
-    phone_number: Optional[str] = None
+    name: str
+    phone: Optional[str] = None
+    role: Optional[UserRole] = UserRole.BUYER
 
 
 class UserResponseDTO(BaseModel):
     id: int
     email: str
-    first_name: str
-    last_name: str
-    phone_number: Optional[str] = None
-    role: str
+    name: str
+    phone: Optional[str] = None
+    role: UserRole
     is_active: bool
     created_at: datetime
     
@@ -97,3 +96,38 @@ class UserResponseDTO(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    expires_in: int = 900  # 15 minutes in seconds
+    refresh_token: Optional[str] = None
+
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int = 900
+    refresh_token: Optional[str] = None
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str = Field(..., min_length=8, description="New password (minimum 8 characters)")
+
+
+class ChangePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str = Field(..., min_length=8, description="New password (minimum 8 characters)")
+
+
+class GenericResponse(BaseModel):
+    ok: bool = True
+    message: Optional[str] = None
+
+
+# Models are automatically built by Pydantic v2

@@ -1,20 +1,25 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
+from dataclasses import dataclass
+from typing import Optional
 
 from .base import DomainEntity
-
-@dataclass
-class UserRole:
-    name: str
-    permissions: List[str] = field(default_factory=list)
+from domain.value_objects.user_role import UserRole
 
 @dataclass
 class User(DomainEntity):
     email: str
     hashed_password: str
-    full_name: Optional[str] = None
+    full_name: str
     is_active: bool = True
-    roles: List[UserRole] = field(default_factory=list)
+    role: UserRole = UserRole.BUYER
+    phone_number: Optional[str] = None
+    agent_license_id: Optional[str] = None
+    agency_name: Optional[str] = None
 
     def is_agent(self) -> bool:
-        return any(role.name == 'agent' for role in self.roles)
+        return self.role == UserRole.AGENT
+    
+    def is_admin(self) -> bool:
+        return self.role == UserRole.ADMIN
+    
+    def is_buyer(self) -> bool:
+        return self.role == UserRole.BUYER

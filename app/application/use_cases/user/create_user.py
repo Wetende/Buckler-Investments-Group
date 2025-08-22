@@ -1,7 +1,9 @@
+from datetime import datetime
 from application.dto.user import UserCreateDTO, UserResponseDTO
 from domain.entities.user import User
 from domain.repositories.user import UserRepository
 from domain.services.password_service import PasswordService
+from domain.value_objects.user_role import UserRole
 from shared.exceptions.user import UserAlreadyExistsError
 
 class CreateUserUseCase:
@@ -18,11 +20,14 @@ class CreateUserUseCase:
 
         new_user = User(
             id=0, # Set by repository
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email=user_data.email,
             hashed_password=hashed_password,
-            full_name=user_data.full_name,
+            full_name=user_data.name,
             is_active=True,
-            roles=[] # Default roles can be assigned here if needed
+            role=user_data.role if user_data.role else UserRole.BUYER,
+            phone_number=user_data.phone,
         )
 
         created_user = await self._user_repository.create(new_user)
@@ -30,7 +35,9 @@ class CreateUserUseCase:
         return UserResponseDTO(
             id=created_user.id,
             email=created_user.email,
-            full_name=created_user.full_name,
+            name=created_user.full_name,
+            phone=created_user.phone_number,
+            role=created_user.role,
             is_active=created_user.is_active,
-            roles=[role.name for role in created_user.roles]
+            created_at=created_user.created_at
         )

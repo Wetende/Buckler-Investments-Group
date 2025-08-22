@@ -1,0 +1,94 @@
+---
+alwaysApply: true
+description: Domain layer purity rules - no external dependencies allowed
+globs: domain/**/*.py
+---
+
+# Domain Layer Purity Rules
+
+## Core Principle
+The domain layer is the **innermost layer** and must have **ZERO external dependencies**.
+
+## ✅ ALLOWED in Domain Layer
+- Pure Python classes and functions
+- Business logic and rules
+- Abstract interfaces (from abc)
+- Standard library imports only
+- Other domain layer imports
+- Value objects and enums
+- Domain entities with business methods
+
+## ❌ FORBIDDEN in Domain Layer
+```python
+# ❌ NO FastAPI imports
+from fastapi import ...
+
+# ❌ NO SQLAlchemy models  
+from sqlalchemy import ...
+
+# ❌ NO external service imports
+import requests
+import boto3
+
+# ❌ NO infrastructure imports
+from infrastructure.database import ...
+
+# ❌ NO API layer imports
+from api.v1 import ...
+
+# ❌ NO application layer imports
+from application.dto import ...
+```
+
+## ✅ CORRECT Domain Entity Example
+```python
+# domain/entities/property/property.py
+from abc import ABC
+from datetime import datetime
+from typing import Optional, List
+from ..value_objects.money import Money
+from ..value_objects.property_enums import PropertyType, PropertyStatus
+
+class Property:
+    """Pure business entity with no external dependencies"""
+    
+    def __init__(self, id: int, title: str, price: Money, location: str):
+        self.id = id
+        self.title = title
+        self.price = price
+        self.location = location
+        self.status = PropertyStatus.DRAFT
+    
+    def publish(self) -> None:
+        """Business rule: can only publish if all required fields are set"""
+        if not self.title or not self.location:
+            raise ValueError("Cannot publish property without title and location")
+        self.status = PropertyStatus.PUBLISHED
+    
+    def calculate_monthly_payment(self, interest_rate: float, years: int) -> Money:
+        """Pure business calculation"""
+        # Business logic here
+        pass
+```
+
+## Repository Interfaces
+```python
+# domain/repositories/property.py
+from abc import ABC, abstractmethod
+from typing import List, Optional
+from ..entities.property.property import Property
+
+class PropertyRepository(ABC):
+    @abstractmethod
+    async def create(self, entity: Property) -> Property:
+        pass
+    
+    @abstractmethod
+    async def get_by_id(self, id: int) -> Optional[Property]:
+        pass
+```
+
+## ID Standards
+- All domain entities must use `id: int`
+- No UUID, string, or optional IDs allowed
+- Foreign key references must be `int` type

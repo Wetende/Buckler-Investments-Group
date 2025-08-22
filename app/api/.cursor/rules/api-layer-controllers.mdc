@@ -1,0 +1,129 @@
+---
+alwaysApply: true
+description: API layer controller patterns and HTTP conventions
+globs: api/**/*.py
+---
+
+# API Layer - Controllers & Routes
+
+## Layer Purpose
+API layer handles HTTP concerns and delegates to application layer use cases.
+
+## Route Structure by Business Domain
+```
+app/api/v1/
+├── property_listing/     # All property functionality
+├── investment_platform/  # All investment functionality  
+├── shared/              # Cross-cutting concerns (auth, users, media)
+├── tours/               # Tour packages
+├── cars/                # Vehicle rentals
+└── bnb/                 # Short-term rentals
+```
+
+## HTTP Method Conventions (ONLY GET & POST)
+
+### ✅ CORRECT Route Definitions
+```python
+# api/v1/property_listing/public_routes.py
+from fastapi import APIRouter, Depends
+from dependency_injector.wiring import inject, Provide
+from application.use_cases.property.create_property import CreatePropertyUseCase
+from application.dto.property import PropertyCreateDTO, PropertyResponseDTO
+
+router = APIRouter()
+
+# POST: Create or update (id=0 for create, id>0 for update)
+@router.post("/", response_model=PropertyResponseDTO)
+@inject
+async def create_or_update_property(
+    request: PropertyCreateDTO,
+    use_case: CreatePropertyUseCase = Depends(Provide[AppContainer.property_use_cases.create_property_use_case]),
+) -> PropertyResponseDTO:
+    return await use_case.execute(request)
+
+# GET: Retrieve single entity
+@router.get("/{property_id}", response_model=PropertyResponseDTO)
+@inject
+async def get_property(
+    property_id: int,
+    use_case: GetPropertyUseCase = Depends(Provide[AppContainer.property_use_cases.get_property_use_case]),
+) -> PropertyResponseDTO:
+    return await use_case.execute(property_id)
+
+# GET: List entities
+@router.get("/", response_model=List[PropertyResponseDTO])
+@inject
+async def list_properties(
+    use_case: ListPropertiesUseCase = Depends(Provide[AppContainer.property_use_cases.list_properties_use_case]),
+) -> List[PropertyResponseDTO]:
+    return await use_case.execute()
+
+# GET: Delete entity (using GET method)
+@router.get("/{property_id}/delete", response_model=dict)
+@inject
+async def delete_property(
+    property_id: int,
+    use_case: DeletePropertyUseCase = Depends(Provide[AppContainer.property_use_cases.delete_property_use_case]),
+) -> dict:
+    await use_case.execute(property_id)
+    return {"ok": True, "property_id": property_id}
+```
+
+## ❌ FORBIDDEN HTTP Methods
+```python
+# ❌ WRONG: These methods are not allowed
+@router.put("/{entity_id}")     # FORBIDDEN
+@router.patch("/{entity_id}")   # FORBIDDEN
+@router.delete("/{entity_id}")  # FORBIDDEN
+```
+
+## Router Organization
+```python
+# Group routes by business domain
+router = APIRouter(
+    prefix="/api/v1/property",
+    tags=["Property Listing"],
+    responses={404: {"description": "Not found"}},
+)
+```
+
+## Dependency Injection (REQUIRED)
+```python
+# ✅ REQUIRED: All routes must use @inject decorator
+@router.post("/entities", response_model=EntityResponseDTO)
+@inject
+async def create_entity(
+    request: EntityCreateUpdateDTO,
+    use_case: CreateEntityUseCase = Depends(Provide[AppContainer.entity_use_cases.create_entity_use_case]),
+) -> EntityResponseDTO:
+    # Controller just orchestrates - no business logic
+    return await use_case.execute(request)
+```
+
+## Request/Response Patterns
+
+### Create/Update Request Body
+```python
+# For create: {"id": 0, "name": "New Entity", ...}
+# For update: {"id": 123, "name": "Updated Entity", ...}
+```
+
+### Error Handling
+```python
+from fastapi import HTTPException
+
+# 404 for not found
+if not entity:
+    raise HTTPException(status_code=404, detail="Entity not found")
+
+# 400 for bad request
+if entity_id <= 0:
+    raise HTTPException(status_code=400, detail="Invalid entity ID")
+```
+
+## Controller Responsibilities
+- Handle HTTP requests/responses
+- Validate request data (via Pydantic)
+- Delegate to use cases
+- Return appropriate HTTP status codes
+- NO business logic in controllers

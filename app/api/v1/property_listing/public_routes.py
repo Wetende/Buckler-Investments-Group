@@ -1,0 +1,222 @@
+"""
+Public property routes - accessible without authentication.
+
+Consolidated from:
+- properties_all.py (public endpoints)
+- property/routes.py (search functionality)
+"""
+from __future__ import annotations
+
+from decimal import Decimal
+from typing import List, Optional
+
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
+from sqlalchemy import and_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from dependency_injector.wiring import inject, Provide
+
+from infrastructure.config.database import get_async_session
+from infrastructure.config.config import settings
+from infrastructure.database.models import Property, PropertyStatus
+from application.dto.property_schemas import (
+    PaginatedPropertyResponse,
+    PropertySummaryResponse,
+    PropertyDetailResponse,
+)
+from application.dto.property import (
+    PropertyResponseDTO, 
+    SearchPropertiesRequestDTO
+)
+from application.use_cases.property.search_properties import SearchPropertiesUseCase
+from api.containers import AppContainer
+
+router = APIRouter()
+
+# Property search using use case pattern
+@router.post("/search")
+@inject  
+async def search_properties(
+    request: dict = Body(...),
+    use_case: SearchPropertiesUseCase = Depends(Provide[AppContainer.property_use_cases.search_properties_use_case]),
+):
+    """Search properties using business use case."""
+    # Convert dict to DTO for the use case
+    search_dto = SearchPropertiesRequestDTO(**request)
+    return await use_case.execute(search_dto)
+
+# Public property listings with pagination
+@router.get("/", response_model=PaginatedPropertyResponse)
+async def list_properties(
+    page_size: int = Query(20, ge=1, le=100),
+    cursor: Optional[str] = Query(None),
+    property_type_id: Optional[int] = None,
+    min_price: Optional[Decimal] = None,
+    max_price: Optional[Decimal] = None,
+    status: PropertyStatus = PropertyStatus.AVAILABLE,
+    min_bedrooms: Optional[int] = Query(None, ge=0),
+    min_bathrooms: Optional[int] = Query(None, ge=0),
+    latitude: Optional[float] = None,
+    longitude: Optional[float] = None,
+    radius: Optional[int] = Query(None, description="Search radius in km"),
+    sort_by: str = Query("newest", pattern="^(price_asc|price_desc|newest)$"),
+    project_id: Optional[int] = None,
+    session: AsyncSession = Depends(get_async_session),
+):
+    """List available properties with filtering and pagination."""
+    conditions = [Property.status == status]
+    if property_type_id:
+        conditions.append(Property.property_type_id == property_type_id)
+    if project_id is not None:
+        conditions.append(Property.project_id == project_id)
+    if min_price is not None:
+        conditions.append(Property.price >= min_price)
+    if max_price is not None:
+        conditions.append(Property.price <= max_price)
+    if min_bedrooms is not None:
+        conditions.append(Property.bedrooms >= min_bedrooms)
+    if min_bathrooms is not None:
+        conditions.append(Property.bathrooms >= min_bathrooms)
+
+    def decode_cursor(cursor: Optional[str]) -> Optional[int]:
+        if not cursor:
+            return None
+        import base64, json
+        try:
+            payload = json.loads(base64.urlsafe_b64decode(cursor.encode()).decode())
+            return int(payload.get("last_id"))
+        except Exception:
+            return None
+
+    last_id = decode_cursor(cursor)
+    if last_id is not None:
+        conditions.append(Property.id > last_id)
+
+    if latitude is not None and longitude is not None and radius is not None:
+        all_props_stmt = select(Property).where(and_(*conditions))
+        all_props_res = await session.execute(all_props_stmt)
+        all_props = all_props_res.scalars().all()
+        from math import radians, cos, sin, asin, sqrt
+        def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+            lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+            dlon, dlat = lon2 - lon1, lat2 - lat1
+            a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+            return 6371 * (2 * asin(sqrt(a)))
+        props = [p for p in all_props if p.latitude is not None and p.longitude is not None and haversine(latitude, longitude, p.latitude, p.longitude) <= radius]
+    else:
+        stmt = select(Property).where(and_(*conditions))
+        if sort_by == "price_asc":
+            stmt = stmt.order_by(Property.price.asc())
+        elif sort_by == "price_desc":
+            stmt = stmt.order_by(Property.price.desc())
+        else:
+            stmt = stmt.order_by(Property.created_at.desc())
+        stmt = stmt.limit(page_size + 1)
+        res = await session.execute(stmt)
+        props = res.scalars().all()
+
+    has_more = len(props) > page_size
+    if has_more:
+        props = props[:-1]
+
+    kes_per_usd = Decimal(str(getattr(settings, "KES_PER_USD", 130.0)))
+    items = []
+    for p in props:
+        price_usd = (p.price / kes_per_usd).quantize(Decimal("0.01")) if p.price else None
+        items.append(PropertySummaryResponse(
+            id=p.id,
+            title=p.title,
+            price=p.price,
+            price_usd=price_usd,
+            address=p.address,
+            main_image_url=(p.images[0] if p.images else None),
+            bedrooms=p.bedrooms,
+            bathrooms=p.bathrooms,
+        ))
+
+    def encode_cursor(last_id: int) -> str:
+        import base64, json
+        return base64.urlsafe_b64encode(json.dumps({"last_id": last_id}).encode()).decode()
+
+    return PaginatedPropertyResponse(
+        items=items,
+        cursor=encode_cursor(props[-1].id) if props and has_more else None,
+        has_more=has_more,
+    )
+
+# Property detail
+@router.get("/{property_id}", response_model=PropertyDetailResponse)
+async def get_property_detail(property_id: int, session: AsyncSession = Depends(get_async_session)):
+    """Get detailed information about a specific property."""
+    res = await session.execute(select(Property).where(Property.id == property_id))
+    prop = res.scalar_one_or_none()
+    if prop is None or prop.status != PropertyStatus.AVAILABLE:
+        raise HTTPException(status_code=404, detail="Property not found")
+    kes_per_usd = Decimal(str(getattr(settings, "KES_PER_USD", 130.0)))
+    price_usd = (prop.price / kes_per_usd).quantize(Decimal("0.01")) if prop.price else None
+    return PropertyDetailResponse(
+        id=prop.id,
+        title=prop.title,
+        price=prop.price,
+        price_usd=price_usd,
+        address=prop.address,
+        main_image_url=(prop.images[0] if prop.images else None),
+        bedrooms=prop.bedrooms,
+        bathrooms=prop.bathrooms,
+        description=prop.description,
+        status=prop.status,
+        latitude=prop.latitude,
+        longitude=prop.longitude,
+        amenities=prop.amenities,
+        images=prop.images,
+        agent_id=prop.agent_id,
+        created_at=prop.created_at,
+        updated_at=prop.updated_at,
+    )
+
+# Recently listed properties
+@router.get("/recently-listed", response_model=PaginatedPropertyResponse)
+async def recently_listed(
+    page_size: int = Query(20, ge=1, le=100), 
+    cursor: Optional[str] = Query(None), 
+    session: AsyncSession = Depends(get_async_session)
+):
+    """Get recently listed properties."""
+    def decode_cursor(cursor: Optional[str]) -> Optional[int]:
+        if not cursor:
+            return None
+        import base64, json
+        try:
+            payload = json.loads(base64.urlsafe_b64decode(cursor.encode()).decode())
+            return int(payload.get("last_id"))
+        except Exception:
+            return None
+    last_id = decode_cursor(cursor)
+    conditions = [Property.status == PropertyStatus.AVAILABLE]
+    if last_id:
+        conditions.append(Property.id > last_id)
+    stmt = select(Property).where(and_(*conditions)).order_by(Property.created_at.desc()).limit(page_size + 1)
+    res = await session.execute(stmt)
+    props = res.scalars().all()
+    kes_per_usd = Decimal(str(getattr(settings, "KES_PER_USD", 130.0)))
+    items = []
+    for p in props[:page_size]:
+        price_usd = (p.price / kes_per_usd).quantize(Decimal("0.01")) if p.price else None
+        items.append(PropertySummaryResponse(
+            id=p.id,
+            title=p.title,
+            price=p.price,
+            price_usd=price_usd,
+            address=p.address,
+            main_image_url=(p.images[0] if p.images else None),
+            bedrooms=p.bedrooms,
+            bathrooms=p.bathrooms,
+        ))
+    has_more = len(props) > page_size
+    def encode_cursor(last_id: int) -> str:
+        import base64, json
+        return base64.urlsafe_b64encode(json.dumps({"last_id": last_id}).encode()).decode()
+    return PaginatedPropertyResponse(
+        items=items, 
+        cursor=encode_cursor(props[page_size - 1].id) if props and has_more else None, 
+        has_more=has_more
+    )

@@ -1,0 +1,131 @@
+---
+alwaysApply: true
+description: Business domain routing organization for super platform
+globs: api/v1/**/*.py
+---
+
+# Business Domain Routing
+
+## Super Platform Domains
+This super platform integrates multiple business domains:
+
+### 🏠 Property Listing Domain (`/api/v1/property/`)
+```
+property_listing/
+├── public_routes.py     # Search, listings, details
+├── admin_routes.py      # CRUD operations
+└── catalog_routes.py    # Areas, developers, projects
+```
+
+### 💼 Investment Platform Domain (`/api/v1/investment/`)
+```
+investment_platform/
+├── public_routes.py     # Product listings
+├── user_routes.py       # Orders, positions, KYC
+└── admin_routes.py      # Management, NAV
+```
+
+### 🏖️ Short-term Rentals Domain (`/api/v1/bnb/`)
+```
+bnb/
+└── routes.py           # Airbnb-style bookings
+```
+
+### 🚗 Tours Domain (`/api/v1/tours/`)
+```
+tours/
+└── routes.py           # Tour packages & bookings
+```
+
+### 🚙 Cars Domain (`/api/v1/cars/`)
+```
+cars/
+└── routes.py           # Vehicle rentals
+```
+
+### 🔗 Shared Domain (`/api/v1/shared/`)
+```
+shared/
+├── auth_routes.py      # Authentication
+├── user_routes.py      # User management
+├── media_routes.py     # File uploads
+└── admin_routes.py     # System administration
+```
+
+## Route Naming Conventions
+
+### Create/Update Pattern
+```python
+# Single endpoint for both create and update
+@router.post("/", response_model=EntityResponseDTO)
+async def create_or_update_entity(request: EntityCreateUpdateDTO):
+    # id=0 for create, id>0 for update
+    pass
+```
+
+### Retrieval Patterns
+```python
+# Get single entity
+@router.get("/{entity_id}", response_model=EntityResponseDTO)
+async def get_entity(entity_id: int):
+    pass
+
+# List entities with optional filtering
+@router.get("/", response_model=List[EntityResponseDTO])
+async def list_entities(
+    location: Optional[str] = None,
+    min_price: Optional[int] = None,
+    limit: int = 20,
+    offset: int = 0
+):
+    pass
+
+# Search with POST for complex criteria
+@router.post("/search", response_model=List[EntityResponseDTO])
+async def search_entities(criteria: SearchCriteriaDTO):
+    pass
+```
+
+### Deletion Pattern
+```python
+# Delete using GET method
+@router.get("/{entity_id}/delete", response_model=dict)
+async def delete_entity(entity_id: int):
+    return {"ok": True, "entity_id": entity_id}
+```
+
+## Cross-Domain Integration
+
+### Bundling Endpoints
+```python
+# Bundle creation across domains
+@router.post("/bundles", response_model=BundleResponseDTO)
+async def create_bundle(request: CreateBundleRequestDTO):
+    # Can include: tours + accommodation + vehicles
+    pass
+```
+
+### Unified Search
+```python
+# Search across multiple domains
+@router.post("/search/all", response_model=UnifiedSearchResponseDTO)
+async def search_all_domains(criteria: UnifiedSearchCriteriaDTO):
+    pass
+```
+
+## Access Control Patterns
+
+### Public Routes
+- No authentication required
+- Basic rate limiting
+- Available to all users
+
+### User Routes  
+- Authentication required
+- User-specific data
+- Own resource access only
+
+### Admin Routes
+- Admin role required
+- Full system access
+- Audit logging enabled

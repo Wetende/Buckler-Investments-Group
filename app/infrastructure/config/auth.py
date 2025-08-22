@@ -24,6 +24,9 @@ __all__ = [
     "verify_password",
     "get_password_hash",
     "create_access_token",
+    "create_refresh_token",
+    "verify_refresh_token",
+    "revoke_refresh_token",
     "get_current_user",
     "get_current_active_user",
     "authenticate_user",
@@ -36,6 +39,10 @@ __all__ = [
 SECRET_KEY: str = settings.SECRET_KEY
 ALGORITHM: str = getattr(settings, "ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES: int = getattr(settings, "ACCESS_TOKEN_EXPIRE_MINUTES", 15)
+REFRESH_TOKEN_EXPIRE_DAYS: int = getattr(settings, "REFRESH_TOKEN_EXPIRE_DAYS", 30)
+
+# In-memory refresh token store (in production, use Redis or database)
+_refresh_tokens: dict[str, dict] = {}
 
 # ---------------------------------------------------------------------------
 # Password hashing
@@ -75,6 +82,44 @@ def create_access_token(subject: str | int, expires_delta: Optional[timedelta] =
     }
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+def create_refresh_token(user_id: int) -> str:
+    """Generate a refresh token for a user."""
+    import secrets
+    
+    refresh_token = secrets.token_urlsafe(32)
+    expires_at = datetime.now(UTC) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    
+    # Store refresh token (in production, use Redis or database)
+    _refresh_tokens[refresh_token] = {
+        "user_id": user_id,
+        "expires_at": expires_at,
+        "created_at": datetime.now(UTC)
+    }
+    
+    return refresh_token
+
+
+async def verify_refresh_token(refresh_token: str) -> Optional[int]:
+    """Verify a refresh token and return user ID if valid."""
+    token_data = _refresh_tokens.get(refresh_token)
+    
+    if not token_data:
+        return None
+    
+    # Check if token has expired
+    if datetime.now(UTC) > token_data["expires_at"]:
+        # Remove expired token
+        _refresh_tokens.pop(refresh_token, None)
+        return None
+    
+    return token_data["user_id"]
+
+
+async def revoke_refresh_token(refresh_token: str) -> bool:
+    """Revoke a refresh token."""
+    return _refresh_tokens.pop(refresh_token, None) is not None
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,213 @@
+---
+alwaysApply: true
+description: Testing standards and patterns for all layers
+globs: tests/**/*.py
+---
+
+# Testing Standards & Patterns
+
+## Testing Strategy by Layer
+
+### 1. Domain Layer Tests (`tests/unit/domain/`)
+```python
+# Test pure business logic without external dependencies
+def test_property_publish_business_rule():
+    """Test pure business logic without external dependencies"""
+    property_entity = Property(
+        id=1,
+        title="Test Property",
+        price=Money(100000, "KES"),
+        location="Test Location"
+    )
+    
+    property_entity.publish()
+    assert property_entity.status == PropertyStatus.PUBLISHED
+
+def test_property_cannot_publish_without_title():
+    property_entity = Property(id=1, title="", price=Money(100000), location="Test")
+    
+    with pytest.raises(ValueError, match="Cannot publish property without title"):
+        property_entity.publish()
+```
+
+### 2. Application Layer Tests (`tests/unit/application/`)
+```python
+# Test use cases with mocked repositories
+@pytest.mark.asyncio
+async def test_create_property_use_case():
+    # Arrange
+    mock_repository = Mock(spec=PropertyRepository)
+    mock_repository.create.return_value = Property(
+        id=1, title="Test Property", price=Money(100000), location="Test"
+    )
+    
+    use_case = CreatePropertyUseCase(mock_repository)
+    request = PropertyCreateDTO(id=0, title="Test Property", price=100000, location="Test")
+    
+    # Act
+    result = await use_case.execute(request)
+    
+    # Assert
+    assert result.id == 1
+    assert result.title == "Test Property"
+    mock_repository.create.assert_called_once()
+```
+
+### 3. Infrastructure Layer Tests (`tests/integration/infrastructure/`)
+```python
+# Test repository implementations with test database
+@pytest.mark.asyncio
+async def test_sqlalchemy_property_repository():
+    # Use test database session
+    async with test_db_session() as session:
+        repository = SqlAlchemyPropertyRepository(session)
+        
+        # Test create
+        property_entity = Property(id=0, title="Test", price=Money(100000), location="Test")
+        saved_entity = await repository.create(property_entity)
+        
+        assert saved_entity.id > 0
+        assert saved_entity.title == "Test"
+        
+        # Test retrieve
+        retrieved = await repository.get_by_id(saved_entity.id)
+        assert retrieved is not None
+        assert retrieved.title == "Test"
+```
+
+### 4. API Layer Tests (`tests/api/`)
+```python
+# Test HTTP endpoints with test client
+@pytest.mark.asyncio
+async def test_create_property_endpoint():
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.post(
+            "/api/v1/property/",
+            json={"id": 0, "title": "Test Property", "price": 100000, "location": "Test"}
+        )
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["title"] == "Test Property"
+        assert data["id"] > 0
+```
+
+## Test Organization Patterns
+
+### Test Fixtures
+```python
+# tests/conftest.py
+@pytest.fixture
+async def test_db_session():
+    """Provide isolated database session for tests"""
+    async with AsyncSession(test_engine) as session:
+        yield session
+        await session.rollback()
+
+@pytest.fixture
+def mock_property_repository():
+    """Mock repository for use case tests"""
+    return Mock(spec=PropertyRepository)
+
+@pytest.fixture
+async def test_property():
+    """Test property entity"""
+    return Property(
+        id=1,
+        title="Test Property",
+        price=Money(Decimal("100000"), "KES"),
+        location="Nairobi, Kenya"
+    )
+```
+
+### Test Data Factories
+```python
+# tests/factories.py
+class PropertyFactory:
+    @staticmethod
+    def create(
+        id: int = 1,
+        title: str = "Test Property",
+        price: Decimal = Decimal("100000"),
+        currency: str = "KES",
+        location: str = "Nairobi"
+    ) -> Property:
+        return Property(
+            id=id,
+            title=title,
+            price=Money(price, currency),
+            location=location
+        )
+
+class PropertyCreateDTOFactory:
+    @staticmethod
+    def create(id: int = 0, **kwargs) -> PropertyCreateDTO:
+        defaults = {
+            "title": "Test Property",
+            "price": 100000,
+            "location": "Nairobi",
+            "currency": "KES"
+        }
+        defaults.update(kwargs)
+        return PropertyCreateDTO(id=id, **defaults)
+```
+
+## Test Naming Conventions
+```python
+# Pattern: test_[action]_[expected_result]_[condition]
+def test_create_property_returns_property_with_id_when_valid_data():
+    pass
+
+def test_create_property_raises_validation_error_when_invalid_price():
+    pass
+
+def test_search_properties_returns_filtered_results_when_criteria_provided():
+    pass
+```
+
+## Mocking Guidelines
+```python
+# ✅ CORRECT: Mock external dependencies
+@patch('infrastructure.external_services.payment.stripe_service.create_payment')
+async def test_payment_processing(mock_stripe):
+    mock_stripe.return_value = {"id": "pi_123", "status": "succeeded"}
+    # Test payment use case
+
+# ✅ CORRECT: Mock repository interfaces
+def test_use_case_with_mock_repository():
+    mock_repo = Mock(spec=PropertyRepository)
+    use_case = CreatePropertyUseCase(mock_repo)
+    # Test use case logic
+```
+
+## Integration Test Patterns
+```python
+# Full integration test with dependency injection
+@pytest.mark.integration
+async def test_property_creation_end_to_end():
+    # Setup test container with real implementations
+    container = create_test_container()
+    
+    # Test complete flow: API -> Use Case -> Repository -> Database
+    async with AsyncClient(app=app, base_url="http://test") as client:
+        response = await client.post("/api/v1/property/", json=test_data)
+        
+        assert response.status_code == 200
+        
+        # Verify in database
+        property_id = response.json()["id"]
+        saved_property = await container.property_repository().get_by_id(property_id)
+        assert saved_property is not None
+```
+
+## Test Coverage Requirements
+- Domain layer: 100% coverage (pure business logic)
+- Application layer: 95% coverage (use cases)
+- Infrastructure layer: 80% coverage (external dependencies)
+- API layer: 90% coverage (HTTP handling)
+
+## Test Performance
+- Unit tests: < 10ms each
+- Integration tests: < 100ms each  
+- API tests: < 500ms each
+- Use async/await for all async code tests

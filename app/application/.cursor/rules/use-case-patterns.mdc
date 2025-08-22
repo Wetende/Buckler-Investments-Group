@@ -1,0 +1,107 @@
+---
+alwaysApply: true
+description: Application layer use case and DTO patterns
+globs: application/**/*.py
+---
+
+# Application Layer - Use Cases & DTOs
+
+## Layer Purpose
+The application layer orchestrates domain operations and contains use cases that represent business workflows.
+
+## ✅ ALLOWED in Application Layer
+- Domain layer imports
+- Pydantic models for DTOs
+- Abstract interfaces
+- Use case implementations
+- Business workflow orchestration
+
+## ❌ FORBIDDEN in Application Layer
+```python
+# ❌ NO direct database imports
+from sqlalchemy.orm import Session
+
+# ❌ NO FastAPI imports
+from fastapi import Depends
+
+# ❌ NO infrastructure concrete classes
+from infrastructure.database.repositories.property_repository import SqlAlchemyPropertyRepository
+```
+
+## ✅ CORRECT Use Case Pattern
+```python
+# application/use_cases/property/create_property.py
+from typing import Protocol
+from domain.entities.property.property import Property
+from domain.repositories.property import PropertyRepository
+from application.dto.property import PropertyCreateDTO, PropertyResponseDTO
+
+class CreatePropertyUseCase:
+    def __init__(self, property_repository: PropertyRepository):
+        self._property_repository = property_repository
+    
+    async def execute(self, request: PropertyCreateDTO) -> PropertyResponseDTO:
+        # Pure business logic - no infrastructure concerns
+        property_entity = Property(
+            id=0 if request.id == 0 else request.id,
+            title=request.title,
+            price=request.price,
+            location=request.location
+        )
+        
+        if request.id == 0:
+            # Create new
+            saved_property = await self._property_repository.create(property_entity)
+        else:
+            # Update existing
+            saved_property = await self._property_repository.update(property_entity)
+        
+        return PropertyResponseDTO.from_entity(saved_property)
+```
+
+## DTO Patterns
+
+### Request DTOs (Create/Update)
+```python
+class EntityCreateUpdateDTO(BaseModel):
+    id: int = Field(ge=0, description="0 for create, positive for update")
+    name: str = Field(min_length=1, max_length=255)
+    description: Optional[str] = None
+    
+    @validator('id')
+    def validate_id(cls, v):
+        if v < 0:
+            raise ValueError('ID must be 0 (create) or positive (update)')
+        return v
+
+    model_config = ConfigDict(from_attributes=True)
+```
+
+### Response DTOs
+```python
+class EntityResponseDTO(BaseModel):
+    id: int                     # ✅ Always integer
+    name: str
+    description: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    @classmethod
+    def from_entity(cls, entity) -> 'EntityResponseDTO':
+        return cls(
+            id=entity.id,
+            name=entity.name,
+            description=entity.description,
+            created_at=entity.created_at,
+            updated_at=entity.updated_at
+        )
+    
+    model_config = ConfigDict(from_attributes=True)
+```
+
+## Business Logic Rules
+- Use cases contain workflow logic, not business rules
+- Business rules belong in domain entities
+- Use cases orchestrate multiple domain operations
+- Always return DTOs, never domain entities
+- Handle validation at DTO level
