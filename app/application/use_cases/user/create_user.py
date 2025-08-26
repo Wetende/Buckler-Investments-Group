@@ -19,7 +19,7 @@ class CreateUserUseCase:
         hashed_password = self._password_service.hash_password(user_data.password)
 
         new_user = User(
-            id=0, # Set by repository
+            id=0,  # Assigned by repository/DB
             created_at=datetime.now(),
             updated_at=datetime.now(),
             email=user_data.email,
@@ -32,12 +32,4 @@ class CreateUserUseCase:
 
         created_user = await self._user_repository.create(new_user)
 
-        return UserResponseDTO(
-            id=created_user.id,
-            email=created_user.email,
-            name=created_user.full_name,
-            phone=created_user.phone_number,
-            role=created_user.role,
-            is_active=created_user.is_active,
-            created_at=created_user.created_at
-        )
+        return UserResponseDTO.from_entity(created_user)

@@ -16,15 +16,15 @@ class TestAuthApiEndpoints:
     @pytest.fixture
     async def test_client(self):
         """HTTP client for testing API endpoints."""
-        async with AsyncClient(app=app, base_url="http://testserver") as client:
-            yield client
+        from fastapi.testclient import TestClient
+        client = TestClient(app)
+        yield client
 
-    @pytest.mark.asyncio
-    async def test_token_endpoint_exists_and_accepts_post(self, test_client):
+    def test_token_endpoint_exists_and_accepts_post(self, test_client):
         """Test that token endpoint exists and accepts POST requests."""
         # Act
-        response = await test_client.post(
-            "/api/v1/shared/auth/token",
+        response = test_client.post(
+            "/api/v1/auth/token",
             data={"username": "test", "password": "test"},
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
@@ -33,32 +33,30 @@ class TestAuthApiEndpoints:
         assert response.status_code != 404
         # May be 401 (unauthorized) but endpoint exists
 
-    @pytest.mark.asyncio
-    async def test_token_endpoint_requires_form_data_content_type(self, test_client):
+    def test_token_endpoint_requires_form_data_content_type(self, test_client):
         """Test that token endpoint requires form data content type."""
         # Arrange - Send JSON instead of form data
-        response = await test_client.post(
-            "/api/v1/shared/auth/token",
+        response = test_client.post(
+            "/api/v1/auth/token",
             json={"username": "test", "password": "test"}
         )
 
         # Assert - Should fail with 422 (validation error) due to incorrect content type
         assert response.status_code == 422
 
-    @pytest.mark.asyncio
-    async def test_token_endpoint_validates_required_fields(self, test_client):
+    def test_token_endpoint_validates_required_fields(self, test_client):
         """Test that token endpoint validates required username and password fields."""
         # Test missing username
-        response = await test_client.post(
-            "/api/v1/shared/auth/token",
+        response = test_client.post(
+            "/api/v1/auth/token",
             data={"password": "test"},
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
         assert response.status_code == 422
 
         # Test missing password
-        response = await test_client.post(
-            "/api/v1/shared/auth/token",
+        response = test_client.post(
+            "/api/v1/auth/token",
             data={"username": "test"},
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )

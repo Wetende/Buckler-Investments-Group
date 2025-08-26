@@ -41,7 +41,19 @@ app.container = container
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    await container.shutdown_resources()
+    # Fix: Check if shutdown_resources exists and is awaitable
+    if hasattr(container, 'shutdown_resources') and callable(container.shutdown_resources):
+        try:
+            result = container.shutdown_resources()
+            # Only await if it's actually awaitable
+            if hasattr(result, '__await__'):
+                await result
+        except Exception as e:
+            print(f"Warning: Container shutdown failed: {e}")
+    else:
+        # Fallback: use unwire if available
+        if hasattr(container, 'unwire'):
+            container.unwire()
 
 # Always generate a fresh OpenAPI schema (avoids stale cached schemas in long-running dev sessions)
 def _fresh_openapi():  # pragma: no cover
@@ -102,12 +114,23 @@ from .v1.shared import router as shared_router
 from .v1.tours import router as tours_router
 from .v1.cars import router as cars_router
 from .v1.bnb import router as bnb_router
+from .v1.bundle.routes import router as bundle_router
 
 # Import remaining routers that are already well-organized
 from .v1.public.article_routes import router as public_article_router
 from .v1.public.sitemap import router as sitemap_router
 from .v1.notifications_unified import router as notifications_router
 from .v1.settings_unified import router as settings_router
+
+# Import payment and payout routers - temporarily disabled
+# from .v1.payments.routes import router as payments_router  # Temporarily disabled
+from .v1.payouts.routes import router as payouts_router
+
+# Import search router
+from .v1.search.routes import router as search_router
+
+# Import reviews router
+from .v1.reviews.routes import router as reviews_router
 
 # Include business domain routers
 app.include_router(property_router, prefix="/api/v1/property")
@@ -118,9 +141,20 @@ app.include_router(shared_router, prefix="/api/v1")
 app.include_router(tours_router, prefix="/api/v1/tours", tags=["Tours"])
 app.include_router(cars_router, prefix="/api/v1/cars", tags=["Cars"])
 app.include_router(bnb_router, prefix="/api/v1/bnb", tags=["BnB"])
+app.include_router(bundle_router, prefix="/api/v1/bundles", tags=["Bundles"])
 
 # Include favorites router
 app.include_router(favorites_router)
+
+# Include payment and payout routers
+# app.include_router(payments_router, prefix="/api/v1/payments", tags=["Payments"])  # Temporarily disabled
+app.include_router(payouts_router, prefix="/api/v1/payouts", tags=["Payouts"])
+
+# Include search router
+app.include_router(search_router, prefix="/api/v1/search", tags=["Search"])
+
+# Include reviews router
+app.include_router(reviews_router, prefix="/api/v1/reviews", tags=["Reviews"])
 
 # Include remaining standalone routers
 app.include_router(public_article_router)

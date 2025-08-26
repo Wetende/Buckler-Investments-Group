@@ -11,6 +11,7 @@ from domain.repositories.investment import InvestmentRepository, InvestmentHoldi
 from domain.repositories.user import UserRepository
 from domain.repositories.bundle import BundleRepository
 from domain.repositories.bundle_booking import BundleBookingRepository
+# from domain.repositories.payment import PaymentRepository  # Temporarily disabled
 from infrastructure.database.repositories.bnb import (
     SqlAlchemyBnbRepository,
     SqlAlchemyBookingRepository,
@@ -31,12 +32,28 @@ from infrastructure.database.repositories.investment import (
 from infrastructure.database.repositories.user import SqlAlchemyUserRepository
 from infrastructure.database.repositories.bundle import SqlAlchemyBundleRepository
 from infrastructure.database.repositories.bundle_booking import SqlAlchemyBundleBookingRepository
+# from infrastructure.database.repositories.payment import SqlAlchemyPaymentRepository  # Temporarily disabled
 
 # Use Cases
 from application.use_cases.bnb.search_listings import SearchListingsUseCase
 from application.use_cases.bnb.create_booking import CreateBookingUseCase
+from application.use_cases.bnb.create_listing import CreateListingUseCase
+from application.use_cases.bnb.get_listing import GetListingUseCase
+from application.use_cases.bnb.list_listings import ListListingsUseCase
+from application.use_cases.bnb.delete_listing import DeleteListingUseCase
+from application.use_cases.bnb.get_host_listings import GetHostListingsUseCase
+from application.use_cases.bnb.get_booking import GetBookingUseCase
+from application.use_cases.bnb.get_user_bookings import GetUserBookingsUseCase
+from application.use_cases.bnb.cancel_booking import CancelBookingUseCase
+from application.use_cases.bnb.get_host_bookings import GetHostBookingsUseCase
+from application.use_cases.bnb.approve_booking import ApproveBookingUseCase
+from application.use_cases.bnb.reject_booking import RejectBookingUseCase
 from application.use_cases.tours.search_tours import SearchToursUseCase
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
+from application.use_cases.tours.create_tour import CreateTourUseCase
+from application.use_cases.tours.get_tour import GetTourUseCase
+from application.use_cases.tours.list_tours import ListToursUseCase
+from application.use_cases.tours.delete_tour import DeleteTourUseCase
 from application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
 from application.use_cases.cars.create_rental import CreateRentalUseCase
 from application.use_cases.property.search_properties import SearchPropertiesUseCase
@@ -52,6 +69,9 @@ from domain.services.password_service import PasswordService
 from infrastructure.services.bcrypt_password_service import BcryptPasswordService
 from application.use_cases.bundle.create_bundle import CreateBundleUseCase
 from application.use_cases.bundle.book_bundle import BookBundleUseCase
+# from application.use_cases.payment.create_payment_intent import CreatePaymentIntentUseCase  # Temporarily disabled
+# from infrastructure.external_services.payment.stripe_service import StripePaymentService  # Temporarily disabled
+# from infrastructure.external_services.payment.mpesa_service import MpesaPaymentService  # Temporarily disabled
 
 
 class BundleUseCases(containers.DeclarativeContainer):
@@ -167,6 +187,8 @@ class AppContainer(containers.DeclarativeContainer):
             "api.v1.investment_platform.public_routes",
             "api.v1.investment_platform.user_routes",
             "api.v1.shared.user_routes",
+            "api.v1.shared.auth_routes",
+            # "api.v1.payments.routes",  # Temporarily disabled
         ]
     )
 
@@ -179,6 +201,19 @@ class AppContainer(containers.DeclarativeContainer):
     password_service: providers.Factory[PasswordService] = providers.Factory(
         BcryptPasswordService
     )
+
+    # Payment Services - temporarily disabled
+    # stripe_service = providers.Singleton(
+    #     StripePaymentService,
+    #     api_key="sk_test_mock_key"  # This should come from config
+    # )
+
+    # mpesa_service = providers.Singleton(
+    #     MpesaPaymentService,
+    #     consumer_key="mock_key",  # This should come from config
+    #     consumer_secret="mock_secret",  # This should come from config
+    #     shortcode="174379"  # This should come from config
+    # )
 
     # BNB Repositories
     bnb_repository: providers.Factory[BnbRepository] = providers.Factory(
@@ -247,6 +282,12 @@ class AppContainer(containers.DeclarativeContainer):
         session=db_session,
     )
 
+    # Payment Repository - temporarily disabled
+    # payment_repository: providers.Factory[PaymentRepository] = providers.Factory(
+    #     SqlAlchemyPaymentRepository,
+    #     session=db_session,
+    # )
+
     # BNB Use Cases
     search_listings_use_case = providers.Factory(
         SearchListingsUseCase,
@@ -256,6 +297,63 @@ class AppContainer(containers.DeclarativeContainer):
     create_booking_use_case = providers.Factory(
         CreateBookingUseCase,
         bnb_repository=bnb_repository,
+        booking_repository=booking_repository,
+    )
+
+    # Additional BnB Use Cases
+    create_listing_use_case = providers.Factory(
+        CreateListingUseCase,
+        bnb_repository=bnb_repository,
+    )
+
+    get_listing_use_case = providers.Factory(
+        GetListingUseCase,
+        bnb_repository=bnb_repository,
+    )
+
+    list_listings_use_case = providers.Factory(
+        ListListingsUseCase,
+        bnb_repository=bnb_repository,
+    )
+
+    delete_listing_use_case = providers.Factory(
+        DeleteListingUseCase,
+        bnb_repository=bnb_repository,
+    )
+
+    get_host_listings_use_case = providers.Factory(
+        GetHostListingsUseCase,
+        bnb_repository=bnb_repository,
+    )
+
+    get_booking_use_case = providers.Factory(
+        GetBookingUseCase,
+        booking_repository=booking_repository,
+    )
+
+    get_user_bookings_use_case = providers.Factory(
+        GetUserBookingsUseCase,
+        booking_repository=booking_repository,
+    )
+
+    cancel_booking_use_case = providers.Factory(
+        CancelBookingUseCase,
+        booking_repository=booking_repository,
+    )
+
+    get_host_bookings_use_case = providers.Factory(
+        GetHostBookingsUseCase,
+        booking_repository=booking_repository,
+        bnb_repository=bnb_repository,
+    )
+
+    approve_booking_use_case = providers.Factory(
+        ApproveBookingUseCase,
+        booking_repository=booking_repository,
+    )
+
+    reject_booking_use_case = providers.Factory(
+        RejectBookingUseCase,
         booking_repository=booking_repository,
     )
 
@@ -269,6 +367,27 @@ class AppContainer(containers.DeclarativeContainer):
         CreateTourBookingUseCase,
         tour_repository=tour_repository,
         tour_booking_repository=tour_booking_repository,
+    )
+
+    # Additional Tour Use Cases
+    create_tour_use_case = providers.Factory(
+        CreateTourUseCase,
+        tour_repository=tour_repository,
+    )
+
+    get_tour_use_case = providers.Factory(
+        GetTourUseCase,
+        tour_repository=tour_repository,
+    )
+
+    list_tours_use_case = providers.Factory(
+        ListToursUseCase,
+        tour_repository=tour_repository,
+    )
+
+    delete_tour_use_case = providers.Factory(
+        DeleteTourUseCase,
+        tour_repository=tour_repository,
     )
 
     # Car Use Cases
@@ -319,3 +438,11 @@ class AppContainer(containers.DeclarativeContainer):
         vehicle_repo=vehicle_repository,
         bnb_repo=bnb_repository,
     )
+
+    # Payment Use Cases - temporarily disabled
+    # create_payment_intent_use_case = providers.Factory(
+    #     CreatePaymentIntentUseCase,
+    #     payment_repository=payment_repository,
+    #     stripe_service=stripe_service,
+    #     mpesa_service=mpesa_service,
+    # )

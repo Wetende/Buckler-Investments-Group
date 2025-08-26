@@ -56,6 +56,14 @@ class User(Base):
         "Article", back_populates="author", cascade="all, delete-orphan"
     )
     
+    # Payment relationships - temporarily simplified
+    # payment_intents = relationship(
+    #     "PaymentIntentModel", back_populates="customer", cascade="all, delete-orphan"
+    # )
+    # payments = relationship(
+    #     "PaymentModel", back_populates="customer", cascade="all, delete-orphan"
+    # )
+    
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), 

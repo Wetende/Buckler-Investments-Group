@@ -22,3 +22,7 @@ class BookingRepository(BaseRepository):
     @abstractmethod
     async def get_by_guest(self, guest_id: int) -> List[Booking]:
         pass
+    
+    @abstractmethod
+    async def get_by_listing_id(self, listing_id: int) -> List[Booking]:
+        pass

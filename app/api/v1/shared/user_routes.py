@@ -1,51 +1,30 @@
-"""User management routes - moved and consolidated from user/routes.py and profile.py"""
+"""
+User management routes - Administrative user management endpoints.
+
+Note: User registration and profile management have been moved to /auth endpoints.
+This module now focuses on administrative user management functions.
+"""
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from dependency_injector.wiring import inject, Provide
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from application.dto.user import UserCreateDTO, UserResponseDTO, UserRead
-from application.use_cases.user.create_user import CreateUserUseCase
-from api.containers import AppContainer
-from infrastructure.config.auth import get_current_active_user
+from application.dto.user import UserRead
 from infrastructure.config.database import get_async_session
 from infrastructure.config.dependencies import current_active_user
 from domain.entities.user import User
-from shared.exceptions.user import UserAlreadyExistsError
 
 router = APIRouter()
 
-@router.post("/", response_model=UserResponseDTO, status_code=status.HTTP_201_CREATED)
-@inject
-async def create_user(
-    user_data: UserCreateDTO,
-    use_case: CreateUserUseCase = Depends(Provide[AppContainer.user_use_cases.create_user_use_case]),
-) -> UserResponseDTO:
-    """Create a new user account."""
-    try:
-        return await use_case.execute(user_data)
-    except UserAlreadyExistsError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-
-@router.get("/me", response_model=UserResponseDTO)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)],
-) -> UserResponseDTO:
-    """Get current user profile."""
-    return UserResponseDTO(
-        id=current_user.id,
-        email=current_user.email,
-        full_name=current_user.full_name,
-        is_active=current_user.is_active,
-        roles=[role.name for role in current_user.roles]
-    )
+# Note: The following endpoints have been moved to /auth for better organization:
+# - POST / (user registration) -> moved to POST /auth/register
+# - GET /me (current user profile) -> moved to GET /auth/me
 
 @router.get("/profile", response_model=UserRead)
 async def get_profile(
     user: User = Depends(current_active_user)
 ):
-    """Get user profile (alternative endpoint)."""
+    """Get user profile (legacy endpoint - consider using /auth/me instead)."""
     return user
 
 @router.post("/profile", response_model=UserRead)
@@ -54,10 +33,16 @@ async def update_profile(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
 ):
-    """Update user profile."""
+    """Update user profile (legacy endpoint)."""
     for field, value in payload.model_dump(exclude={"id"}).items():
         if value is not None:
             setattr(user, field, value)
     await session.commit()
     await session.refresh(user)
     return user
+
+# TODO: Add administrative user management endpoints here
+# - List all users (admin only)
+# - Update user roles (admin only)  
+# - Deactivate/reactivate users (admin only)
+# - User search and filtering (admin only)

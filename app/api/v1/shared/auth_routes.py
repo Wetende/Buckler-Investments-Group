@@ -1,8 +1,7 @@
 """Authentication routes - comprehensive JWT authentication endpoints"""
-from __future__ import annotations
 
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import OAuth2PasswordRequestForm
@@ -11,17 +10,16 @@ from dependency_injector.wiring import inject, Provide
 
 from application.dto.user import (
     TokenResponse, PasswordResetRequest, 
-    PasswordResetConfirm, ChangePasswordRequest, GenericResponse
+    PasswordResetConfirm, ChangePasswordRequest, GenericResponse,
+    UserCreateDTO, UserResponseDTO, RefreshTokenRequest
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field
 
-# Local definition to avoid forward reference issues
-class RefreshTokenRequest(BaseModel):
-    refresh_token: str
 from application.use_cases.auth.refresh_token import RefreshTokenUseCase
 from application.use_cases.auth.logout import LogoutUseCase
 from application.use_cases.auth.password_reset import PasswordResetRequestUseCase, PasswordResetConfirmUseCase
 from application.use_cases.auth.change_password import ChangePasswordUseCase
+from application.use_cases.user.create_user import CreateUserUseCase
 from api.containers import AppContainer
 from infrastructure.config.database import get_async_session
 from infrastructure.config.auth import (
@@ -32,7 +30,9 @@ from infrastructure.config.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
 )
 from domain.entities.user import User
+from domain.value_objects.user_role import UserRole
 from shared.exceptions.auth import InvalidRefreshTokenError, InvalidResetTokenError, InvalidPasswordError
+from shared.exceptions.user import UserAlreadyExistsError
 
 router = APIRouter()
 
@@ -90,13 +90,7 @@ async def logout(
     return await use_case.execute(current_user.id)
 
 
-@router.post("/revoke", response_model=GenericResponse)
-async def revoke_refresh_token(
-    refresh_token_data: RefreshTokenRequest = Body(...),
-    use_case: LogoutUseCase = Depends(Provide[AppContainer.auth_use_cases.logout_use_case]),
-) -> GenericResponse:
-    """Revoke a specific refresh token."""
-    return await use_case.execute(user_id=None, refresh_token=refresh_token_data.refresh_token)
+# Note: /revoke endpoint removed - functionality consolidated into /logout
 
 
 @router.post("/password-reset/request", response_model=GenericResponse)
@@ -137,4 +131,106 @@ async def change_password(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
+
+
+# ================================
+# NEW AUTHENTICATION ENDPOINTS
+# ================================
+
+class RegistrationRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=8, description="Password (min 8 chars)")
+    name: str = Field(..., min_length=1, max_length=255)
+    phone: Optional[str] = Field(None, max_length=20)
+    role: Optional[UserRole] = UserRole.BUYER
+
+
+@router.post("/register", response_model=UserResponseDTO, status_code=status.HTTP_201_CREATED)
+@inject
+async def register_user(
+    request: RegistrationRequest = Body(...),
+    use_case: CreateUserUseCase = Depends(Provide[AppContainer.user_use_cases.create_user_use_case]),
+) -> UserResponseDTO:
+    """Register a new user account."""
+    try:
+        dto = UserCreateDTO(**request.model_dump())
+        return await use_case.execute(dto)
+    except UserAlreadyExistsError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+@router.get("/me", response_model=UserResponseDTO)
+async def get_current_user(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+) -> UserResponseDTO:
+    """Get current authenticated user profile."""
+    return UserResponseDTO(
+        id=current_user.id,
+        email=current_user.email,
+        name=current_user.name,
+        phone=current_user.phone,
+        role=current_user.role,
+        is_active=current_user.is_active,
+        created_at=current_user.created_at
+    )
+
+
+# ================================
+# EMAIL/PHONE VERIFICATION
+# ================================
+
+class VerificationRequest(BaseModel):
+    """Request model for email/phone verification."""
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    verification_code: Optional[str] = None
+
+@router.post("/verify-email", response_model=GenericResponse)
+async def verify_email(
+    request: VerificationRequest = Body(...),
+) -> GenericResponse:
+    """Verify user email address with OTP/token."""
+    # TODO: Implement email verification logic
+    # For now, return success - this needs proper verification service implementation
+    return GenericResponse(
+        ok=True,
+        message="Email verification endpoint ready for implementation"
+    )
+
+
+@router.post("/verify-phone", response_model=GenericResponse)
+async def verify_phone(
+    request: VerificationRequest = Body(...),
+) -> GenericResponse:
+    """Verify user phone number with OTP."""
+    # TODO: Implement phone verification logic
+    # For now, return success - this needs proper SMS/verification service implementation
+    return GenericResponse(
+        ok=True,
+        message="Phone verification endpoint ready for implementation"
+    )
+
+
+# ================================
+# SOCIAL LOGIN
+# ================================
+
+class SocialLoginRequest(BaseModel):
+    """Request model for social login."""
+    provider: str  # "google", "facebook", etc.
+    access_token: str
+    email: Optional[str] = None
+    name: Optional[str] = None
+
+@router.post("/social-login", response_model=TokenResponse)
+async def social_login(
+    request: SocialLoginRequest = Body(...),
+) -> TokenResponse:
+    """Authenticate user via social providers (Google, Facebook, etc.)."""
+    # TODO: Implement social login logic
+    # For now, return placeholder response - this needs proper OAuth integration
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Social login endpoint ready for implementation"
+    )
 

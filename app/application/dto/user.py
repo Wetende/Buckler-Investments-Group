@@ -64,10 +64,12 @@ class FavoriteResponse(BaseModel):
 # Use case DTOs
 class UserCreateDTO(BaseModel):
     email: EmailStr
-    password: str
-    name: str
-    phone: Optional[str] = None
+    password: str = Field(..., min_length=8, description="User password (minimum 8 characters)")
+    name: str = Field(..., min_length=1, max_length=255, description="User's full name")
+    phone: Optional[str] = Field(None, max_length=20, description="User's phone number")
     role: Optional[UserRole] = UserRole.BUYER
+    
+    model_config = {"from_attributes": True}
 
 
 class UserResponseDTO(BaseModel):
@@ -79,15 +81,22 @@ class UserResponseDTO(BaseModel):
     is_active: bool
     created_at: datetime
     
+    model_config = {"from_attributes": True}
+    
     @classmethod
     def from_entity(cls, entity) -> 'UserResponseDTO':
+        """Build DTO from either domain entity or ORM model shape.
+        Handles attribute name differences like full_name/name and phone_number/phone.
+        """
+        name_value = getattr(entity, "name", None) or getattr(entity, "full_name", None)
+        phone_value = getattr(entity, "phone", None) or getattr(entity, "phone_number", None)
+        role_value = getattr(entity, "role", None)
         return cls(
             id=entity.id,
             email=entity.email,
-            first_name=entity.first_name,
-            last_name=entity.last_name,
-            phone_number=entity.phone_number,
-            role=entity.role.value if hasattr(entity.role, 'value') else str(entity.role),
+            name=str(name_value) if name_value is not None else "",
+            phone=phone_value,
+            role=role_value if role_value is not None else UserRole.BUYER,
             is_active=entity.is_active,
             created_at=entity.created_at
         )

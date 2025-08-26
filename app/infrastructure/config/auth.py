@@ -63,9 +63,9 @@ def get_password_hash(password: str) -> str:
 # ---------------------------------------------------------------------------
 # OAuth2 setup
 # ---------------------------------------------------------------------------
-# Token endpoint will be mounted at /api/v1/token (see routers.auth)
+# Token endpoint is mounted at /api/v1/auth/token
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
 
 # ---------------------------------------------------------------------------
