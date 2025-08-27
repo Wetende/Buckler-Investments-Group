@@ -2,6 +2,7 @@ from domain.entities.tours.tour import Tour
 from domain.repositories.tours import TourRepository
 from application.dto.tours import TourCreateUpdateDTO, TourResponseDTO
 from domain.value_objects.money import Money
+from datetime import datetime
 
 class CreateTourUseCase:
     def __init__(self, tour_repository: TourRepository):
@@ -17,7 +18,9 @@ class CreateTourUseCase:
             duration_hours=request.duration_hours,
             operator_id=request.operator_id if hasattr(request, 'operator_id') else 1,  # TODO: Get from auth context
             max_participants=request.max_participants,
-            included_services=request.included_services
+            included_services=request.included_services,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
         )
         
         if request.id == 0:

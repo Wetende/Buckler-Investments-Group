@@ -36,6 +36,12 @@ from .developer import Developer
 from .project import Project
 from .media import Media
 from .article import Article
+from .tours import Tour
+from .tour_booking import TourBooking
+from .vehicle import Vehicle
+from .car_rental import CarRental
+from .bundle import BundleModel, BundledItemModel
+from .bundle_booking import BundleBookingModel
 # from .payment import PaymentIntentModel, PaymentModel, RefundModel  # Temporarily disabled for troubleshooting
 
 __all__ = [
@@ -69,6 +75,13 @@ __all__ = [
     "KycRecord",
     "OrderSide",
     "OrderStatus",
+    "Tour",
+    "TourBooking", 
+    "Vehicle",
+    "CarRental",
+    "BundleModel",
+    "BundledItemModel",
+    "BundleBookingModel",
     # "PaymentIntentModel",  # Temporarily disabled
     # "PaymentModel",  # Temporarily disabled
     # "RefundModel",  # Temporarily disabled

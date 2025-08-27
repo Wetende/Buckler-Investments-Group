@@ -50,6 +50,8 @@ from application.use_cases.bnb.approve_booking import ApproveBookingUseCase
 from application.use_cases.bnb.reject_booking import RejectBookingUseCase
 from application.use_cases.tours.search_tours import SearchToursUseCase
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
+from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
+from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
 from application.use_cases.tours.create_tour import CreateTourUseCase
 from application.use_cases.tours.get_tour import GetTourUseCase
 from application.use_cases.tours.list_tours import ListToursUseCase
@@ -175,11 +177,15 @@ class PropertyUseCases(containers.DeclarativeContainer):
 
 
 class AppContainer(containers.DeclarativeContainer):
-
+    """Application-wide DI container wiring repositories, services, and use cases."""
     wiring_config = containers.WiringConfiguration(
         modules=[
             "api.v1.bnb.routes",
+            "api.v1.bnb.listing_routes",
+            "api.v1.bnb.booking_routes",
             "api.v1.tours.routes",
+            "api.v1.tours.tour_routes",
+            "api.v1.tours.booking_routes",
             "api.v1.cars.routes",
             "api.v1.bundle.routes",
             "api.v1.property_listing.public_routes",
@@ -366,6 +372,16 @@ class AppContainer(containers.DeclarativeContainer):
     create_tour_booking_use_case = providers.Factory(
         CreateTourBookingUseCase,
         tour_repository=tour_repository,
+        tour_booking_repository=tour_booking_repository,
+    )
+
+    get_tour_booking_use_case = providers.Factory(
+        GetTourBookingUseCase,
+        tour_booking_repository=tour_booking_repository,
+    )
+
+    get_user_tour_bookings_use_case = providers.Factory(
+        GetUserTourBookingsUseCase,
         tour_booking_repository=tour_booking_repository,
     )
 

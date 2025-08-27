@@ -1,6 +1,7 @@
 from datetime import datetime
 from domain.repositories.tours import TourRepository, TourBookingRepository
 from domain.entities.tours import TourBooking
+from domain.value_objects.money import Money
 from ...dto.tours import CreateTourBookingRequest, TourBookingResponse
 from shared.exceptions.tours import TourNotFoundError
 
@@ -14,7 +15,7 @@ class CreateTourBookingUseCase:
         if not tour:
             raise TourNotFoundError()
         
-        total_price = tour.price.amount * request.participants
+        total_price_money = Money(tour.price.amount * request.participants, tour.price.currency)
         
         booking = TourBooking(
             id=0, # Will be set by repository
@@ -22,7 +23,7 @@ class CreateTourBookingUseCase:
             customer_id=request.customer_id,
             booking_date=request.booking_date,
             participants=request.participants,
-            total_price=total_price,
+            total_price=total_price_money,
             status="CONFIRMED",
             created_at=datetime.now(),
             updated_at=datetime.now()

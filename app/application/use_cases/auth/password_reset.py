@@ -36,7 +36,8 @@ class PasswordResetRequestUseCase:
         if user and user.is_active:
             # Generate reset token (in production, store this in database)
             reset_token = secrets.token_urlsafe(32)
-            expires_at = datetime.now() + timedelta(hours=1)  # 1 hour expiry
+            from datetime import timezone
+            expires_at = datetime.now(timezone.utc) + timedelta(hours=1)  # 1 hour expiry
             
             # TODO: Store reset token in database with expiry
             # TODO: Send reset email with token
@@ -84,8 +85,10 @@ class PasswordResetConfirmUseCase:
         # Hash new password
         hashed_password = self._password_service.hash_password(request.new_password)
         
-        # Update user password
+        # Update user password and timestamp
+        from datetime import timezone
         user.hashed_password = hashed_password
+        user.updated_at = datetime.now(timezone.utc)
         await self._user_repository.update(user)
         
         # TODO: Invalidate reset token

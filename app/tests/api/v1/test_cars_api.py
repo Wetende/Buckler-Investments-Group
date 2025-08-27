@@ -8,7 +8,7 @@ from domain.value_objects.money import Money
 async def test_search_vehicles_api(client):
     # Arrange
     vehicles = [
-        Vehicle(id=1, make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={}),
+        Vehicle(id=1, make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={}, created_at=datetime.now(), updated_at=datetime.now()),
     ]
     client.mock_vehicle_repo.search_available.return_value = vehicles
 
@@ -27,7 +27,7 @@ async def test_search_vehicles_api(client):
 @pytest.mark.asyncio
 async def test_create_rental_api(client):
     # Arrange
-    vehicle = Vehicle(id=1, make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={})
+    vehicle = Vehicle(id=1, make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={}, created_at=datetime.now(), updated_at=datetime.now())
     client.mock_vehicle_repo.get_by_id.return_value = vehicle
     client.mock_rental_repo.create.side_effect = lambda rental: rental
 

@@ -5,9 +5,16 @@ Main application entry point with CORS, middleware, and router configuration.
 """
 
 from fastapi import FastAPI
+import sys
+from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi.errors import RateLimitExceeded
 from fastapi.responses import JSONResponse
+
+# Ensure 'app' package root (containing 'infrastructure', 'domain', 'application') is importable
+_APP_ROOT = Path(__file__).resolve().parents[1]
+if str(_APP_ROOT) not in sys.path:
+    sys.path.insert(0, str(_APP_ROOT))
 
 from infrastructure.config.middleware import (
     limiter,
@@ -36,8 +43,8 @@ app = FastAPI(
 
 # Create and wire container
 container = AppContainer()
+container.wire()  # Wire the container
 app.container = container
-# Wiring is now configured in the container's wiring_config
 
 @app.on_event("shutdown")
 async def shutdown_event():

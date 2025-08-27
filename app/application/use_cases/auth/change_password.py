@@ -44,8 +44,10 @@ class ChangePasswordUseCase:
         # Hash new password
         new_hashed_password = self._password_service.hash_password(request.new_password)
         
-        # Update user password
+        # Update user password and timestamp
+        from datetime import datetime, timezone
         user.hashed_password = new_hashed_password
+        user.updated_at = datetime.now(timezone.utc)
         await self._user_repository.update(user)
         
         # TODO: In production, consider:

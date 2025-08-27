@@ -3,7 +3,7 @@
 from datetime import timedelta
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, Body
+from fastapi import APIRouter, Depends, HTTPException, status, Body, Header
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from dependency_injector.wiring import inject, Provide
@@ -26,10 +26,9 @@ from infrastructure.config.auth import (
     authenticate_user,
     create_access_token,
     create_refresh_token,
-    get_current_active_user,
     ACCESS_TOKEN_EXPIRE_MINUTES,
 )
-from domain.entities.user import User
+from domain.entities.user import User as DomainUser
 from domain.value_objects.user_role import UserRole
 from shared.exceptions.auth import InvalidRefreshTokenError, InvalidResetTokenError, InvalidPasswordError
 from shared.exceptions.user import UserAlreadyExistsError
@@ -66,6 +65,7 @@ async def login_for_access_token(
 
 
 @router.post("/refresh", response_model=TokenResponse)
+@inject
 async def refresh_access_token(
     request: RefreshTokenRequest = Body(...),
     use_case: RefreshTokenUseCase = Depends(Provide[AppContainer.auth_use_cases.refresh_token_use_case]),
@@ -82,18 +82,34 @@ async def refresh_access_token(
 
 
 @router.post("/logout", response_model=GenericResponse)
+@inject
 async def logout(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    authorization: str = Header(None, alias="Authorization"),
     use_case: LogoutUseCase = Depends(Provide[AppContainer.auth_use_cases.logout_use_case]),
+    session: AsyncSession = Depends(get_async_session),
 ) -> GenericResponse:
     """Logout user (invalidates access token on client side)."""
-    return await use_case.execute(current_user.id)
+    # Extract token from Authorization header
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authorization header required")
+    
+    token = authorization.split(" ")[1]
+    
+    # Decode token to get user ID
+    from infrastructure.config.auth import _decode_token
+    try:
+        user_id = await _decode_token(token)
+        return await use_case.execute(int(user_id))
+    except Exception as e:
+        print(f"Logout error: {e}")  # Debug logging
+        raise HTTPException(status_code=401, detail=f"Authentication failed: {str(e)}")
 
 
 # Note: /revoke endpoint removed - functionality consolidated into /logout
 
 
 @router.post("/password-reset/request", response_model=GenericResponse)
+@inject
 async def request_password_reset(
     request: PasswordResetRequest = Body(...),
     use_case: PasswordResetRequestUseCase = Depends(Provide[AppContainer.auth_use_cases.password_reset_request_use_case]),
@@ -103,6 +119,7 @@ async def request_password_reset(
 
 
 @router.post("/password-reset/confirm", response_model=GenericResponse)
+@inject
 async def confirm_password_reset(
     request: PasswordResetConfirm = Body(...),
     use_case: PasswordResetConfirmUseCase = Depends(Provide[AppContainer.auth_use_cases.password_reset_confirm_use_case]),
@@ -118,19 +135,32 @@ async def confirm_password_reset(
 
 
 @router.post("/change-password", response_model=GenericResponse)
+@inject
 async def change_password(
-    current_user: Annotated[User, Depends(get_current_active_user)],
     request: ChangePasswordRequest = Body(...),
+    authorization: str = Header(None, alias="Authorization"),
     use_case: ChangePasswordUseCase = Depends(Provide[AppContainer.auth_use_cases.change_password_use_case]),
 ) -> GenericResponse:
     """Change password for authenticated user."""
+    # Extract token from Authorization header
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authorization header required")
+    
+    token = authorization.split(" ")[1]
+    
+    # Decode token to get user ID
+    from infrastructure.config.auth import _decode_token
     try:
-        return await use_case.execute(current_user.id, request)
+        user_id = await _decode_token(token)
+        return await use_case.execute(int(user_id), request)
     except InvalidPasswordError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
+    except Exception as e:
+        print(f"Change password error: {e}")  # Debug logging
+        raise HTTPException(status_code=401, detail=f"Authentication failed: {str(e)}")
 
 
 # ================================
@@ -138,6 +168,7 @@ async def change_password(
 # ================================
 
 class RegistrationRequest(BaseModel):
+    """Payload for user registration via /auth/register."""
     email: EmailStr
     password: str = Field(..., min_length=8, description="Password (min 8 chars)")
     name: str = Field(..., min_length=1, max_length=255)
@@ -161,18 +192,39 @@ async def register_user(
 
 @router.get("/me", response_model=UserResponseDTO)
 async def get_current_user(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    authorization: str = Header(None, alias="Authorization"),
+    session: AsyncSession = Depends(get_async_session),
 ) -> UserResponseDTO:
     """Get current authenticated user profile."""
-    return UserResponseDTO(
-        id=current_user.id,
-        email=current_user.email,
-        name=current_user.name,
-        phone=current_user.phone,
-        role=current_user.role,
-        is_active=current_user.is_active,
-        created_at=current_user.created_at
-    )
+    # Extract token from Authorization header
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authorization header required")
+    
+    token = authorization.split(" ")[1]
+    
+    # Decode token and get user
+    from infrastructure.config.auth import _decode_token
+    from shared.mappers.user import UserMapper
+    from infrastructure.database.models.user import User as UserModel
+    from sqlalchemy import select
+    
+    try:
+        user_id = await _decode_token(token)
+        stmt = select(UserModel).where(UserModel.id == int(user_id))
+        result = await session.execute(stmt)
+        user_model = result.scalar_one_or_none()
+        
+        if not user_model:
+            raise HTTPException(status_code=401, detail="User not found")
+        
+        if not user_model.is_active:
+            raise HTTPException(status_code=403, detail="Inactive user")
+        
+        # Convert to domain entity and then to DTO
+        user_entity = UserMapper.model_to_entity(user_model)
+        return UserResponseDTO.from_entity(user_entity)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 
 # ================================

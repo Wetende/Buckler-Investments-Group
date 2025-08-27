@@ -7,7 +7,8 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional, List
 
-from pydantic import BaseModel, Field, constr, condecimal, conint, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict
+from pydantic import field_serializer
 
 from domain.value_objects.property_status import PropertyStatus
 
@@ -17,26 +18,41 @@ class MoneyDTO(BaseModel):
     amount: Decimal
     currency: str = "KES"
 
+    @field_serializer('amount')
+    def serialize_amount(self, v: Decimal) -> str:
+        # Always render with two decimal places
+        return f"{v:.2f}"
+
+
+class PropertyFeaturesDTO(BaseModel):
+    bedrooms: int
+    bathrooms: float
+    square_feet: int
+    lot_size_acres: Optional[float] = None
+    year_built: Optional[int] = None
+    garage_spaces: Optional[int] = None
+
 
 class PropertyBase(BaseModel):
     """Shared base fields for Property schemas."""
 
-    title: constr(max_length=200)
+    title: str
     description: Optional[str] = None
-    price: condecimal(max_digits=12, decimal_places=2, ge=0)
-    property_type_id: int
+    # Keep for public listing schema compatibility (not used by domain entity directly)
+    price: Optional[Decimal] = None
+    property_type_id: Optional[int] = None
     address: str
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    bedrooms: Optional[conint(ge=0)] = None
-    bathrooms: Optional[conint(ge=0)] = None
-    square_footage: Optional[conint(ge=0)] = None
+    bedrooms: Optional[int] = None
+    bathrooms: Optional[int] = None
+    square_footage: Optional[int] = None
     amenities: Optional[dict] = None
     images: Optional[List[str]] = None
-    meta_description: Optional[constr(max_length=160)] = None
+    meta_description: Optional[str] = None
 
 
-class PropertyCreateUpdate(PropertyBase):
+class PropertyCreateUpdate(BaseModel):
     """Schema for create/update property requests according to CRUD convention."""
 
     id: int = Field(0, description="0 for create, actual id for update")
@@ -85,35 +101,34 @@ class PropertyResponseDTO(BaseModel):
     id: int
     title: str
     description: str
-    price: Decimal
+    listing_price: MoneyDTO
     address: str
-    location: str
-    bedrooms: Optional[int] = None
-    bathrooms: Optional[int] = None
-    area_sqm: Optional[int] = None
-    
+    status: str
+    features: Optional[dict] = None
+
     @classmethod
     def from_entity(cls, entity) -> 'PropertyResponseDTO':
         return cls(
             id=entity.id,
             title=entity.title,
             description=entity.description,
-            price=entity.price.amount,
+            listing_price=MoneyDTO(amount=entity.listing_price.amount, currency=getattr(entity.listing_price, 'currency', 'KES')),
             address=entity.address,
-            location=entity.location,
-            bedrooms=entity.features.bedrooms if entity.features else None,
-            bathrooms=entity.features.bathrooms if entity.features else None,
-            area_sqm=entity.features.area_sqm if entity.features else None
+            status=entity.status,
+            features={
+                "bedrooms": entity.features.bedrooms,
+                "bathrooms": entity.features.bathrooms,
+                "square_feet": entity.features.square_feet,
+            } if getattr(entity, 'features', None) else None,
         )
 
 
 class CreatePropertyRequestDTO(BaseModel):
+    agent_id: int
     title: str
     description: str
-    price: Decimal
     address: str
-    location: str
+    listing_price: Decimal
     property_type: str
-    bedrooms: Optional[int] = None
-    bathrooms: Optional[int] = None
-    area_sqm: Optional[int] = None
+    features: PropertyFeaturesDTO
+    image_urls: Optional[List[str]] = None

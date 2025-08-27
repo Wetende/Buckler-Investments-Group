@@ -7,7 +7,7 @@ class ListListingsUseCase:
         self._bnb_repository = bnb_repository
     
     async def execute(self, limit: int = 20, offset: int = 0) -> List[StListingRead]:
-        listings = await self._bnb_repository.get_all(limit=limit, offset=offset)
+        listings = await self._bnb_repository.list(limit=limit, offset=offset)
         
         return [
             StListingRead(

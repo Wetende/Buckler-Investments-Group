@@ -7,7 +7,7 @@ class ListToursUseCase:
         self._tour_repository = tour_repository
     
     async def execute(self, limit: int = 20, offset: int = 0) -> List[TourResponseDTO]:
-        tours = await self._tour_repository.get_all(limit=limit, offset=offset)
+        tours = await self._tour_repository.list(limit=limit, offset=offset)
         
         return [
             TourResponseDTO(

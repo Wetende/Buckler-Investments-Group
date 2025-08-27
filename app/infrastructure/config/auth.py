@@ -16,7 +16,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .config import settings
 from .database import get_async_session
-from infrastructure.database.models.user import User, UserRole
+from infrastructure.database.models.user import User as UserModel, UserRole
+from domain.entities.user import User as DomainUser
 
 __all__ = [
     "pwd_context",
@@ -126,13 +127,13 @@ async def revoke_refresh_token(refresh_token: str) -> bool:
 # DB helpers
 # ---------------------------------------------------------------------------
 
-async def _get_user_by_email(session: AsyncSession, email: str) -> Optional[User]:
-    stmt = select(User).where(User.email == email)
+async def _get_user_by_email(session: AsyncSession, email: str) -> Optional[UserModel]:
+    stmt = select(UserModel).where(UserModel.email == email)
     result = await session.execute(stmt)
     return result.scalar_one_or_none()
 
 
-async def authenticate_user(session: AsyncSession, email: str, password: str) -> Optional[User]:
+async def authenticate_user(session: AsyncSession, email: str, password: str) -> Optional[UserModel]:
     """Return user if credentials are valid, else None."""
     user = await _get_user_by_email(session, email)
     if not user or not verify_password(password, user.hashed_password):
@@ -158,17 +159,24 @@ async def _decode_token(token: str) -> str:
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     session: Annotated[AsyncSession, Depends(get_async_session)],
-) -> User:
+):
+    from shared.mappers.user import UserMapper
+    from domain.entities.user import User as DomainUser
+    
     user_id = await _decode_token(token)
-    stmt = select(User).where(User.id == int(user_id))
+    stmt = select(UserModel).where(UserModel.id == int(user_id))
     result = await session.execute(stmt)
-    user: Optional[User] = result.scalar_one_or_none()
-    if user is None:
+    user_model: Optional[UserModel] = result.scalar_one_or_none()
+    if user_model is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-    return user
+    
+    # Convert to domain entity
+    return UserMapper.model_to_entity(user_model)
 
 
-async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
+async def get_current_active_user(
+    current_user: Annotated[DomainUser, Depends(get_current_user)]
+):
     """
     Return the user if they are active, otherwise raise a 403 Forbidden error.
     """
@@ -184,7 +192,7 @@ async def get_current_active_user(current_user: Annotated[User, Depends(get_curr
 def require_roles(*allowed_roles: UserRole):
     """Dependency factory ensuring the current user has one of *allowed_roles*."""
 
-    async def _checker(user: Annotated[User, Depends(get_current_active_user)]):
+    async def _checker(user: Annotated[DomainUser, Depends(get_current_active_user)]):
         if user.role not in allowed_roles:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions")
         return user

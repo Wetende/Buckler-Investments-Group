@@ -4,6 +4,8 @@ from typing import List
 
 from ...containers import AppContainer
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
+from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
+from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
 from application.dto.tours import (
     CreateTourBookingRequest,
     TourBookingResponse,
@@ -28,22 +30,26 @@ async def create_tour_booking(
         raise HTTPException(status_code=404, detail="Tour not found")
 
 @router.get("/bookings/{booking_id}", response_model=TourBookingResponseDTO)
+@inject
 async def get_tour_booking_details(
     booking_id: int,
-    # TODO: Implement get tour booking use case
+    use_case: GetTourBookingUseCase = Depends(Provide[AppContainer.get_tour_booking_use_case]),
 ):
     """Get detailed information about a specific tour booking"""
-    # TODO: Implement booking retrieval logic
-    raise HTTPException(status_code=501, detail="Not implemented yet")
+    try:
+        return await use_case.execute(booking_id)
+    except TourBookingNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour booking not found")
 
 @router.get("/my-bookings", response_model=List[TourBookingResponseDTO])
+@inject
 async def get_my_tour_bookings(
     # TODO: Get customer_id from authentication context
     customer_id: int = Query(1, description="Customer ID (from auth context)"),
+    use_case: GetUserTourBookingsUseCase = Depends(Provide[AppContainer.get_user_tour_bookings_use_case]),
 ):
     """Get all tour bookings for the authenticated user"""
-    # TODO: Implement user booking retrieval
-    return []
+    return await use_case.execute(customer_id)
 
 @router.post("/bookings/{booking_id}/cancel", response_model=dict)
 async def cancel_tour_booking_post(

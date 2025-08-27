@@ -31,4 +31,6 @@ class UserMapper:
             agent_license_id=getattr(entity, 'agent_license_id', None),
             agency_name=getattr(entity, 'agency_name', None),
             is_active=entity.is_active,
+            created_at=entity.created_at,
+            updated_at=entity.updated_at,
         )
