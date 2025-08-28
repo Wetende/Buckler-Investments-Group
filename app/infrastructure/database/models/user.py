@@ -15,7 +15,7 @@ from .property import Property
 from .article import Article
 
 from ...config.database import Base
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 
 
 class User(Base):
@@ -37,7 +37,7 @@ class User(Base):
     role: Mapped[UserRole] = mapped_column(
         SQLEnum(UserRole), 
         nullable=False, 
-        default=UserRole.BUYER
+        default=UserRole.USER
     )
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     

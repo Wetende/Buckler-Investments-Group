@@ -20,7 +20,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.main import app
 from infrastructure.config.database import get_async_session
 from application.dto.user import UserCreateDTO, TokenResponse, PasswordResetRequest, ChangePasswordRequest
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 
 
 class AuthenticationTester:

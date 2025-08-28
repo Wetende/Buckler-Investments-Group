@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from domain.entities.user import User
 from domain.repositories.user import UserRepository
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 from infrastructure.database.models.user import User as UserModel
 from shared.mappers.user import UserMapper
 

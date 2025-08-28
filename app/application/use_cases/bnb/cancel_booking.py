@@ -16,5 +16,5 @@ class CancelBookingUseCase:
             raise BookingCancellationError("Booking cannot be cancelled in current status")
         
         # Update booking status to cancelled
-        booking.status = BookingStatus.CANCELLED.value
+        booking.status = BookingStatus.CANCELED
         await self._booking_repository.update(booking)

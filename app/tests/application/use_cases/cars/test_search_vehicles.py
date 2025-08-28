@@ -17,8 +17,8 @@ async def test_search_vehicles_returns_all_when_no_max_price(mock_vehicle_reposi
     use_case = SearchVehiclesUseCase(mock_vehicle_repository)
     
     vehicles = [
-        Vehicle(id=1, make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={}),
-        Vehicle(id=2, make="Honda", model="Civic", year=2021, daily_rate=Money(6000, "KES"), owner_id=1, features={})
+        Vehicle(id=1, created_at=datetime.now(), updated_at=datetime.now(), make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={}),
+        Vehicle(id=2, created_at=datetime.now(), updated_at=datetime.now(), make="Honda", model="Civic", year=2021, daily_rate=Money(6000, "KES"), owner_id=1, features={})
     ]
     mock_vehicle_repository.search_available.return_value = vehicles
     
@@ -42,8 +42,8 @@ async def test_search_vehicles_filters_by_max_price(mock_vehicle_repository):
     use_case = SearchVehiclesUseCase(mock_vehicle_repository)
     
     vehicles = [
-        Vehicle(id=1, make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={}),
-        Vehicle(id=2, make="Honda", model="Civic", year=2021, daily_rate=Money(6000, "KES"), owner_id=1, features={})
+        Vehicle(id=1, created_at=datetime.now(), updated_at=datetime.now(), make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={}),
+        Vehicle(id=2, created_at=datetime.now(), updated_at=datetime.now(), make="Honda", model="Civic", year=2021, daily_rate=Money(6000, "KES"), owner_id=1, features={})
     ]
     mock_vehicle_repository.search_available.return_value = vehicles
     

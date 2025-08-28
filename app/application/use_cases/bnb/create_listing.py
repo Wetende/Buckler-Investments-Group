@@ -10,6 +10,7 @@ class CreateListingUseCase:
     
     async def execute(self, request: StListingCU) -> StListingRead:
         # Convert DTO to domain entity
+        from datetime import datetime
         listing_entity = ShortTermListing(
             id=0,  # Will be set by repository
             host_id=request.host_id if hasattr(request, 'host_id') else 1,  # TODO: Get from auth context
@@ -22,7 +23,9 @@ class CreateListingUseCase:
             rules=request.rules,
             instant_book=request.instant_book,
             min_nights=request.min_nights,
-            max_nights=request.max_nights
+            max_nights=request.max_nights,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
         )
         
         if request.id == 0:

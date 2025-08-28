@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from .base import DomainEntity
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 
 @dataclass
 class User(DomainEntity):
@@ -10,7 +10,7 @@ class User(DomainEntity):
     hashed_password: str
     full_name: str
     is_active: bool = True
-    role: UserRole = UserRole.BUYER
+    role: UserRole = UserRole.USER
     phone_number: Optional[str] = None
     agent_license_id: Optional[str] = None
     agency_name: Optional[str] = None

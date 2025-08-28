@@ -10,133 +10,62 @@ from application.dto.reviews import (
     ReviewStatsDTO,
     ReviewType,
 )
+from application.use_cases.review.create_review import CreateReviewUseCase
+from application.use_cases.review.get_reviews import GetReviewsUseCase
+from application.use_cases.review.get_review_stats import GetReviewStatsUseCase
+from application.use_cases.review.respond_to_review import RespondToReviewUseCase
+from application.use_cases.review.get_user_reviews import GetUserReviewsUseCase
+from application.use_cases.review.flag_review import FlagReviewUseCase
+from application.use_cases.review.delete_review import DeleteReviewUseCase
+from shared.exceptions.review import ReviewNotFoundError, ReviewAlreadyExistsError
 
 router = APIRouter()
 
 # Review CRUD endpoints
 @router.post("/", response_model=ReviewResponseDTO)
-
+@inject
 async def create_review(
     request: ReviewCreateDTO,
-    # TODO: Implement create review use case
+    create_use_case: CreateReviewUseCase = Depends(Provide[AppContainer.create_review_use_case]),
+    # TODO: Get reviewer_id from authentication context
+    reviewer_id: int = Query(1, description="Reviewer ID (from auth context)"),
 ):
     """Create a new review for a listing/tour/car"""
-    # TODO: Implement review creation logic
-    # This should:
-    # 1. Validate user has booked the item
-    # 2. Check if user already reviewed this item
-    # 3. Create the review
-    # 4. Update target item's average rating
-    
-    from datetime import datetime
-    
-    return ReviewResponseDTO(
-        id=1,
-        target_type=request.target_type,
-        target_id=request.target_id,
-        rating=request.rating,
-        title=request.title,
-        comment=request.comment,
-        reviewer_id=request.reviewer_id or 1,
-        reviewer_name="John Doe",
-        booking_id=request.booking_id,
-        response=None,
-        response_date=None,
-        created_at=datetime.utcnow(),
-        updated_at=None
-    )
+    try:
+        return await create_use_case.execute(request, reviewer_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{target_type}/{target_id}", response_model=List[ReviewResponseDTO])
-
+@inject
 async def get_reviews(
     target_type: ReviewType,
     target_id: int,
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
     rating_filter: int = Query(None, ge=1, le=5, description="Filter by specific rating"),
-    # TODO: Implement get reviews use case
+    get_use_case: GetReviewsUseCase = Depends(Provide[AppContainer.get_reviews_use_case]),
 ):
     """Get all reviews for a specific listing/tour/car"""
-    # TODO: Implement review retrieval logic
-    from datetime import datetime
-    
-    # Mock data for now
-    reviews = [
-        ReviewResponseDTO(
-            id=1,
-            target_type=target_type,
-            target_id=target_id,
-            rating=5,
-            title="Amazing experience!",
-            comment="Had a wonderful time. Highly recommended for families. Great service and beautiful location.",
-            reviewer_id=1,
-            reviewer_name="Sarah Johnson",
-            booking_id=123,
-            response="Thank you for the lovely review!",
-            response_date=datetime(2024, 1, 22, 10, 0, 0),
-            created_at=datetime(2024, 1, 20, 15, 30, 0),
-            updated_at=None
-        ),
-        ReviewResponseDTO(
-            id=2,
-            target_type=target_type,
-            target_id=target_id,
-            rating=4,
-            title="Good value for money",
-            comment="Nice place, clean and comfortable. Location was perfect for our needs.",
-            reviewer_id=2,
-            reviewer_name="Mike Chen",
-            booking_id=124,
-            response=None,
-            response_date=None,
-            created_at=datetime(2024, 1, 18, 12, 15, 0),
-            updated_at=None
-        ),
-        ReviewResponseDTO(
-            id=3,
-            target_type=target_type,
-            target_id=target_id,
-            rating=5,
-            title="Perfect getaway",
-            comment="Everything was exactly as described. Host was very responsive and helpful.",
-            reviewer_id=3,
-            reviewer_name="Emily Davis",
-            booking_id=125,
-            response="We're so glad you enjoyed your stay!",
-            response_date=datetime(2024, 1, 17, 14, 0, 0),
-            created_at=datetime(2024, 1, 15, 9, 45, 0),
-            updated_at=None
+    try:
+        return await get_use_case.execute(
+            target_type, target_id, rating_filter, limit, offset
         )
-    ]
-    
-    # Apply rating filter if provided
-    if rating_filter:
-        reviews = [r for r in reviews if r.rating == rating_filter]
-    
-    return reviews[offset:offset + limit]
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{target_type}/{target_id}/stats", response_model=ReviewStatsDTO)
-
+@inject
 async def get_review_stats(
     target_type: ReviewType,
     target_id: int,
-    # TODO: Implement get review stats use case
+    stats_use_case: GetReviewStatsUseCase = Depends(Provide[AppContainer.get_review_stats_use_case]),
 ):
     """Get review statistics for a specific listing/tour/car"""
-    # TODO: Implement review statistics calculation
-    return ReviewStatsDTO(
-        target_type=target_type,
-        target_id=target_id,
-        total_reviews=45,
-        average_rating=4.6,
-        rating_breakdown={
-            "1": 1,
-            "2": 2,
-            "3": 4,
-            "4": 15,
-            "5": 23
-        }
-    )
+    try:
+        return await stats_use_case.execute(target_type, target_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/review/{review_id}", response_model=ReviewResponseDTO)
 

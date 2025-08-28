@@ -10,6 +10,8 @@ from application.use_cases.bnb.cancel_booking import CancelBookingUseCase
 from application.use_cases.bnb.get_host_bookings import GetHostBookingsUseCase
 from application.use_cases.bnb.approve_booking import ApproveBookingUseCase
 from application.use_cases.bnb.reject_booking import RejectBookingUseCase
+from application.use_cases.analytics.host_dashboard import HostDashboardUseCase
+from application.use_cases.analytics.host_earnings import HostEarningsUseCase
 from application.dto.bnb import (
     CreateBookingRequest,
     BookingResponse,
@@ -203,35 +205,31 @@ async def get_user_conversations(
 
 # Host dashboard & analytics
 @router.get("/host/dashboard", response_model=dict)
+@inject
 async def get_host_dashboard(
     # TODO: Get host_id from authentication context
     host_id: int = Query(1, description="Host ID (from auth context)"),
+    dashboard_use_case: HostDashboardUseCase = Depends(Provide[AppContainer.host_dashboard_use_case]),
 ):
     """Get host dashboard statistics"""
-    # TODO: Implement dashboard analytics
-    return {
-        "total_listings": 5,
-        "active_bookings": 3,
-        "total_revenue": 15000,
-        "occupancy_rate": 0.75,
-        "average_rating": 4.5
-    }
+    try:
+        return await dashboard_use_case.execute(host_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/host/earnings", response_model=dict)
+@inject
 async def get_host_earnings(
     # TODO: Get host_id from authentication context
     host_id: int = Query(1, description="Host ID (from auth context)"),
     period: str = Query("month", description="Period: day, week, month, year"),
+    earnings_use_case: HostEarningsUseCase = Depends(Provide[AppContainer.host_earnings_use_case]),
 ):
     """Get host earnings summary"""
-    # TODO: Implement earnings calculation
-    return {
-        "period": period,
-        "total_earnings": 15000,
-        "pending_payouts": 2500,
-        "completed_payouts": 12500,
-        "bookings_count": 8
-    }
+    try:
+        return await earnings_use_case.execute(host_id, period)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/host/payouts", response_model=List[dict])
 async def get_host_payouts(

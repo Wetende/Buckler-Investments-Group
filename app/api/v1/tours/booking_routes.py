@@ -6,6 +6,8 @@ from ...containers import AppContainer
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
 from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
 from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
+from application.use_cases.analytics.tour_operator_dashboard import TourOperatorDashboardUseCase
+from application.use_cases.analytics.tour_operator_earnings import TourOperatorEarningsUseCase
 from application.dto.tours import (
     CreateTourBookingRequest,
     TourBookingResponse,
@@ -152,35 +154,31 @@ async def get_tour_conversations(
 
 # Operator dashboard & analytics
 @router.get("/operator/dashboard", response_model=dict)
+@inject
 async def get_operator_dashboard(
     # TODO: Get operator_id from authentication context
     operator_id: int = Query(1, description="Operator ID (from auth context)"),
+    dashboard_use_case: TourOperatorDashboardUseCase = Depends(Provide[AppContainer.tour_operator_dashboard_use_case]),
 ):
     """Get operator dashboard statistics"""
-    # TODO: Implement dashboard analytics
-    return {
-        "total_tours": 8,
-        "active_bookings": 12,
-        "total_revenue": 25000,
-        "tours_completed": 45,
-        "average_rating": 4.7
-    }
+    try:
+        return await dashboard_use_case.execute(operator_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/operator/earnings", response_model=dict)
+@inject
 async def get_operator_earnings(
     # TODO: Get operator_id from authentication context
     operator_id: int = Query(1, description="Operator ID (from auth context)"),
     period: str = Query("month", description="Period: day, week, month, year"),
+    earnings_use_case: TourOperatorEarningsUseCase = Depends(Provide[AppContainer.tour_operator_earnings_use_case]),
 ):
     """Get operator earnings summary"""
-    # TODO: Implement earnings calculation
-    return {
-        "period": period,
-        "total_earnings": 25000,
-        "pending_payouts": 3500,
-        "completed_payouts": 21500,
-        "bookings_count": 12
-    }
+    try:
+        return await earnings_use_case.execute(operator_id, period)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/operator/payouts", response_model=List[dict])
 async def get_operator_payouts(

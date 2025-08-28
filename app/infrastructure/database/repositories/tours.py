@@ -14,10 +14,14 @@ class SqlAlchemyTourRepository(TourRepository):
 
     async def create(self, entity: Tour) -> Tour:
         model = TourMapper.entity_to_model(entity)
-        self._session.add(model)
-        await self._session.commit()
-        await self._session.refresh(model)
-        return TourMapper.model_to_entity(model)
+        try:
+            self._session.add(model)
+            await self._session.commit()
+            await self._session.refresh(model)
+            return TourMapper.model_to_entity(model)
+        except Exception as e:
+            await self._session.rollback()
+            raise e
 
     async def get_by_id(self, id: int) -> Optional[Tour]:
         stmt = select(TourModel).where(TourModel.id == id)
@@ -27,15 +31,23 @@ class SqlAlchemyTourRepository(TourRepository):
 
     async def update(self, entity: Tour) -> Tour:
         model = TourMapper.entity_to_model(entity)
-        await self._session.merge(model)
-        await self._session.commit()
-        return entity
+        try:
+            await self._session.merge(model)
+            await self._session.commit()
+            return entity
+        except Exception as e:
+            await self._session.rollback()
+            raise e
 
     async def delete(self, id: int) -> None:
-        model = await self._session.get(TourModel, id)
-        if model:
-            await self._session.delete(model)
-            await self._session.commit()
+        try:
+            model = await self._session.get(TourModel, id)
+            if model:
+                await self._session.delete(model)
+                await self._session.commit()
+        except Exception as e:
+            await self._session.rollback()
+            raise e
 
     async def list(self, limit: int = 100, offset: int = 0) -> List[Tour]:
         stmt = select(TourModel).limit(limit).offset(offset)
@@ -59,10 +71,14 @@ class SqlAlchemyTourBookingRepository(TourBookingRepository):
 
     async def create(self, entity: TourBooking) -> TourBooking:
         model = TourMapper.booking_entity_to_model(entity)
-        self._session.add(model)
-        await self._session.commit()
-        await self._session.refresh(model)
-        return TourMapper.booking_model_to_entity(model)
+        try:
+            self._session.add(model)
+            await self._session.commit()
+            await self._session.refresh(model)
+            return TourMapper.booking_model_to_entity(model)
+        except Exception as e:
+            await self._session.rollback()
+            raise e
 
     async def get_by_id(self, id: int) -> Optional[TourBooking]:
         stmt = select(TourBookingModel).where(TourBookingModel.id == id)
@@ -72,15 +88,23 @@ class SqlAlchemyTourBookingRepository(TourBookingRepository):
 
     async def update(self, entity: TourBooking) -> TourBooking:
         model = TourMapper.booking_entity_to_model(entity)
-        await self._session.merge(model)
-        await self._session.commit()
-        return entity
+        try:
+            await self._session.merge(model)
+            await self._session.commit()
+            return entity
+        except Exception as e:
+            await self._session.rollback()
+            raise e
 
     async def delete(self, id: int) -> None:
-        model = await self._session.get(TourBookingModel, id)
-        if model:
-            await self._session.delete(model)
-            await self._session.commit()
+        try:
+            model = await self._session.get(TourBookingModel, id)
+            if model:
+                await self._session.delete(model)
+                await self._session.commit()
+        except Exception as e:
+            await self._session.rollback()
+            raise e
 
     async def list(self, limit: int = 100, offset: int = 0) -> List[TourBooking]:
         stmt = select(TourBookingModel).limit(limit).offset(offset)

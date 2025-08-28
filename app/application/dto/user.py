@@ -8,7 +8,7 @@ from fastapi_users import schemas
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 
 
 class UserRead(schemas.BaseUser[int]):
@@ -67,7 +67,7 @@ class UserCreateDTO(BaseModel):
     password: str = Field(..., min_length=8, description="User password (minimum 8 characters)")
     name: str = Field(..., min_length=1, max_length=255, description="User's full name")
     phone: Optional[str] = Field(None, max_length=20, description="User's phone number")
-    role: Optional[UserRole] = UserRole.BUYER
+    role: Optional[UserRole] = UserRole.USER
     
     model_config = {"from_attributes": True}
 
@@ -96,7 +96,7 @@ class UserResponseDTO(BaseModel):
             email=entity.email,
             name=str(name_value) if name_value is not None else "",
             phone=phone_value,
-            role=role_value if role_value is not None else UserRole.BUYER,
+            role=role_value if role_value is not None else UserRole.USER,
             is_active=entity.is_active,
             created_at=entity.created_at
         )

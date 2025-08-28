@@ -69,7 +69,7 @@ async def create_or_update_user(
         new_user = User(
             email=payload.email,
             hashed_password=payload.password,  # should be hashed upstream in user manager
-            role=payload.role or UserRole.BUYER,
+            role=payload.role or UserRole.USER,
             name=payload.name,
             phone=payload.phone,
         )

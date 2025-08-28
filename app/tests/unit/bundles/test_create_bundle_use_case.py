@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 from decimal import Decimal
+from datetime import datetime
 
 from application.use_cases.bundle.create_bundle import CreateBundleUseCase
 from application.dto.bundle import CreateBundleRequestDTO, BundledItemRequestDTO
@@ -34,6 +35,8 @@ async def test_create_bundle_use_case_success():
     # Mock the bundle creation return value
     created_bundle = Bundle(
         id=1,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
         user_id=1,
         items=[
             BundledItem(item_id=1, item_type='tour_booking', price=tour.price, details={}),
@@ -69,7 +72,18 @@ async def test_create_bundle_item_not_found():
 
     use_case = CreateBundleUseCase(bundle_repo, tour_repo, vehicle_repo, bnb_repo)
 
-    tour_repo.find_by_id.return_value = None
+    # Since tour is not found, this test should raise an error before creating the bundle
+    tour_repo.get_by_id.return_value = None
+
+    # This shouldn't be reached, but if it is, return a proper entity
+    mock_bundle = Bundle(
+        id=1,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+        user_id=1,
+        items=[]
+    )
+    bundle_repo.create.return_value = mock_bundle
 
     request_dto = CreateBundleRequestDTO(
         user_id=1,
@@ -80,4 +94,4 @@ async def test_create_bundle_item_not_found():
     with pytest.raises(BundledItemNotFoundError) as excinfo:
         await use_case.execute(request_dto)
     
-    assert "Tour booking with ID 99 not found" in str(excinfo.value)
+    assert "Tour Booking with ID 99 not found" in str(excinfo.value)

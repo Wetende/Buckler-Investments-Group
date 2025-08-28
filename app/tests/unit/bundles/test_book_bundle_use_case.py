@@ -5,7 +5,7 @@ from datetime import datetime
 
 from application.use_cases.bundle.book_bundle import BookBundleUseCase
 from application.dto.bundle_booking import CreateBundleBookingRequestDTO
-from domain.entities.bundle import Bundle
+from domain.entities.bundle import Bundle, BundledItem
 from domain.entities.bundle_booking import BundleBooking, BookingStatus
 from domain.value_objects.money import Money
 from shared.exceptions.bundle import BundleNotFoundError
@@ -18,16 +18,25 @@ async def test_book_bundle_use_case_success():
 
     use_case = BookBundleUseCase(bundle_repo, booking_repo)
 
+    # Create a bundle with items so it has a proper total price
+    bundle_items = [
+        BundledItem(item_id=1, item_type='tour_booking', price=Money(amount=Decimal("100.00"), currency="USD"), details={}),
+        BundledItem(item_id=2, item_type='car_rental', price=Money(amount=Decimal("100.00"), currency="USD"), details={})
+    ]
+
     bundle = Bundle(
         id=1,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
         user_id=1,
-        items=[],
-        total_price=Money(amount=Decimal("200.00"), currency="USD")
+        items=bundle_items
     )
     bundle_repo.find_by_id.return_value = bundle
 
     created_booking = BundleBooking(
         id=1,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
         bundle_id=1,
         user_id=1,
         total_price=bundle.total_price,

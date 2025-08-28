@@ -16,5 +16,16 @@ class BundleBookingResponseDTO(BaseModel):
     status: BookingStatus
     booked_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
+
+    @classmethod
+    def from_entity(cls, entity) -> 'BundleBookingResponseDTO':
+        """Convert BundleBooking entity to DTO"""
+        return cls(
+            id=entity.id,
+            bundle_id=entity.bundle_id,
+            user_id=entity.user_id,
+            total_price=MoneyDTO(amount=entity.total_price.amount, currency=entity.total_price.currency),
+            status=entity.status,
+            booked_at=entity.booked_at
+        )

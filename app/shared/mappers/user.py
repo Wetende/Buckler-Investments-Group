@@ -1,6 +1,6 @@
 from domain.entities.user import User
 from infrastructure.database.models.user import User as UserModel
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 
 class UserMapper:
     @staticmethod
@@ -27,7 +27,7 @@ class UserMapper:
             hashed_password=entity.hashed_password,
             name=entity.full_name,  # Entity uses 'full_name', model uses 'name'
             phone=getattr(entity, 'phone_number', None),
-            role=getattr(entity, 'role', UserRole.BUYER),
+            role=getattr(entity, 'role', UserRole.USER),
             agent_license_id=getattr(entity, 'agent_license_id', None),
             agency_name=getattr(entity, 'agency_name', None),
             is_active=entity.is_active,

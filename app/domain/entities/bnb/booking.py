@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import date
 from ..base import DomainEntity
 from ...value_objects.money import Money
+from ...value_objects.booking_status import BookingStatus
 
 @dataclass
 class Booking(DomainEntity):
@@ -11,11 +12,11 @@ class Booking(DomainEntity):
     check_out: date
     guests: int
     total_amount: Money
-    status: str
+    status: BookingStatus
     
     def calculate_nights(self) -> int:
         return (self.check_out - self.check_in).days
     
     def can_be_cancelled(self) -> bool:
         """Business rule for cancellation"""
-        return self.status in ["PENDING", "CONFIRMED"]
+        return self.status in [BookingStatus.PENDING, BookingStatus.CONFIRMED]

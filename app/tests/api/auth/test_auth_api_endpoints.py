@@ -135,14 +135,15 @@ class TestAuthApiEndpoints:
     ):
         """Test that /users/me endpoint returns user data with valid token."""
         # Arrange
-        from domain.entities.user import User, UserRole
+        from domain.entities.user import User
+        from shared.constants.user_roles import UserRole
         mock_user = User(
             id=123,
             email="test@example.com",
             hashed_password="hashed",
             full_name="Test User",
             is_active=True,
-            roles=[UserRole(name="user", permissions=[])]
+            role=UserRole.USER
         )
         mock_get_current_user.return_value = mock_user
 

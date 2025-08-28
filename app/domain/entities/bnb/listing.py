@@ -1,15 +1,17 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Optional, List
-from datetime import date
+from datetime import date, datetime
 from ..base import DomainEntity
 from ...value_objects.money import Money
+from ...value_objects.booking_status import StListingType, CancellationPolicy
 
 @dataclass
 class ShortTermListing(DomainEntity):
+    # Inherited from DomainEntity: id, created_at, updated_at
     host_id: int
     title: str
-    listing_type: str
+    listing_type: StListingType
     capacity: int
     nightly_price: Money
     address: str
@@ -18,6 +20,7 @@ class ShortTermListing(DomainEntity):
     instant_book: bool = False
     min_nights: Optional[int] = None
     max_nights: Optional[int] = None
+    cancellation_policy: CancellationPolicy = CancellationPolicy.MODERATE
     
     def calculate_total_cost(self, check_in: date, check_out: date) -> Money:
         """Business logic for calculating total booking cost"""

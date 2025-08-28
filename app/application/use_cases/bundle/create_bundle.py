@@ -23,7 +23,13 @@ class CreateBundleUseCase:
         self._bnb_repo = bnb_repo
 
     async def execute(self, request: CreateBundleRequestDTO) -> BundleResponseDTO:
-        bundle = Bundle(user_id=request.user_id)
+        from datetime import datetime
+        bundle = Bundle(
+            id=0,  # Will be set by repository on creation
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow(),
+            user_id=request.user_id
+        )
 
         item_mappers = {
             "tour_booking": self._map_tour_item,
@@ -42,7 +48,7 @@ class CreateBundleUseCase:
 
         created_bundle = await self._bundle_repo.create(bundle)
 
-        return BundleResponseDTO.from_orm(created_bundle)
+        return BundleResponseDTO.from_entity(created_bundle)
 
     async def _map_tour_item(self, item_id: int) -> BundledItem:
         tour = await self._tour_repo.get_by_id(item_id)

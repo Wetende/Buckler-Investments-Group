@@ -12,7 +12,8 @@ from unittest.mock import Mock
 
 from api.main import app
 from infrastructure.config.database import Base
-from domain.entities.user import User, UserRole
+from domain.entities.user import User
+from shared.constants.user_roles import UserRole
 
 
 # Test database URL - use PostgreSQL like production
@@ -82,7 +83,7 @@ def sample_user_entity():
         hashed_password="$2b$12$hashed_password_example",
         full_name="Test User",
         is_active=True,
-        roles=[UserRole(name="user", permissions=["view_own_profile"])]
+        role=UserRole.USER
     )
 
 

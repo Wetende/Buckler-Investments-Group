@@ -18,7 +18,11 @@ class BookBundleUseCase:
         if not bundle:
             raise BundleNotFoundError(request.bundle_id)
 
+        from datetime import datetime
         booking = BundleBooking(
+            id=0,  # Will be set by repository
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow(),
             bundle_id=bundle.id,
             user_id=request.user_id,
             total_price=bundle.total_price,
@@ -26,4 +30,4 @@ class BookBundleUseCase:
 
         created_booking = await self._booking_repo.create(booking)
 
-        return BundleBookingResponseDTO.from_orm(created_booking)
+        return BundleBookingResponseDTO.from_entity(created_booking)

@@ -21,7 +21,17 @@ async def test_create_rental_success(mock_vehicle_repository, mock_car_rental_re
     # Arrange
     use_case = CreateRentalUseCase(mock_vehicle_repository, mock_car_rental_repository)
     
-    vehicle = Vehicle(id=1, make="Toyota", model="Corolla", year=2022, daily_rate=Money(5000, "KES"), owner_id=1, features={})
+    vehicle = Vehicle(
+        id=1,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+        make="Toyota",
+        model="Corolla",
+        year=2022,
+        daily_rate=Money(5000, "KES"),
+        owner_id=1,
+        features={}
+    )
     mock_vehicle_repository.get_by_id.return_value = vehicle
     
     # Mock the return value of the create method

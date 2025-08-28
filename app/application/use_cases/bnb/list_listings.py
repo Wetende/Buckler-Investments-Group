@@ -5,10 +5,10 @@ from application.dto.bnb import StListingRead
 class ListListingsUseCase:
     def __init__(self, bnb_repository: BnbRepository):
         self._bnb_repository = bnb_repository
-    
+
     async def execute(self, limit: int = 20, offset: int = 0) -> List[StListingRead]:
         listings = await self._bnb_repository.list(limit=limit, offset=offset)
-        
+
         return [
             StListingRead(
                 id=listing.id,

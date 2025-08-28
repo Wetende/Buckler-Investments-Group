@@ -26,5 +26,23 @@ class BundleResponseDTO(BaseModel):
     items: List[BundledItemResponseDTO]
     total_price: MoneyDTO
 
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
+
+    @classmethod
+    def from_entity(cls, entity) -> 'BundleResponseDTO':
+        """Convert Bundle entity to DTO"""
+        items_dto = []
+        for item in entity.items:
+            items_dto.append(BundledItemResponseDTO(
+                item_id=item.item_id,
+                item_type=item.item_type,
+                price=MoneyDTO(amount=item.price.amount, currency=item.price.currency),
+                details=item.details
+            ))
+
+        return cls(
+            id=entity.id,
+            user_id=entity.user_id,
+            items=items_dto,
+            total_price=MoneyDTO(amount=entity.total_price.amount, currency=entity.total_price.currency)
+        )

@@ -3,7 +3,7 @@ from application.dto.user import UserCreateDTO, UserResponseDTO
 from domain.entities.user import User
 from domain.repositories.user import UserRepository
 from domain.services.password_service import PasswordService
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 from shared.exceptions.user import UserAlreadyExistsError
 
 class CreateUserUseCase:
@@ -26,7 +26,7 @@ class CreateUserUseCase:
             hashed_password=hashed_password,
             full_name=user_data.name,
             is_active=True,
-            role=user_data.role if user_data.role else UserRole.BUYER,
+            role=user_data.role if user_data.role else UserRole.USER,
             phone_number=user_data.phone,
         )
 

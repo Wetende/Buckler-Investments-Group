@@ -12,6 +12,7 @@ from domain.repositories.user import UserRepository
 from domain.repositories.bundle import BundleRepository
 from domain.repositories.bundle_booking import BundleBookingRepository
 # from domain.repositories.payment import PaymentRepository  # Temporarily disabled
+from domain.repositories.review import ReviewRepository
 from infrastructure.database.repositories.bnb import (
     SqlAlchemyBnbRepository,
     SqlAlchemyBookingRepository,
@@ -33,6 +34,7 @@ from infrastructure.database.repositories.user import SqlAlchemyUserRepository
 from infrastructure.database.repositories.bundle import SqlAlchemyBundleRepository
 from infrastructure.database.repositories.bundle_booking import SqlAlchemyBundleBookingRepository
 # from infrastructure.database.repositories.payment import SqlAlchemyPaymentRepository  # Temporarily disabled
+from infrastructure.database.repositories.review import SqlAlchemyReviewRepository
 
 # Use Cases
 from application.use_cases.bnb.search_listings import SearchListingsUseCase
@@ -74,6 +76,17 @@ from application.use_cases.bundle.book_bundle import BookBundleUseCase
 # from application.use_cases.payment.create_payment_intent import CreatePaymentIntentUseCase  # Temporarily disabled
 # from infrastructure.external_services.payment.stripe_service import StripePaymentService  # Temporarily disabled
 # from infrastructure.external_services.payment.mpesa_service import MpesaPaymentService  # Temporarily disabled
+from application.use_cases.review.create_review import CreateReviewUseCase
+from application.use_cases.review.get_reviews import GetReviewsUseCase
+from application.use_cases.review.get_review_stats import GetReviewStatsUseCase
+from application.use_cases.review.respond_to_review import RespondToReviewUseCase
+from application.use_cases.review.get_user_reviews import GetUserReviewsUseCase
+from application.use_cases.review.flag_review import FlagReviewUseCase
+from application.use_cases.review.delete_review import DeleteReviewUseCase
+from application.use_cases.analytics.host_dashboard import HostDashboardUseCase
+from application.use_cases.analytics.host_earnings import HostEarningsUseCase
+from application.use_cases.analytics.tour_operator_dashboard import TourOperatorDashboardUseCase
+from application.use_cases.analytics.tour_operator_earnings import TourOperatorEarningsUseCase
 
 
 class BundleUseCases(containers.DeclarativeContainer):
@@ -194,14 +207,17 @@ class AppContainer(containers.DeclarativeContainer):
             "api.v1.investment_platform.user_routes",
             "api.v1.shared.user_routes",
             "api.v1.shared.auth_routes",
+            "api.v1.reviews.routes",
             # "api.v1.payments.routes",  # Temporarily disabled
         ]
     )
 
-    # Database
-    db_session = providers.Resource(
-        AsyncSessionLocal
-    )
+    # Database - Factory approach with proper session management
+    def create_managed_session():
+        """Create a session that will be properly managed."""
+        return AsyncSessionLocal()
+
+    db_session_factory = providers.Factory(create_managed_session)
 
     # Services
     password_service: providers.Factory[PasswordService] = providers.Factory(
@@ -224,75 +240,81 @@ class AppContainer(containers.DeclarativeContainer):
     # BNB Repositories
     bnb_repository: providers.Factory[BnbRepository] = providers.Factory(
         SqlAlchemyBnbRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     booking_repository: providers.Factory[BookingRepository] = providers.Factory(
         SqlAlchemyBookingRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     # Tour Repositories
     tour_repository: providers.Factory[TourRepository] = providers.Factory(
         SqlAlchemyTourRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     tour_booking_repository: providers.Factory[TourBookingRepository] = providers.Factory(
         SqlAlchemyTourBookingRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     # Car Repositories
     vehicle_repository: providers.Factory[VehicleRepository] = providers.Factory(
         SqlAlchemyVehicleRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     car_rental_repository: providers.Factory[CarRentalRepository] = providers.Factory(
         SqlAlchemyCarRentalRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     # Property Repository
     property_repository: providers.Factory[PropertyRepository] = providers.Factory(
         SqlAlchemyPropertyRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     # Investment Repositories
     investment_repository: providers.Factory[InvestmentRepository] = providers.Factory(
         SqlAlchemyInvestmentRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     investment_holding_repository: providers.Factory[InvestmentHoldingRepository] = providers.Factory(
         SqlAlchemyInvestmentHoldingRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     # User Repository
     user_repository: providers.Factory[UserRepository] = providers.Factory(
         SqlAlchemyUserRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     # Bundle Repository
     bundle_repository: providers.Factory[BundleRepository] = providers.Factory(
         SqlAlchemyBundleRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     bundle_booking_repository: providers.Factory[BundleBookingRepository] = providers.Factory(
         SqlAlchemyBundleBookingRepository,
-        session=db_session,
+        session=db_session_factory,
     )
 
     # Payment Repository - temporarily disabled
     # payment_repository: providers.Factory[PaymentRepository] = providers.Factory(
     #     SqlAlchemyPaymentRepository,
-    #     session=db_session,
+    #     session=db_session_factory,
     # )
+
+    # Review Repository
+    review_repository: providers.Factory[ReviewRepository] = providers.Factory(
+        SqlAlchemyReviewRepository,
+        session=db_session_factory,
+    )
 
     # BNB Use Cases
     search_listings_use_case = providers.Factory(
@@ -462,3 +484,70 @@ class AppContainer(containers.DeclarativeContainer):
     #     stripe_service=stripe_service,
     #     mpesa_service=mpesa_service,
     # )
+
+    # Review Use Cases
+    create_review_use_case = providers.Factory(
+        CreateReviewUseCase,
+        review_repository=review_repository,
+        user_repository=user_repository,
+    )
+
+    get_reviews_use_case = providers.Factory(
+        GetReviewsUseCase,
+        review_repository=review_repository,
+        user_repository=user_repository,
+    )
+
+    get_review_stats_use_case = providers.Factory(
+        GetReviewStatsUseCase,
+        review_repository=review_repository,
+    )
+
+    respond_to_review_use_case = providers.Factory(
+        RespondToReviewUseCase,
+        review_repository=review_repository,
+    )
+
+    get_user_reviews_use_case = providers.Factory(
+        GetUserReviewsUseCase,
+        review_repository=review_repository,
+        user_repository=user_repository,
+    )
+
+    flag_review_use_case = providers.Factory(
+        FlagReviewUseCase,
+        review_repository=review_repository,
+    )
+
+    delete_review_use_case = providers.Factory(
+        DeleteReviewUseCase,
+        review_repository=review_repository,
+        user_repository=user_repository,
+    )
+
+    # Analytics Use Cases
+    host_dashboard_use_case = providers.Factory(
+        HostDashboardUseCase,
+        bnb_repository=bnb_repository,
+        booking_repository=booking_repository,
+        review_repository=review_repository,
+    )
+
+    host_earnings_use_case = providers.Factory(
+        HostEarningsUseCase,
+        bnb_repository=bnb_repository,
+        booking_repository=booking_repository,
+    )
+
+    tour_operator_dashboard_use_case = providers.Factory(
+        TourOperatorDashboardUseCase,
+        tour_repository=tour_repository,
+        tour_booking_repository=tour_booking_repository,
+        review_repository=review_repository,
+    )
+
+    tour_operator_earnings_use_case = providers.Factory(
+        TourOperatorEarningsUseCase,
+        tour_repository=tour_repository,
+        tour_booking_repository=tour_booking_repository,
+    )

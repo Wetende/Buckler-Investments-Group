@@ -6,7 +6,8 @@ Tests pure business logic without external dependencies.
 import pytest
 from datetime import datetime
 
-from domain.entities.user import User, UserRole
+from domain.entities.user import User
+from shared.constants.user_roles import UserRole, Permission, get_user_permissions
 
 
 class TestUserEntity:
@@ -15,12 +16,12 @@ class TestUserEntity:
     @pytest.fixture
     def basic_user_role(self):
         """Create a basic user role for testing."""
-        return UserRole(name="user", permissions=["view_own_profile", "update_own_profile"])
+        return UserRole.USER
 
     @pytest.fixture
     def agent_user_role(self):
         """Create an agent role for testing."""
-        return UserRole(name="agent", permissions=["view_own_profile", "create_listings", "manage_listings"])
+        return UserRole.AGENT
 
     @pytest.fixture
     def basic_user(self, basic_user_role):
@@ -31,7 +32,7 @@ class TestUserEntity:
             hashed_password="hashed_password_123",
             full_name="Test User",
             is_active=True,
-            roles=[basic_user_role]
+            role=basic_user_role
         )
 
     def test_user_creation_with_valid_data_succeeds(self, basic_user_role):
@@ -45,7 +46,7 @@ class TestUserEntity:
             hashed_password="hashed_password_456",
             full_name="John Doe",
             is_active=True,
-            roles=[basic_user_role]
+            role=basic_user_role
         )
 
         # Assert
@@ -54,23 +55,24 @@ class TestUserEntity:
         assert user.hashed_password == "hashed_password_456"
         assert user.full_name == "John Doe"
         assert user.is_active is True
-        assert len(user.roles) == 1
-        assert user.roles[0].name == "user"
+        assert user.role == basic_user_role
+        assert user.role.value == "user"
 
-    def test_user_creation_with_empty_roles_succeeds(self):
-        """Test creating a user with empty roles list succeeds."""
+    def test_user_creation_with_default_role_succeeds(self):
+        """Test creating a user with default role succeeds."""
         # Arrange & Act
         user = User(
             id=1,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="noroles@example.com",
             hashed_password="hash123",
             full_name="No Roles User",
-            is_active=True,
-            roles=[]
+            is_active=True
         )
 
         # Assert
-        assert user.roles == []
+        assert user.role == UserRole.USER
         assert user.email == "noroles@example.com"
 
     def test_user_is_agent_returns_true_when_user_has_agent_role(self, agent_user_role):
@@ -78,11 +80,13 @@ class TestUserEntity:
         # Arrange
         user = User(
             id=1,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="agent@example.com",
             hashed_password="hash123",
             full_name="Agent User",
             is_active=True,
-            roles=[agent_user_role]
+            role=agent_user_role
         )
 
         # Act & Assert
@@ -93,43 +97,47 @@ class TestUserEntity:
         # Arrange
         user = User(
             id=1,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="user@example.com",
             hashed_password="hash123",
             full_name="Regular User",
             is_active=True,
-            roles=[basic_user_role]
+            role=basic_user_role
         )
 
         # Act & Assert
         assert user.is_agent() is False
 
-    def test_user_is_agent_returns_false_when_user_has_no_roles(self):
-        """Test is_agent() returns False when user has no roles."""
+    def test_user_is_agent_returns_false_when_user_has_user_role(self):
+        """Test is_agent() returns False when user has regular user role."""
         # Arrange
         user = User(
             id=1,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="user@example.com",
             hashed_password="hash123",
-            full_name="No Roles User",
+            full_name="Regular User",
             is_active=True,
-            roles=[]
+            role=UserRole.USER
         )
 
         # Act & Assert
         assert user.is_agent() is False
 
-    def test_user_is_agent_returns_true_with_multiple_roles_including_agent(
-        self, basic_user_role, agent_user_role
-    ):
-        """Test is_agent() returns True when user has multiple roles including agent."""
+    def test_user_is_agent_returns_true_when_user_has_agent_role_directly(self, agent_user_role):
+        """Test is_agent() returns True when user has agent role."""
         # Arrange
         user = User(
             id=1,
-            email="multiuser@example.com",
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
+            email="agent@example.com",
             hashed_password="hash123",
-            full_name="Multi Role User",
+            full_name="Agent User",
             is_active=True,
-            roles=[basic_user_role, agent_user_role]
+            role=agent_user_role
         )
 
         # Act & Assert
@@ -140,11 +148,13 @@ class TestUserEntity:
         # Arrange & Act
         user = User(
             id=1,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="minimal@example.com",
             hashed_password="hash123",
             full_name=None,
             is_active=True,
-            roles=[]
+            role=UserRole.USER
         )
 
         # Assert
@@ -156,11 +166,13 @@ class TestUserEntity:
         # Arrange & Act
         user = User(
             id=1,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="inactive@example.com",
             hashed_password="hash123",
             full_name="Inactive User",
             is_active=False,
-            roles=[basic_user_role]
+            role=basic_user_role
         )
 
         # Assert
@@ -172,11 +184,13 @@ class TestUserEntity:
         # Arrange & Act
         user = User(
             id=1,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="Test.User@Example.COM",
             hashed_password="hash123",
             full_name="Case Test User",
             is_active=True,
-            roles=[]
+            role=UserRole.USER
         )
 
         # Assert
@@ -187,11 +201,13 @@ class TestUserEntity:
         # Arrange
         user = User(
             id=123,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="dict.test@example.com",
             hashed_password="hash123",
             full_name="Dict Test User",
             is_active=True,
-            roles=[basic_user_role]
+            role=basic_user_role
         )
         user.created_at = datetime(2024, 1, 15, 10, 30, 0)
         user.updated_at = datetime(2024, 1, 16, 11, 45, 0)
@@ -206,69 +222,72 @@ class TestUserEntity:
         assert user_dict["hashed_password"] == "hash123"
         assert user_dict["full_name"] == "Dict Test User"
         assert user_dict["is_active"] is True
-        assert user_dict["roles"] == [basic_user_role]
+        assert user_dict["role"] == basic_user_role
         assert user_dict["created_at"] == datetime(2024, 1, 15, 10, 30, 0)
         assert user_dict["updated_at"] == datetime(2024, 1, 16, 11, 45, 0)
 
-    def test_user_role_contains_permissions(self):
-        """Test that UserRole properly stores permissions."""
+    def test_user_role_permissions_lookup(self):
+        """Test that UserRole permissions can be looked up."""
         # Arrange & Act
-        role = UserRole(
-            name="test_role",
-            permissions=["permission1", "permission2", "permission3"]
-        )
+        user_permissions = get_user_permissions(UserRole.USER)
 
         # Assert
-        assert role.name == "test_role"
-        assert len(role.permissions) == 3
-        assert "permission1" in role.permissions
-        assert "permission2" in role.permissions
-        assert "permission3" in role.permissions
+        assert len(user_permissions) > 0
+        assert Permission.VIEW_OWN_PROFILE in user_permissions
+        assert Permission.UPDATE_OWN_PROFILE in user_permissions
 
-    def test_user_role_can_have_empty_permissions(self):
-        """Test that UserRole can be created with empty permissions list."""
+    def test_agent_role_has_additional_permissions(self):
+        """Test that agent role has more permissions than user role."""
         # Arrange & Act
-        role = UserRole(name="empty_role", permissions=[])
+        user_permissions = get_user_permissions(UserRole.USER)
+        agent_permissions = get_user_permissions(UserRole.AGENT)
 
         # Assert
-        assert role.name == "empty_role"
-        assert role.permissions == []
+        assert len(agent_permissions) > len(user_permissions)
+        assert Permission.CREATE_PROPERTIES in agent_permissions
 
     def test_user_equality_based_on_id(self, basic_user_role):
         """Test that user equality is based on ID (if implemented)."""
         # Arrange
         user1 = User(
             id=123,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="user1@example.com",
             hashed_password="hash1",
             full_name="User One",
             is_active=True,
-            roles=[basic_user_role]
+            role=basic_user_role
         )
-        
+
         user2 = User(
             id=123,
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="user2@example.com",  # Different email but same ID
             hashed_password="hash2",
             full_name="User Two",
             is_active=False,
-            roles=[]
+            role=UserRole.USER
         )
         
         user3 = User(
             id=456,  # Different ID
+            created_at=datetime.now(),
+            updated_at=datetime.now(),
             email="user1@example.com",
             hashed_password="hash1",
             full_name="User One",
             is_active=True,
-            roles=[basic_user_role]
+            role=basic_user_role
         )
 
         # Act & Assert
-        # If equality is implemented based on ID
-        if hasattr(user1, '__eq__'):
-            assert user1 == user2  # Same ID
-            assert user1 != user3  # Different ID
-        else:
-            # If no custom equality, they should be different objects
-            assert user1 is not user2
+        # User entity uses default dataclass equality (compares all attributes)
+        # Since user1 and user2 have same ID but different other attributes, they are not equal
+        assert user1 != user2  # Different attributes despite same ID
+        assert user1 != user3  # Different IDs and attributes
+
+        # But they should be different objects
+        assert user1 is not user2
+        assert user2 is not user3

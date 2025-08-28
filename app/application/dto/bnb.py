@@ -136,12 +136,12 @@ class ListingResponse(BaseModel):
         return cls(
             id=entity.id,
             title=entity.title,
-            type=entity.type.value if hasattr(entity.type, 'value') else str(entity.type),
+            type=entity.listing_type.value if hasattr(entity.listing_type, 'value') else str(entity.listing_type),
             capacity=entity.capacity,
             nightly_price=entity.nightly_price.amount,
-            location=entity.location,
+            location=entity.address,
             instant_book=entity.instant_book,
-            rating=entity.rating
+            rating=getattr(entity, 'rating', None)
         )
 
 

@@ -62,6 +62,12 @@ class SqlAlchemyPropertyRepository(PropertyRepository):
         models = result.scalars().all()
         return [PropertyMapper.model_to_entity(m) for m in models]
 
+    async def list(self, limit: int = 100, offset: int = 0) -> List[Property]:
+        stmt = select(PropertyModel).limit(limit).offset(offset)
+        result = await self._session.execute(stmt)
+        models = result.scalars().all()
+        return [PropertyMapper.model_to_entity(m) for m in models]
+
     async def find_by_agent(self, agent_id: int) -> List[Property]:
         stmt = select(PropertyModel).where(PropertyModel.agent_id == agent_id)
         result = await self._session.execute(stmt)

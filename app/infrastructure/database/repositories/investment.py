@@ -33,6 +33,18 @@ class SqlAlchemyInvestmentRepository(InvestmentRepository):
         models = result.scalars().all()
         return [InvestmentMapper.model_to_entity(m) for m in models]
 
+    async def update(self, entity: Investment) -> Investment:
+        model = InvestmentMapper.entity_to_model(entity)
+        await self._session.merge(model)
+        await self._session.commit()
+        return entity
+
+    async def delete(self, id: int) -> None:
+        model = await self._session.get(InvestmentModel, id)
+        if model:
+            await self._session.delete(model)
+            await self._session.commit()
+
     async def find_by_status(self, status: str) -> List[Investment]:
         stmt = select(InvestmentModel).where(InvestmentModel.status == status)
         result = await self._session.execute(stmt)
@@ -59,6 +71,24 @@ class SqlAlchemyInvestmentHoldingRepository(InvestmentHoldingRepository):
 
     async def find_by_user_id(self, user_id: int) -> List[InvestmentHolding]:
         stmt = select(InvestmentHoldingModel).where(InvestmentHoldingModel.user_id == user_id)
+        result = await self._session.execute(stmt)
+        models = result.scalars().all()
+        return [InvestmentMapper.holding_model_to_entity(m) for m in models]
+
+    async def update(self, entity: InvestmentHolding) -> InvestmentHolding:
+        model = InvestmentMapper.holding_entity_to_model(entity)
+        await self._session.merge(model)
+        await self._session.commit()
+        return entity
+
+    async def delete(self, id: int) -> None:
+        model = await self._session.get(InvestmentHoldingModel, id)
+        if model:
+            await self._session.delete(model)
+            await self._session.commit()
+
+    async def list(self, limit: int = 100, offset: int = 0) -> List[InvestmentHolding]:
+        stmt = select(InvestmentHoldingModel).limit(limit).offset(offset)
         result = await self._session.execute(stmt)
         models = result.scalars().all()
         return [InvestmentMapper.holding_model_to_entity(m) for m in models]

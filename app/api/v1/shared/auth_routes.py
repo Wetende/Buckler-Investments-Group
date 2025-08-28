@@ -29,7 +29,7 @@ from infrastructure.config.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
 )
 from domain.entities.user import User as DomainUser
-from domain.value_objects.user_role import UserRole
+from shared.constants.user_roles import UserRole
 from shared.exceptions.auth import InvalidRefreshTokenError, InvalidResetTokenError, InvalidPasswordError
 from shared.exceptions.user import UserAlreadyExistsError
 
@@ -173,7 +173,7 @@ class RegistrationRequest(BaseModel):
     password: str = Field(..., min_length=8, description="Password (min 8 chars)")
     name: str = Field(..., min_length=1, max_length=255)
     phone: Optional[str] = Field(None, max_length=20)
-    role: Optional[UserRole] = UserRole.BUYER
+    role: Optional[UserRole] = UserRole.USER
 
 
 @router.post("/register", response_model=UserResponseDTO, status_code=status.HTTP_201_CREATED)
