@@ -566,3 +566,4 @@ class TestMVPEndpoints:
             
         print("✅ Working endpoints validation complete")
 
+

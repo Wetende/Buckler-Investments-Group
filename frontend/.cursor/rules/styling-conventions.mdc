@@ -1,0 +1,59 @@
+---
+description: Styling reuse, CSS/Tailwind conventions, and motion patterns for Litho
+globs: frontend/src/**
+alwaysApply: true
+---
+
+# Styling Conventions (Litho)
+
+Goal: Keep visual consistency by reusing Litho styles, CSS, Tailwind utility classes, and motion patterns.
+
+## Reuse First
+- Reuse SCSS/CSS in `frontend/src/Assets/**` and classnames used by existing components.
+- Reuse motion from `Functions/GlobalAnimations` and `framer-motion` props already present.
+- Keep spacing/typography scales consistent with Litho sections.
+
+## Tailwind & Classes
+- Prefer existing Tailwind utilities and classes seen across pages; avoid inventing new spacing scales.
+- Keep classlists terse and consistent; factor reusable class combinations into styled wrappers if repeated.
+
+## Components & Layout
+- Use existing Grid/Container/Row/Col from react-bootstrap as in Litho pages to maintain responsive breakpoints.
+- For carousels, reuse Swiper configurations already present.
+
+## Theming
+- Respect existing color palette; introduce new tokens only when required and add them via tailwind.config if needed.
+
+## Litho Styling Assets to Reuse
+- **SCSS Variables**: `Assets/scss/variables.scss` - use existing color, font, and spacing variables
+- **Mixins**: `Assets/scss/mixins.scss` - reuse responsive breakpoints and animations
+- **Global Styles**: `Assets/scss/global.scss` - inherit typography and base styles
+- **Component Styles**: Individual component SCSS files in `Assets/scss/components/`
+
+## Motion & Animation Patterns
+- **Framer Motion**: Reuse configurations from `Functions/GlobalAnimations.js`
+- **Swiper**: Use existing carousel configurations from Litho pages
+- **Hover Effects**: Reuse existing hover states and transitions
+
+## Layout Patterns
+- **Grid System**: Always use react-bootstrap's Container/Row/Col as in Litho
+- **Spacing Scale**: Use Tailwind spacing utilities already present (py-[130px], mb-24, etc.)
+- **Typography Scale**: Reuse existing heading classes (heading-4, heading-5, etc.)
+
+## CSS Class Reuse Examples
+```jsx
+// Reuse existing button classes
+<Buttons className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase"
+         themeColor="#232323" color="#fff" />
+
+// Reuse existing section spacing
+<section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+  {/* content */}
+</section>
+
+// Reuse existing carousel classes
+<div className="swiper-pagination-light swiper-pagination-medium white-move">
+  {/* swiper content */}
+</div>
+```
+

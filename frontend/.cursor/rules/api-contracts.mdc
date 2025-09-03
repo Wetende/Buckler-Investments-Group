@@ -1,0 +1,122 @@
+---
+description: API communication rules and backend contract mapping for frontend
+globs: frontend/src/**
+alwaysApply: true
+---
+
+# API Communication & Contracts
+
+Reference: [frontend.md](mdc:frontend.md) for full endpoint map and standards.
+
+## Transport
+- Base URL: `/api/v1` (configurable via env).
+- Only GET and POST (backend standard). Mutations use POST with `id=0` (create) or `id>0` (update). Deletes via GET `/{id}/delete`.
+- IDs are integers.
+
+## Auth
+- Attach `Authorization: Bearer <token>` when authenticated.
+- On 401, attempt refresh via `/auth/refresh` once, then logout.
+
+## Data Layer
+- Use React Query for fetch/caching. Keys must include filters/pagination.
+- Place fetch logic in hooks (e.g., `useListings`, `useProperty`, `useTours`), not in presentational components.
+- Cursor pagination (properties) vs limit/offset (bnb/tours/cars) must be respected.
+
+## Error Handling
+- Map backend `{detail}` to user-friendly messages; show inline errors for forms.
+
+## Litho Component Integration with API
+When wiring Litho components to API data:
+
+### Forms
+```jsx
+// Use existing Form components with API validation
+import { Form, Input } from '../../Components/Form/Form';
+import { useMutation } from '@tanstack/react-query';
+
+const BookingForm = () => {
+  const createBooking = useMutation({
+    mutationFn: (data) => api.post('/api/v1/bnb/bookings', data),
+    onSuccess: () => {
+      // Use existing MessageBox for success
+      setSuccessMessage('Booking created successfully!');
+    },
+    onError: (error) => {
+      // Map backend errors to form fields
+      setFieldError('dates', error.detail);
+    }
+  });
+
+  return (
+    <Form onSubmit={createBooking.mutate}>
+      <Input name="checkIn" label="Check-in Date" />
+      <Input name="checkOut" label="Check-out Date" />
+      {/* Use existing Buttons component */}
+      <Buttons type="submit" title="Book Now" />
+    </Form>
+  );
+};
+```
+
+### Lists & Grids
+```jsx
+// Use existing grid components with API data
+import { useQuery } from '@tanstack/react-query';
+import InfoBannerStyle05 from '../../Components/InfoBanner/InfoBannerStyle05';
+
+const PropertyList = ({ filters }) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['properties', filters],
+    queryFn: () => api.get('/api/v1/property', { params: filters })
+  });
+
+  if (isLoading) {
+    // Use existing loading states
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <InfoBannerStyle05
+      data={data.items}
+      // Pass API data to Litho component
+    />
+  );
+};
+```
+
+### Pagination Patterns
+```jsx
+// Handle both cursor and limit/offset pagination
+const useProperties = (filters) => {
+  return useInfiniteQuery({
+    queryKey: ['properties', filters],
+    queryFn: ({ pageParam }) => {
+      const params = { ...filters };
+      if (pageParam) {
+        params.cursor = pageParam; // For properties
+        // OR params.offset = pageParam; // For bnb/tours/cars
+      }
+      return api.get('/api/v1/property', { params });
+    },
+    getNextPageParam: (lastPage) => lastPage.has_more ? lastPage.cursor : undefined
+  });
+};
+```
+
+### Authentication Integration
+```jsx
+// Use existing auth patterns with Litho components
+import { useAuth } from '../hooks/useAuth';
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, login } = useAuth();
+
+  if (!isAuthenticated) {
+    // Use existing modal or redirect to login
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+```
+

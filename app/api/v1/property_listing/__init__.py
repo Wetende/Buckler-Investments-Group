@@ -19,11 +19,5 @@ router = APIRouter()
 # Include all property sub-routers
 router.include_router(public_router, prefix="/public", tags=["Properties - Public"])
 router.include_router(admin_router, prefix="/admin", tags=["Properties - Admin"])
- 
-# Compatibility aliases for top-level paths expected by tests and clients
-# Expose public routes at base (e.g., /api/v1/property/search)
-router.include_router(public_router, prefix="", tags=["Property Listing"])
-# Expose admin create at base (e.g., POST /api/v1/property/)
-router.include_router(admin_router, prefix="", tags=["Property Listing - Admin"])
 router.include_router(catalog_router, prefix="/catalog", tags=["Properties - Catalog"])
 

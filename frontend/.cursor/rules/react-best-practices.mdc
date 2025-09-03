@@ -1,0 +1,230 @@
+---
+description: React component and hook best practices for Litho-based frontend
+globs: frontend/src/**
+alwaysApply: true
+---
+
+# React Best Practices
+
+## Components
+- Functional components with hooks; no classes.
+- Named exports; clear prop interfaces (TypeScript preferred for new code).
+- RORO props; avoid positional arguments.
+
+## State & Effects
+- Keep components presentational; data fetching in hooks.
+- Use `useEffect` only for side-effects; avoid for pure initialization when possible.
+- Memoize expensive computations and stable callbacks.
+
+## Error & Loading
+- Handle invalid props or API errors early; show skeletons/spinners; prefer early returns.
+
+## Reuse
+- Favor existing Litho components; extend via props/wrappers; avoid duplication.
+
+## Litho Component Patterns to Follow
+When creating new components, mirror Litho patterns:
+
+### Component Structure
+```jsx
+// Litho-style component structure
+const PropertyCard = ({ property, onBook, className }) => {
+  return (
+    <m.div
+      className={`property-card ${className}`}
+      {...fadeIn} // Reuse Litho animations
+    >
+      <div className="property-image">
+        <img
+          src={property.image}
+          alt={property.title}
+          className="w-full"
+        />
+      </div>
+      <div className="property-content p-[25px]">
+        <h3 className="font-serif font-semibold">{property.title}</h3>
+        <p className="text-[#777]">{property.description}</p>
+        {/* Reuse existing Buttons */}
+        <Buttons
+          className="btn-fancy btn-fill"
+          themeColor="#232323"
+          color="#fff"
+          title="Book Now"
+          onClick={onBook}
+        />
+      </div>
+    </m.div>
+  );
+};
+```
+
+### Hook Patterns
+```jsx
+// Litho-style custom hooks
+const usePropertyList = (filters = {}) => {
+  return useQuery({
+    queryKey: ['properties', filters],
+    queryFn: () => api.get('/api/v1/property', { params: filters }),
+    staleTime: 5 * 60 * 1000, // Reuse Litho caching patterns
+  });
+};
+
+const useBookingForm = () => {
+  const createBooking = useMutation({
+    mutationFn: (data) => api.post('/api/v1/bnb/bookings', data),
+    onSuccess: () => {
+      // Reuse Litho success handling
+      showToast('Booking created successfully!');
+    },
+  });
+
+  return { createBooking, isLoading: createBooking.isLoading };
+};
+```
+
+### Form Handling
+```jsx
+// Reuse Litho form patterns
+const BookingForm = ({ propertyId }) => {
+  const { createBooking, isLoading } = useBookingForm();
+
+  return (
+    <Formik
+      initialValues={{ checkIn: '', checkOut: '', guests: 1 }}
+      validationSchema={bookingSchema}
+      onSubmit={(values) => {
+        createBooking.mutate({
+          propertyId,
+          ...values,
+          id: 0 // Litho pattern for create
+        });
+      }}
+    >
+      {({ errors, touched }) => (
+        <Form className="booking-form">
+          {/* Reuse existing Form components */}
+          <Input
+            type="date"
+            name="checkIn"
+            label="Check-in Date"
+            error={touched.checkIn && errors.checkIn}
+          />
+          <Input
+            type="date"
+            name="checkOut"
+            label="Check-out Date"
+            error={touched.checkOut && errors.checkOut}
+          />
+
+          <Buttons
+            type="submit"
+            disabled={isLoading}
+            className="btn-fancy btn-fill w-full"
+            title={isLoading ? "Creating..." : "Book Now"}
+          />
+        </Form>
+      )}
+    </Formik>
+  );
+};
+```
+
+### Error Boundaries
+```jsx
+// Reuse Litho error boundary patterns
+class PropertyErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Reuse Litho error logging
+    console.error('Property component error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Reuse existing error UI from Litho
+      return (
+        <MessageBox
+          theme="message-box01"
+          variant="error"
+          message="Something went wrong loading properties. Please try again."
+        />
+      );
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+### State Management
+```jsx
+// When global state is needed, prefer React Context over external libraries
+const PropertyContext = React.createContext();
+
+const PropertyProvider = ({ children }) => {
+  const [favorites, setFavorites] = useState([]);
+  const [filters, setFilters] = useState({});
+
+  // Reuse Litho localStorage patterns
+  useEffect(() => {
+    const saved = localStorage.getItem('property-favorites');
+    if (saved) {
+      setFavorites(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('property-favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  return (
+    <PropertyContext.Provider value={{
+      favorites,
+      filters,
+      setFavorites,
+      setFilters
+    }}>
+      {children}
+    </PropertyContext.Provider>
+  );
+};
+```
+
+## Component Naming Conventions
+Follow Litho patterns:
+- `InteractiveBanners02` - descriptive + number for variants
+- `InfoBannerStyle05` - clear purpose + style variant
+- `Buttons` - simple, plural for component collections
+- `CustomModal` - descriptive compound names
+
+## Props Patterns
+```jsx
+// Litho-style props with clear defaults
+const PropertyList = ({
+  filters = {},
+  className = '',
+  showFilters = true,
+  onPropertyClick = () => {},
+  ...props
+}) => {
+  // Implementation reusing Litho components
+};
+```
+
+## Event Handling
+```jsx
+// Reuse Litho event patterns
+const handleBooking = useCallback((propertyId) => {
+  // Reuse existing modal or navigation patterns
+  navigate(`/rentals/${propertyId}/book`);
+}, [navigate]);
+```
+

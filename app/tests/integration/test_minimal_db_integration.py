@@ -234,3 +234,4 @@ class TestMinimalDatabaseIntegration:
         assert platforms_working >= 1, "At least one platform should be accessible after authentication"
         print(f"✅ End-to-end user journey successful with {platforms_working} working platforms")
 
+

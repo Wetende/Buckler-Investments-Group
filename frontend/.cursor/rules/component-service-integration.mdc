@@ -1,0 +1,537 @@
+---
+description: Component patterns for integrating API services and hooks
+globs: frontend/src/**/*.jsx,frontend/src/**/*.tsx,frontend/src/**/*.js,frontend/src/**/*.ts
+alwaysApply: true
+---
+
+# Component Service Integration Patterns
+
+Purpose: Ensure consistent patterns for using API services and React Query hooks in React components.
+
+References:
+- [litho-usage.mdc](mdc:frontend/.cursor/rules/litho-usage.mdc) - Litho component reuse
+- [api-service-patterns.mdc](mdc:frontend/.cursor/rules/api-service-patterns.mdc) - Service patterns
+- [react-query-hooks.mdc](mdc:frontend/.cursor/rules/react-query-hooks.mdc) - Hook patterns
+
+## Component Structure with Data
+
+### Data Fetching Components
+```jsx
+const ListingsPage = () => {
+    const [filters, setFilters] = useState({})
+    const { listings, isLoading, error } = useListings(filters)
+
+    if (isLoading) {
+        return <ListingsSkeleton />
+    }
+
+    if (error) {
+        return <ErrorMessage error={error} />
+    }
+
+    return (
+        <div>
+            <Filters onChange={setFilters} />
+            <ListingsGrid listings={listings} />
+        </div>
+    )
+}
+```
+
+### Form Components with Mutations
+```jsx
+const BookingForm = ({ listingId }) => {
+    const navigate = useNavigate()
+    const createBooking = useCreateBooking()
+
+    const handleSubmit = async (data) => {
+        try {
+            await createBooking.mutateAsync({
+                listingId,
+                ...data,
+                id: 0 // Follow backend pattern
+            })
+            navigate('/bookings/success')
+        } catch (error) {
+            // Error handled by mutation onError
+        }
+    }
+
+    return (
+        <Form onSubmit={handleSubmit}>
+            <DatePicker name="checkIn" />
+            <DatePicker name="checkOut" />
+            <Button
+                type="submit"
+                disabled={createBooking.isLoading}
+            >
+                {createBooking.isLoading ? 'Creating...' : 'Book Now'}
+            </Button>
+        </Form>
+    )
+}
+```
+
+## Error Handling Patterns
+
+### Error Boundaries
+```jsx
+class PropertyErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = { hasError: false }
+    }
+
+    static getDerivedStateFromError(error) {
+        return { hasError: true }
+    }
+
+    componentDidCatch(error, errorInfo) {
+        console.error('Property component error:', error, errorInfo)
+    }
+
+    render() {
+        if (this.state.hasError) {
+            // Reuse existing error UI from Litho
+            return (
+                <MessageBox
+                    theme="message-box01"
+                    variant="error"
+                    message="Something went wrong loading properties. Please try again."
+                />
+            )
+        }
+
+        return this.props.children
+    }
+}
+```
+
+### Inline Error Handling
+```jsx
+const SearchResults = ({ query }) => {
+    const { results, isLoading, error } = useSearch(query)
+
+    if (isLoading) return <SearchSkeleton />
+    if (error) return <SearchError error={error} onRetry={() => {}} />
+
+    return (
+        <div>
+            {results.posts?.map(post => (
+                <SearchResultItem key={post.id} item={post} />
+            ))}
+            {results.users?.map(user => (
+                <UserResultItem key={user.id} item={user} />
+            ))}
+        </div>
+    )
+}
+```
+
+## Loading State Patterns
+
+### Skeleton Components
+```jsx
+const ListingsSkeleton = () => (
+    <div className="space-y-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="animate-pulse">
+                <div className="bg-gray-200 h-48 rounded-lg mb-4"></div>
+                <div className="space-y-2">
+                    <div className="bg-gray-200 h-4 w-3/4"></div>
+                    <div className="bg-gray-200 h-4 w-1/2"></div>
+                </div>
+            </div>
+        ))}
+    </div>
+)
+```
+
+### Progressive Loading
+```jsx
+const InfiniteListings = () => {
+    const {
+        data,
+        isLoading,
+        isFetchingNextPage,
+        hasNextPage,
+        fetchNextPage,
+    } = useInfiniteListings()
+
+    if (isLoading) return <ListingsSkeleton />
+
+    return (
+        <div>
+            {data?.pages?.map((page, pageIndex) => (
+                <div key={pageIndex}>
+                    {page.map(listing => (
+                        <ListingCard key={listing.id} listing={listing} />
+                    ))}
+                </div>
+            ))}
+
+            {hasNextPage && (
+                <LoadMoreButton
+                    onClick={() => fetchNextPage()}
+                    loading={isFetchingNextPage}
+                />
+            )}
+        </div>
+    )
+}
+```
+
+## Optimistic Updates
+
+### Favorite Toggle
+```jsx
+const FavoriteButton = ({ listingId, isFavorite }) => {
+    const toggleFavorite = useToggleFavorite()
+
+    const handleClick = () => {
+        toggleFavorite.mutate({
+            id: listingId,
+            isFavorite: !isFavorite
+        })
+    }
+
+    return (
+        <Button
+            onClick={handleClick}
+            disabled={toggleFavorite.isLoading}
+            className={isFavorite ? 'text-red-500' : 'text-gray-400'}
+        >
+            <HeartIcon filled={isFavorite} />
+        </Button>
+    )
+}
+```
+
+## Form Integration Patterns
+
+### React Hook Form with Services
+```jsx
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+
+const schema = z.object({
+    checkIn: z.date(),
+    checkOut: z.date(),
+    guests: z.number().min(1).max(10),
+})
+
+const BookingForm = ({ listingId }) => {
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(schema)
+    })
+
+    const createBooking = useCreateBooking()
+
+    const onSubmit = async (data) => {
+        try {
+            await createBooking.mutateAsync({
+                listingId,
+                ...data
+            })
+            // Success handled by mutation
+        } catch (error) {
+            // Error handled by mutation
+        }
+    }
+
+    return (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            <DatePicker {...register('checkIn')} error={errors.checkIn} />
+            <DatePicker {...register('checkOut')} error={errors.checkOut} />
+            <Input
+                type="number"
+                {...register('guests', { valueAsNumber: true })}
+                error={errors.guests}
+            />
+
+            <Button
+                type="submit"
+                disabled={createBooking.isLoading}
+            >
+                {createBooking.isLoading ? 'Booking...' : 'Book Now'}
+            </Button>
+        </Form>
+    )
+}
+```
+
+## Search and Filter Patterns
+
+### Unified Search
+```jsx
+const SearchBar = () => {
+    const [query, setQuery] = useState('')
+    const [debouncedQuery] = useDebounce(query, 300)
+    const { suggestions, isLoading } = useSearchSuggestions(debouncedQuery)
+
+    return (
+        <div className="relative">
+            <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search destinations, tours, properties..."
+            />
+
+            {isLoading && <SearchSpinner />}
+
+            {suggestions && (
+                <SearchSuggestions
+                    suggestions={suggestions}
+                    onSelect={(suggestion) => {
+                        setQuery(suggestion)
+                        // Navigate or filter
+                    }}
+                />
+            )}
+        </div>
+    )
+}
+```
+
+### Filter Panels
+```jsx
+const ListingsFilters = ({ filters, onChange }) => {
+    const { filters: availableFilters } = useFilters()
+
+    return (
+        <div className="filters-panel">
+            <Select
+                value={filters.location}
+                onChange={(value) => onChange({ ...filters, location: value })}
+                options={availableFilters.locations}
+                placeholder="Select location"
+            />
+
+            <RangeSlider
+                min={availableFilters.priceRange.min}
+                max={availableFilters.priceRange.max}
+                value={filters.priceRange}
+                onChange={(value) => onChange({ ...filters, priceRange: value })}
+            />
+
+            <Button onClick={() => onChange({})}>
+                Clear Filters
+            </Button>
+        </div>
+    )
+}
+```
+
+## Pagination Patterns
+
+### Cursor Pagination (Properties)
+```jsx
+const PropertiesList = ({ filters }) => {
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useProperties(filters)
+
+    return (
+        <div>
+            {data?.pages?.map((page, pageIndex) => (
+                <div key={pageIndex}>
+                    {page.items.map(property => (
+                        <PropertyCard key={property.id} property={property} />
+                    ))}
+                </div>
+            ))}
+
+            {hasNextPage && (
+                <Button
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                >
+                    {isFetchingNextPage ? 'Loading...' : 'Load More'}
+                </Button>
+            )}
+        </div>
+    )
+}
+```
+
+### Offset Pagination (BnB/Tours/Cars)
+```jsx
+const ListingsList = ({ filters }) => {
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useListingsInfinite(filters)
+
+    return (
+        <div>
+            {data?.pages?.map((page, pageIndex) => (
+                <div key={pageIndex}>
+                    {page.map(listing => (
+                        <ListingCard key={listing.id} listing={listing} />
+                    ))}
+                </div>
+            ))}
+
+            {hasNextPage && (
+                <Button
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                >
+                    {isFetchingNextPage ? 'Loading...' : 'Load More'}
+                </Button>
+            )}
+        </div>
+    )
+}
+```
+
+## Component Composition Patterns
+
+### Container/Presentational Split
+```jsx
+// Container component
+const ListingsContainer = () => {
+    const [filters, setFilters] = useState({})
+    const { listings, isLoading, error } = useListings(filters)
+
+    return (
+        <ListingsPresentation
+            listings={listings}
+            isLoading={isLoading}
+            error={error}
+            filters={filters}
+            onFiltersChange={setFilters}
+        />
+    )
+}
+
+// Presentation component (reusable with Litho components)
+const ListingsPresentation = ({
+    listings,
+    isLoading,
+    error,
+    filters,
+    onFiltersChange
+}) => {
+    if (isLoading) return <ListingsSkeleton />
+    if (error) return <ErrorMessage error={error} />
+
+    return (
+        <div>
+            <FiltersPanel filters={filters} onChange={onFiltersChange} />
+            <ListingsGrid listings={listings} />
+        </div>
+    )
+}
+```
+
+## Performance Patterns
+
+### Memoization
+```jsx
+const PropertyCard = React.memo(({ property, onClick }) => {
+    return (
+        <div onClick={() => onClick(property.id)}>
+            <img src={property.image} alt={property.title} />
+            <h3>{property.title}</h3>
+            <p>{property.price}</p>
+        </div>
+    )
+})
+```
+
+### Lazy Loading
+```jsx
+const PropertyDetail = lazy(() => import('./PropertyDetail'))
+
+const PropertyCard = ({ property }) => {
+    const [showDetail, setShowDetail] = useState(false)
+
+    return (
+        <div>
+            {/* Card content */}
+            {showDetail && (
+                <Suspense fallback={<PropertyDetailSkeleton />}>
+                    <PropertyDetail property={property} />
+                </Suspense>
+            )}
+        </div>
+    )
+}
+```
+
+## Accessibility Patterns
+
+### ARIA Labels
+```jsx
+const SearchInput = ({ value, onChange, suggestions }) => {
+    const [isOpen, setIsOpen] = useState(false)
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={value}
+                onChange={onChange}
+                onFocus={() => setIsOpen(true)}
+                onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+                aria-expanded={isOpen}
+                aria-haspopup="listbox"
+                aria-autocomplete="list"
+                role="combobox"
+            />
+
+            {isOpen && suggestions && (
+                <ul role="listbox">
+                    {suggestions.map((suggestion, index) => (
+                        <li
+                            key={suggestion.id}
+                            role="option"
+                            aria-selected={index === 0}
+                        >
+                            {suggestion.text}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    )
+}
+```
+
+### Focus Management
+```jsx
+const BookingModal = ({ isOpen, onClose, children }) => {
+    const modalRef = useRef()
+
+    useEffect(() => {
+        if (isOpen) {
+            modalRef.current?.focus()
+        }
+    }, [isOpen])
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            onClose()
+        }
+    }
+
+    return (
+        <div
+            ref={modalRef}
+            tabIndex={-1}
+            onKeyDown={handleKeyDown}
+            aria-modal="true"
+            role="dialog"
+        >
+            {children}
+        </div>
+    )
+}
+```

@@ -1,0 +1,312 @@
+---
+description: React Query hooks patterns for data fetching and caching
+globs: frontend/src/hooks/*.js,frontend/src/hooks/*.ts,frontend/src/api/use*.js,frontend/src/api/use*.ts
+alwaysApply: true
+---
+
+# React Query Hooks Patterns
+
+Purpose: Ensure consistent data fetching patterns using React Query, following the backend contracts and caching strategies.
+
+References:
+- [frontend.md](mdc:frontend.md) - React Query defaults and caching
+- [api-contracts.mdc](mdc:frontend/.cursor/rules/api-contracts.mdc) - data layer rules
+
+## Hook Structure
+
+### File Naming
+- Domain-based: `useBnb.js`, `useTours.js`, `useProperties.js`
+- Prefix with `use`: `useListings.js`, `useSearch.js`
+- Colocate with services: `frontend/src/api/useBnb.js`
+
+### Imports
+```js
+import { useQuery, useMutation, useInfiniteQuery } from '@tanstack/react-query'
+import { listListings, searchListings } from './bnbService'
+```
+
+### Query Key Patterns
+- Array format with domain prefix
+- Include filters/parameters for uniqueness
+```js
+const { data } = useQuery({
+    queryKey: ['bnb', 'listings', filters],
+    // ...
+})
+```
+
+## Query Patterns
+
+### List Queries
+```js
+export const useListings = (filters = {}) => {
+    return useQuery({
+        queryKey: ['bnb', 'listings', filters],
+        queryFn: () => listListings(filters),
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
+    })
+}
+```
+
+### Detail Queries
+```js
+export const useListing = (id) => {
+    return useQuery({
+        queryKey: ['bnb', 'listing', id],
+        queryFn: () => getListing(id),
+        enabled: !!id, // Only run if id exists
+        staleTime: 5 * 60 * 1000,
+    })
+}
+```
+
+### Search Queries
+```js
+export const useSearchListings = (criteria = {}) => {
+    return useQuery({
+        queryKey: ['bnb', 'search', criteria],
+        queryFn: () => searchListings(criteria),
+        enabled: Object.keys(criteria).length > 0, // Only search if criteria provided
+        staleTime: 2 * 60 * 1000, // Shorter stale time for search results
+    })
+}
+```
+
+## Infinite/Paginated Queries
+
+### Cursor Pagination (Properties)
+```js
+export const useProperties = (filters = {}) => {
+    return useInfiniteQuery({
+        queryKey: ['properties', filters],
+        queryFn: ({ pageParam }) => listProperties({
+            ...filters,
+            cursor: pageParam,
+            page_size: 20
+        }),
+        getNextPageParam: (lastPage) => lastPage.has_more ? lastPage.cursor : undefined,
+        staleTime: 5 * 60 * 1000,
+    })
+}
+```
+
+### Offset Pagination (BnB/Tours/Cars)
+```js
+export const useListingsInfinite = (filters = {}) => {
+    return useInfiniteQuery({
+        queryKey: ['bnb', 'listings', 'infinite', filters],
+        queryFn: ({ pageParam = 0 }) => listListings({
+            ...filters,
+            offset: pageParam,
+            limit: 20
+        }),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === 20 ? allPages.length * 20 : undefined
+        },
+        staleTime: 5 * 60 * 1000,
+    })
+}
+```
+
+## Mutation Patterns
+
+### Create Mutations
+```js
+export const useCreateBooking = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (payload) => createBooking(payload),
+        onSuccess: () => {
+            // Invalidate related queries
+            queryClient.invalidateQueries({ queryKey: ['bnb', 'listings'] })
+            queryClient.invalidateQueries({ queryKey: ['bnb', 'my-bookings'] })
+        },
+    })
+}
+```
+
+### Update Mutations
+```js
+export const useUpdateBooking = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ id, data }) => updateBooking(id, data),
+        onSuccess: (data, variables) => {
+            // Update specific booking in cache
+            queryClient.setQueryData(['bnb', 'booking', variables.id], data)
+        },
+    })
+}
+```
+
+## Error Handling
+
+### Query Error Handling
+```js
+export const useListings = (filters = {}) => {
+    return useQuery({
+        queryKey: ['bnb', 'listings', filters],
+        queryFn: () => listListings(filters),
+        onError: (error) => {
+            console.error('Failed to fetch listings:', error)
+            // Toast notification handled at component level
+        },
+        retry: (failureCount, error) => {
+            // Don't retry on 4xx errors
+            if (error?.response?.status >= 400 && error?.response?.status < 500) {
+                return false
+            }
+            return failureCount < 3
+        },
+    })
+}
+```
+
+### Mutation Error Handling
+```js
+export const useCreateBooking = () => {
+    return useMutation({
+        mutationFn: (payload) => createBooking(payload),
+        onError: (error, variables, context) => {
+            console.error('Failed to create booking:', error)
+            // Error handled in component
+        },
+    })
+}
+```
+
+## Loading States
+
+### Loading Patterns
+```js
+export const useListings = (filters = {}) => {
+    const query = useQuery({
+        queryKey: ['bnb', 'listings', filters],
+        queryFn: () => listListings(filters),
+    })
+
+    return {
+        listings: query.data || [],
+        isLoading: query.isLoading,
+        isError: query.isError,
+        error: query.error,
+        refetch: query.refetch,
+    }
+}
+```
+
+### Skeleton Loading
+```js
+export const useListingDetail = (id) => {
+    const query = useQuery({
+        queryKey: ['bnb', 'listing', id],
+        queryFn: () => getListing(id),
+        enabled: !!id,
+    })
+
+    return {
+        listing: query.data,
+        isLoading: query.isLoading,
+        isFetching: query.isFetching, // Shows loading on refetch
+        isError: query.isError,
+        error: query.error,
+    }
+}
+```
+
+## Cache Management
+
+### Optimistic Updates
+```js
+export const useToggleFavorite = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ id, isFavorite }) => toggleFavorite(id, isFavorite),
+        onMutate: async ({ id, isFavorite }) => {
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['bnb', 'listing', id] })
+
+            // Snapshot previous value
+            const previousListing = queryClient.getQueryData(['bnb', 'listing', id])
+
+            // Optimistically update
+            queryClient.setQueryData(['bnb', 'listing', id], (old) => ({
+                ...old,
+                is_favorite: isFavorite
+            }))
+
+            return { previousListing }
+        },
+        onError: (err, variables, context) => {
+            // Revert on error
+            if (context?.previousListing) {
+                queryClient.setQueryData(['bnb', 'listing', variables.id], context.previousListing)
+            }
+        },
+        onSettled: (data, error, variables) => {
+            // Always refetch after mutation
+            queryClient.invalidateQueries({ queryKey: ['bnb', 'listing', variables.id] })
+        },
+    })
+}
+```
+
+## Hook Organization
+
+### Export Pattern
+```js
+export default {
+    useListings,
+    useListing,
+    useSearchListings,
+    useCreateBooking,
+    useUpdateBooking,
+    useToggleFavorite,
+}
+```
+
+### Custom Hooks for Complex Logic
+```js
+// Combine multiple queries
+export const useListingWithAvailability = (id, dates) => {
+    const listing = useListing(id)
+    const availability = useAvailability(id, dates)
+
+    return {
+        listing: listing.data,
+        availability: availability.data,
+        isLoading: listing.isLoading || availability.isLoading,
+        isError: listing.isError || availability.isError,
+    }
+}
+```
+
+## Performance Considerations
+
+### Query Dependencies
+```js
+export const useRelatedListings = (id, enabled = true) => {
+    return useQuery({
+        queryKey: ['bnb', 'listing', id, 'related'],
+        queryFn: () => getRelatedListings(id),
+        enabled: enabled && !!id, // Only run if enabled and id exists
+        staleTime: 10 * 60 * 1000, // Longer stale time for related content
+    })
+}
+```
+
+### Background Refetching
+```js
+export const useUserBookings = () => {
+    return useQuery({
+        queryKey: ['bnb', 'my-bookings'],
+        queryFn: () => getMyBookings(),
+        refetchOnWindowFocus: false, // Disable for user-specific data
+        staleTime: 2 * 60 * 1000, // Shorter for user data
+    })
+}
+```

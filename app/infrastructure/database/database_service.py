@@ -46,3 +46,4 @@ class DatabaseService:
             return await operation(session)
         finally:
             await session.close()
+

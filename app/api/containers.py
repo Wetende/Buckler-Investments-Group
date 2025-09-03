@@ -1,4 +1,11 @@
 from dependency_injector import containers, providers
+import sys
+from pathlib import Path
+
+# Ensure 'app' package root (containing 'infrastructure', 'domain', 'application') is importable
+_APP_ROOT = Path(__file__).resolve().parents[1]
+if str(_APP_ROOT) not in sys.path:
+    sys.path.insert(0, str(_APP_ROOT))
 
 from infrastructure.config.database import AsyncSessionLocal
 
@@ -91,11 +98,11 @@ from application.use_cases.analytics.tour_operator_earnings import TourOperatorE
 
 class BundleUseCases(containers.DeclarativeContainer):
     """Container for bundle module use cases."""
-    bundle_repo = providers.Dependency(instance_of=BundleRepository)
-    booking_repo = providers.Dependency(instance_of=BundleBookingRepository)
-    tour_repo = providers.Dependency(instance_of=TourRepository)
-    vehicle_repo = providers.Dependency(instance_of=VehicleRepository)
-    bnb_repo = providers.Dependency(instance_of=BnbRepository)
+    bundle_repo: providers.Dependency = providers.Dependency()
+    booking_repo: providers.Dependency = providers.Dependency()
+    tour_repo: providers.Dependency = providers.Dependency()
+    vehicle_repo: providers.Dependency = providers.Dependency()
+    bnb_repo: providers.Dependency = providers.Dependency()
 
     create_bundle_use_case = providers.Factory(
         CreateBundleUseCase,
@@ -114,8 +121,8 @@ class BundleUseCases(containers.DeclarativeContainer):
 
 class AuthUseCases(containers.DeclarativeContainer):
     """Container for authentication use cases."""
-    user_repository = providers.Dependency(instance_of=UserRepository)
-    password_service = providers.Dependency(instance_of=PasswordService)
+    user_repository: providers.Dependency = providers.Dependency()
+    password_service: providers.Dependency = providers.Dependency()
 
     refresh_token_use_case = providers.Factory(
         RefreshTokenUseCase,
@@ -147,8 +154,8 @@ class AuthUseCases(containers.DeclarativeContainer):
 
 class UserUseCases(containers.DeclarativeContainer):
     """Container for user module use cases."""
-    user_repository = providers.Dependency(instance_of=UserRepository)
-    password_service = providers.Dependency(instance_of=PasswordService)
+    user_repository: providers.Dependency = providers.Dependency()
+    password_service: providers.Dependency = providers.Dependency()
 
     create_user_use_case = providers.Factory(
         CreateUserUseCase,
@@ -159,8 +166,8 @@ class UserUseCases(containers.DeclarativeContainer):
 
 class InvestmentUseCases(containers.DeclarativeContainer):
     """Container for investment module use cases."""
-    investment_repository = providers.Dependency(instance_of=InvestmentRepository)
-    holding_repository = providers.Dependency(instance_of=InvestmentHoldingRepository)
+    investment_repository: providers.Dependency = providers.Dependency()
+    holding_repository: providers.Dependency = providers.Dependency()
 
     list_investments_use_case = providers.Factory(
         ListInvestmentsUseCase,
@@ -176,7 +183,7 @@ class InvestmentUseCases(containers.DeclarativeContainer):
 
 class PropertyUseCases(containers.DeclarativeContainer):
     """Container for property module use cases."""
-    property_repository = providers.Dependency(instance_of=PropertyRepository)
+    property_repository: providers.Dependency = providers.Dependency()
 
     search_properties_use_case = providers.Factory(
         SearchPropertiesUseCase,
@@ -213,7 +220,8 @@ class AppContainer(containers.DeclarativeContainer):
     )
 
     # Database - Factory approach with proper session management
-    def create_managed_session():
+    @staticmethod
+    def create_managed_session() -> AsyncSessionLocal:
         """Create a session that will be properly managed."""
         return AsyncSessionLocal()
 

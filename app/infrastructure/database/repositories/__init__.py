@@ -1,3 +1,9 @@
 from .bnb import SqlAlchemyBnbRepository, SqlAlchemyBookingRepository
 from .tours import SqlAlchemyTourRepository, SqlAlchemyTourBookingRepository
 from .cars import SqlAlchemyVehicleRepository, SqlAlchemyCarRentalRepository
+from .property import SqlAlchemyPropertyRepository
+from .investment import SqlAlchemyInvestmentRepository, SqlAlchemyInvestmentHoldingRepository
+from .user import SqlAlchemyUserRepository
+from .bundle import SqlAlchemyBundleRepository
+from .bundle_booking import SqlAlchemyBundleBookingRepository
+from .review import SqlAlchemyReviewRepository

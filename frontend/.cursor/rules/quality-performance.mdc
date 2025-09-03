@@ -1,0 +1,108 @@
+---
+description: Quality, accessibility, and performance standards for frontend
+globs: frontend/src/**
+alwaysApply: true
+---
+
+# Quality, Accessibility, Performance
+
+## Code Quality
+- Functional components with hooks; avoid classes.
+- Descriptive variable names (isActive, hasError, etc.).
+- Early-returns for error/empty states.
+
+## Accessibility
+- Provide alt text for images; label interactive elements; maintain focus states.
+- Keyboard navigability for modals, carousels, and forms.
+
+## Performance
+- Use React.memo/useMemo/useCallback where re-renders are costly.
+- Code-split large sections with React.lazy and Suspense.
+- Optimize images; prefer existing Litho assets and sizes.
+- Avoid fetching in deeply nested components; lift to hooks.
+
+## Testing & Observability
+- Smoke test critical flows; log API errors in dev.
+
+## Litho Component Performance Benefits
+By reusing Litho components, you automatically get:
+- **Optimized bundle size** - no duplicate component code
+- **Consistent performance** - battle-tested implementations
+- **Better caching** - shared component instances
+- **Reduced re-renders** - properly memoized components
+
+## Performance Patterns with Litho
+```jsx
+// Use React.lazy for Litho page imports
+const TravelAgency = lazy(() => import('../Pages/Home/TravelAgency'));
+const HotelResort = lazy(() => import('../Pages/Home/HotelResort'));
+
+// Use existing image optimization
+<img
+  src="/assets/img/webp/image.webp"
+  data-rjs="/assets/img/webp/image@2x.webp"
+  alt="optimized image"
+/>
+
+// Reuse existing loading states
+const PropertyList = () => {
+  const { data, isLoading } = useProperties();
+
+  if (isLoading) {
+    // Reuse existing skeleton from Litho
+    return <div className="skeleton-loader">Loading...</div>;
+  }
+
+  return <InfoBannerStyle05 data={data.items} />;
+};
+```
+
+## Accessibility with Litho Components
+Litho components already include:
+- **ARIA labels** on interactive elements
+- **Keyboard navigation** for carousels and modals
+- **Focus management** for forms and dialogs
+- **Alt text** for images
+- **Screen reader support**
+
+When using Litho components:
+```jsx
+// Litho buttons already have proper ARIA
+<Buttons
+  ariaLabel="Book accommodation" // Already handled
+  title="Book Now"
+/>
+
+// Litho modals already handle focus
+<CustomModal.Wrapper
+  modalBtn={<Buttons title="Open Booking" />}
+  // Focus management included
+>
+  <BookingForm />
+</CustomModal.Wrapper>
+```
+
+## Code Splitting Recommendations
+```jsx
+// Split large Litho imports
+const TravelAgencyHero = lazy(() =>
+  import('../Pages/Home/TravelAgency').then(module => ({
+    default: module.TravelAgencyHero
+  }))
+);
+
+const HotelGallery = lazy(() =>
+  import('../Pages/Home/HotelResort').then(module => ({
+    default: module.HotelGallery
+  }))
+);
+```
+
+## Quality Assurance Checklist
+- [ ] Used existing Litho components instead of creating new ones
+- [ ] Maintained consistent styling with Litho patterns
+- [ ] Added proper loading/error states using Litho components
+- [ ] Ensured accessibility with existing ARIA labels
+- [ ] Implemented proper error boundaries around Litho sections
+- [ ] Added TypeScript interfaces for new props (when extending Litho components)
+

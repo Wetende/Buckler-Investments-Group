@@ -28,3 +28,4 @@ async def check_database_tables():
 if __name__ == "__main__":
     asyncio.run(check_database_tables())
 
+

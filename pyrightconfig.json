@@ -1,0 +1,20 @@
+{
+  "include": ["app"],
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": false,
+  "reportMissingTypeStubs": false,
+  "pythonPlatform": "Windows",
+  "executionEnvironments": [
+    {
+      "root": "app",
+      "extraPaths": ["app"]
+    }
+  ],
+  "reportGeneralTypeIssues": false,
+  "reportOptionalMemberAccess": false,
+  "reportOptionalCall": false,
+  "reportOptionalIterable": false,
+  "reportOptionalSubscript": false,
+  "reportPrivateUsage": false
+}

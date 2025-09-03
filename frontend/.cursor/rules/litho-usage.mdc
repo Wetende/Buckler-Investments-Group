@@ -1,0 +1,56 @@
+---
+description: Litho template usage and component reuse rules for the frontend
+globs: frontend/**/*.jsx,frontend/**/*.tsx,frontend/**/*.ts,frontend/**/*.js
+alwaysApply: true
+---
+
+# Litho Usage & Component Reuse
+
+Purpose: Ensure maximum reuse of existing Litho components, styles, and patterns in `frontend/` when building new pages or features.
+
+Sources of truth:
+- [frontend.md](mdc:frontend.md)
+- [litho.md](mdc:litho.md)
+
+## Principles
+- Prefer reusing existing components in `frontend/src/Components/**` and sections from `frontend/src/Pages/**` before creating new ones.
+- Keep visual language consistent with Litho: retain typography, spacing, and motion patterns.
+- Encapsulate any new UI as small, composable components colocated under `Components/` when broadly reusable; otherwise place inside feature folders.
+
+## Component Guidelines
+- Use functional components and hooks; no class components.
+- Prefer named exports for components and hooks.
+- Props follow RORO (Receive an Object, Return an Object) pattern with explicit TypeScript types where adding new code.
+- Use existing carousels (Swiper wrappers), banners, galleries, testimonial components instead of building custom ones.
+
+## File/Folder Conventions
+- Keep using existing case/structure in Litho (e.g., `Components`, `Pages`).
+- Add feature-specific composite sections under `Pages/<Domain>/` and import Litho components.
+- Do not duplicate styles; import and configure existing ones.
+
+## Data Wiring
+- Hydrate Litho components with data via props from API hooks; avoid fetching in deep presentational components.
+- Centralize API calls in hooks or utilities.
+
+## When Creating New Variants
+- Extend existing components via props or light wrappers; avoid forking large copies.
+- Prefer composition over modification of library internals.
+
+## Reuse Priority Order
+1. Existing Litho components from `Components/` (buttons, forms, carousels, etc.)
+2. Complete sections from `Pages/Home/*` (TravelAgency, HotelResort, etc.)
+3. Layout patterns from `Pages/Portfolios/*` or `Pages/Shop/*`
+4. Utility components from `Components/` (modals, tooltips, etc.)
+5. Only create new components when no Litho equivalent exists
+
+## Litho Components to Always Reuse
+- **Forms**: `Components/Form/Form` - reuse input, select, textarea components
+- **Buttons**: `Components/Button/Buttons` - reuse all button variants
+- **Carousels**: `Components/ImageGallery/*`, `Components/TestimonialsCarousel/*`
+- **Banners**: `Components/InfoBanner/*`, `Components/InteractiveBanners/*`
+- **Modals**: `Components/CustomModal/*`, `Components/ModalPopup/*`
+- **Tables**: `Components/Table/*`
+- **Charts**: `Components/partials/charts/*`
+- **Lists**: `Components/Lists/*`
+- **Page Titles**: `Components/PageTitle/*`
+- **Headers/Footers**: `Components/Header/*`, `Components/Footers/*`

@@ -1,0 +1,171 @@
+---
+description: API service patterns and conventions for Buckler frontend
+globs: frontend/src/api/*.js,frontend/src/api/*.ts
+alwaysApply: true
+---
+
+# API Service Patterns
+
+Purpose: Ensure all API services follow consistent patterns for maintainability, error handling, and backend contract compliance.
+
+References:
+- [frontend.md](mdc:frontend.md) - API contracts and standards
+- [api-contracts.mdc](mdc:frontend/.cursor/rules/api-contracts.mdc) - transport rules
+
+## Service Structure
+
+### File Naming
+- Domain-based: `bnbService.js`, `toursService.js`, `propertyService.js`
+- Lower camelCase: `searchService.js`
+- No hooks in services: hooks go in separate files (e.g., `useBnb.js`)
+
+### Imports
+```js
+import { axiosInstance, axiosPrivate } from './axios'
+```
+
+### Function Signatures
+- Async functions with descriptive names
+- Use object destructuring for response data
+- Clear parameter names and types (if TypeScript)
+```js
+export const searchListings = async (criteria = {}) => {
+    const { data } = await axiosInstance.post('/bnb/search', criteria)
+    return data
+}
+```
+
+### Export Pattern
+- Named exports for individual functions
+- Default export as object for convenience
+```js
+export default {
+    searchListings,
+    listListings,
+    getListing,
+    // etc.
+}
+```
+
+## HTTP Method Usage
+
+### axiosInstance (Public)
+- GET for retrieval: `axiosInstance.get('/endpoint', { params })`
+- POST for search: `axiosInstance.post('/search', criteria)`
+
+### axiosPrivate (Authenticated)
+- POST for creation: `axiosPrivate.post('/resource', payload)`
+- GET for user data: `axiosPrivate.get('/my-resource')`
+
+## Error Handling
+- Let axios interceptors handle 401s (token refresh)
+- Throw errors for component-level handling
+- No try-catch in services unless specific handling needed
+
+## Parameter Patterns
+
+### Query Parameters
+```js
+export const listListings = async (params = {}) => {
+    const { data } = await axiosInstance.get('/bnb/listings', { params })
+    return data
+}
+// Usage: listListings({ limit: 20, offset: 0 })
+```
+
+### Search Criteria
+```js
+export const searchListings = async (criteria = {}) => {
+    const { data } = await axiosInstance.post('/bnb/search', criteria)
+    return data
+}
+// Usage: searchListings({ location: 'Nairobi', guests: 2 })
+```
+
+### Path Parameters
+```js
+export const getListing = async (id) => {
+    const { data } = await axiosInstance.get(`/bnb/listings/${id}`)
+    return data
+}
+// Usage: getListing(123)
+```
+
+## Backend Contract Compliance
+
+### ID Handling
+- All IDs are integers (no UUIDs)
+- Use `Number(id)` if needed for safety
+
+### Create/Update Pattern
+```js
+export const createBooking = async (payload) => {
+    // POST with id=0 handled server-side for creates
+    const { data } = await axiosPrivate.post('/bnb/bookings', payload)
+    return data
+}
+```
+
+### Pagination Patterns
+```js
+// Limit/Offset (bnb, tours, cars)
+export const listListings = async (params = { limit: 20, offset: 0 }) => {
+    const { data } = await axiosInstance.get('/bnb/listings', { params })
+    return data
+}
+
+// Cursor (properties)
+export const listProperties = async (params = {}) => {
+    const { data } = await axiosInstance.get('/property', { params })
+    return data
+    // data: { items: [...], has_more: boolean, cursor: 'next' }
+}
+```
+
+## Response Data Handling
+
+### Consistent Response Structure
+- Return `data` directly from axios response
+- Don't wrap in additional objects unless needed
+- Preserve backend response structure for components
+
+### Array Responses
+```js
+export const getFeaturedTours = async (limit = 8) => {
+    const { data } = await axiosInstance.get('/tours/featured', {
+        params: { limit }
+    })
+    return data // Array of tour objects
+}
+```
+
+## Service Organization
+
+### Group by Resource Type
+```js
+// Listings
+export const listListings = async () => { ... }
+export const getListing = async (id) => { ... }
+export const searchListings = async (criteria) => { ... }
+
+// Bookings (authenticated)
+export const createBooking = async (payload) => { ... }
+export const getBooking = async (id) => { ... }
+```
+
+### Domain Separation
+- Keep services focused on one domain
+- Import from other services if needed (rare)
+- Each service handles its own domain's endpoints
+
+## Testing Considerations
+
+### Mock Patterns
+- Services should be easily mockable for tests
+- Pure functions where possible
+- Consistent parameter interfaces
+
+### Error Scenarios
+- Test 401 handling via axios interceptors
+- Test network errors
+- Test malformed responses

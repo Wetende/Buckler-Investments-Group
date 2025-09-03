@@ -1,0 +1,200 @@
+# WETENDE USER JOURNEY - CURL COMMANDS
+# Copy and paste these commands to test all endpoints
+# Make sure the API server is running on http://localhost:8000
+
+echo "🚀 STEP 1: REGISTER USER WETENDE"
+echo "================================="
+
+# Register user wetende (replace timestamp with current time)
+curl -X POST "http://localhost:8000/api/v1/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "wetende_1736313600@example.com",
+    "password": "testpassword123",
+    "name": "Wetende User",
+    "phone": "+254712345678",
+    "role": "BUYER"
+  }'
+
+echo -e "\n\n🚀 STEP 2: LOGIN WETENDE"
+echo "========================"
+
+# Login wetende
+curl -X POST "http://localhost:8000/api/v1/auth/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d 'username=wetende_1736313600@example.com&password=testpassword123'
+
+echo -e "\n\n🚀 STEP 3: USER PROFILE"
+echo "======================="
+
+# Get current user profile (replace YOUR_ACCESS_TOKEN with actual token from login)
+curl -X GET "http://localhost:8000/api/v1/auth/me" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+
+echo -e "\n\n🚀 STEP 4: BNB SYSTEM"
+echo "====================="
+
+# List all BnB listings (no auth required)
+curl -X GET "http://localhost:8000/api/v1/bnb/listings"
+
+# Get specific listing
+curl -X GET "http://localhost:8000/api/v1/bnb/listings/1"
+
+# Create BnB listing
+curl -X POST "http://localhost:8000/api/v1/bnb/listings" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 0,
+    "host_id": 1,
+    "title": "Wetende Beach Villa",
+    "type": "ENTIRE",
+    "capacity": 4,
+    "bedrooms": 2,
+    "beds": 2,
+    "baths": 2.0,
+    "nightly_price": 150.00,
+    "cleaning_fee": 25.00,
+    "address": "Diani Beach, Kenya",
+    "latitude": -4.3217,
+    "longitude": 39.5767,
+    "amenities": {
+      "wifi": true,
+      "pool": true,
+      "ocean_view": true
+    },
+    "rules": {
+      "no_smoking": true,
+      "no_pets": true
+    },
+    "cancellation_policy": "MODERATE",
+    "instant_book": true,
+    "min_nights": 1,
+    "max_nights": 30
+  }'
+
+# BnB search
+curl -X POST "http://localhost:8000/api/v1/bnb/search" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "check_in": "2024-03-15",
+    "check_out": "2024-03-20",
+    "guests": 2,
+    "location": "Diani Beach"
+  }'
+
+echo -e "\n\n🚀 STEP 5: REVIEWS SYSTEM"
+echo "=========================="
+
+# Get reviews for listing
+curl -X GET "http://localhost:8000/api/v1/reviews/BNB_LISTING/1"
+
+# Get review statistics
+curl -X GET "http://localhost:8000/api/v1/reviews/BNB_LISTING/1/stats"
+
+# Create review
+curl -X POST "http://localhost:8000/api/v1/reviews/?reviewer_id=1" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 0,
+    "target_type": "BNB_LISTING",
+    "target_id": 1,
+    "rating": 5,
+    "title": "Amazing Experience from Wetende!",
+    "comment": "This is a test review created during Wetende user journey testing. The property was fantastic!",
+    "booking_id": 1
+  }'
+
+# Get user reviews
+curl -X GET "http://localhost:8000/api/v1/reviews/user/1"
+
+echo -e "\n\n🚀 STEP 6: DASHBOARD ANALYTICS"
+echo "==============================="
+
+# Host dashboard
+curl -X GET "http://localhost:8000/api/v1/bnb/host/dashboard?host_id=1" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+# Host earnings
+curl -X GET "http://localhost:8000/api/v1/bnb/host/earnings?host_id=1&period=month" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+echo -e "\n\n🚀 STEP 7: TOURS SYSTEM"
+echo "======================="
+
+# List tours
+curl -X GET "http://localhost:8000/api/v1/tours/"
+
+# Get specific tour
+curl -X GET "http://localhost:8000/api/v1/tours/1"
+
+# Tour operator dashboard
+curl -X GET "http://localhost:8000/api/v1/tours/operator/dashboard?operator_id=1" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+
+# Create tour
+curl -X POST "http://localhost:8000/api/v1/tours/" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 0,
+    "name": "Wetende Maasai Mara Safari",
+    "description": "Experience the great migration and Maasai culture with Wetende",
+    "price": 299.99,
+    "duration_hours": 48,
+    "operator_id": 1,
+    "max_participants": 8,
+    "included_services": ["guide", "transport", "meals", "accommodation"]
+  }'
+
+echo -e "\n\n🚀 STEP 8: PROPERTY SYSTEM"
+echo "==========================="
+
+# List properties
+curl -X GET "http://localhost:8000/api/v1/property/"
+
+# Get specific property
+curl -X GET "http://localhost:8000/api/v1/property/1"
+
+echo -e "\n\n🚀 STEP 9: MISSING SYSTEMS (Expected 404)"
+echo "==========================================="
+
+# Investment system (expected 404)
+curl -X GET "http://localhost:8000/api/v1/investment/products"
+
+# Cars system (expected 404)
+curl -X GET "http://localhost:8000/api/v1/cars/"
+
+# Bundle system (expected 404)
+curl -X GET "http://localhost:8000/api/v1/bundle/"
+
+# Search system (expected 404)
+curl -X GET "http://localhost:8000/api/v1/search/"
+
+# Payments system (expected 404)
+curl -X GET "http://localhost:8000/api/v1/payments/"
+
+# Notifications system (expected 404)
+curl -X GET "http://localhost:8000/api/v1/notifications/"
+
+echo -e "\n\n🚀 STEP 10: SYSTEM HEALTH"
+echo "=========================="
+
+# Health check
+curl -X GET "http://localhost:8000/health"
+
+# API documentation
+curl -X GET "http://localhost:8000/docs"
+
+# Root endpoint
+curl -X GET "http://localhost:8000/"
+
+echo -e "\n\n🎉 WETENDE USER JOURNEY COMPLETE!"
+echo "=================================="
+echo "All curl commands have been executed above."
+echo "Replace YOUR_ACCESS_TOKEN with the actual token from login step."
+echo "Update timestamps in email to make it unique."
+
+

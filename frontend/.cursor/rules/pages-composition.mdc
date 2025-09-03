@@ -1,0 +1,66 @@
+---
+description: Pages composition and routing guidance for assembling Litho sections per MVP
+globs: frontend/src/Pages/**
+alwaysApply: true
+---
+
+# Pages Composition & Routing
+
+Compose pages by stitching Litho sections, as specified in [litho.md](mdc:litho.md) and aligned to [frontend.md](mdc:frontend.md).
+
+## Homepage Composition (reference only)
+- Hero + unified search: base from `Pages/Home/TravelAgency.jsx` hero. Inject a unified search component (custom) using `Components/Form/*` styles.
+- Featured: reuse TravelAgency featured tours and `HotelResort` accommodations blocks.
+- Recently listed properties: use portfolio grids from `Pages/Portfolios/*` (e.g., classic/boxed three column) with property meta overlay.
+- Investment spotlight: pull stats/CTA from `Pages/Home/Finance.jsx` or charts from `Components/partials/charts/*`.
+- Testimonials/newsletter: reuse existing components (`Testimonials`, subscribe forms).
+
+## Section Reuse Map
+- Rentals (BnB): `Home/HotelResort.jsx` sections for listing highlights; `Components/ImageGallery/*` for detail; `ModalPopup/*` for booking.
+- Tours: `Home/TravelAgency.jsx` sections; use `InfoBanner/*` for categories.
+- Properties: `Portfolios/*` grids; `SingleProjectPage*` patterns for detail layout.
+- Cars: `Shop/ShopWide.jsx` for grids and `Shop/SingleProduct.jsx` for detail.
+- Investment: `Home/Finance.jsx`, `AdditionalPages/PricingPackagesPage.jsx`, `partials/charts/*`.
+
+## Routing Targets (must match frontend.md)
+- `/`, `/rentals`, `/rentals/:id`, `/tours`, `/tours/:id`, `/properties`, `/properties/:id`, `/cars`, `/cars/:id`, `/invest`, `/blogs`, `/blogs/:slug`, `/login`, `/register`, `/account`.
+
+## Page Assembly Rules
+- Avoid duplicating entire page files; prefer extracting needed sections into composable components.
+- Wrap data-driven sections with containers/hooks; pass API data as props to Litho presentational components.
+- Keep headers/footers consistent across pages by reusing existing Header/Footer components.
+
+## Litho Page Sections to Reuse
+- **Hero Sections**: `Pages/Home/TravelAgency.jsx` - hero slider with package pricing
+- **Featured Content**: `Pages/Home/HotelResort.jsx` - accommodation showcases
+- **Portfolio Grids**: `Pages/Portfolios/PortfolioClassicThreeColumn.jsx` - for property listings
+- **Shop Layouts**: `Pages/Shop/ShopWide.jsx` - for car rentals with filters
+- **Blog Sections**: `Pages/Blogs/BlogGrid.jsx` - for content pages
+- **Contact Forms**: `Pages/Contact/ContactUsSimplePage.jsx` - for all forms
+- **Pricing Tables**: `Pages/AdditionalPages/PricingPackagesPage.jsx` - for investment plans
+
+## Component Extraction Pattern
+When reusing Litho sections, extract reusable parts into `Components/`:
+```jsx
+// Instead of copying entire TravelAgency hero
+// Extract to Components/Hero/HeroSlider.jsx
+// Then reuse in multiple pages
+import HeroSlider from '../../Components/Hero/HeroSlider';
+```
+
+## Page Structure Template
+Every page should follow this Litho-inspired structure:
+```jsx
+// Header - reuse existing Header components
+<Header />
+
+// Page Title - use PageTitle components
+<PageTitle />
+
+// Main Content - compose from Litho sections
+<section>...</section>
+
+// Footer - reuse existing Footer components
+<Footer />
+```
+
