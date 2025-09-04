@@ -10,9 +10,11 @@ export const createRental = async (payload) => {
     return data
 }
 
-export default {
+const carsService = {
     searchVehicles,
     createRental,
 }
+
+export default carsService
 
 

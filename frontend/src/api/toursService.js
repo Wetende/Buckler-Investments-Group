@@ -1,4 +1,4 @@
-import { axiosInstance, axiosPrivate } from './axios'
+import { axiosInstance } from './axios'
 
 export const searchTours = async (criteria = {}) => {
     const { data } = await axiosInstance.post('/tours/search', criteria)
@@ -25,12 +25,14 @@ export const getFeaturedTours = async (limit = 8) => {
     return data
 }
 
-export default {
+const toursService = {
     searchTours,
     listTours,
     getTour,
     getTourAvailability,
     getFeaturedTours,
 }
+
+export default toursService
 
 

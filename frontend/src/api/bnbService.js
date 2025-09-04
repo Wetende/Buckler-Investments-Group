@@ -43,7 +43,7 @@ export const listMyBookings = async () => {
     return data
 }
 
-export default {
+const bnbService = {
     searchListings,
     listListings,
     getListing,
@@ -53,5 +53,7 @@ export default {
     getBooking,
     listMyBookings,
 }
+
+export default bnbService
 
 

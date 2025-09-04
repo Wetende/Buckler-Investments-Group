@@ -27,6 +27,8 @@ import Overlap from "../../Components/Overlap/Overlap";
 import FooterStyle10 from "../../Components/Footers/FooterStyle10";
 import { fadeIn, fadeInLeft, zoomIn } from "../../Functions/GlobalAnimations";
 import InfoBannerStyle05 from "../../Components/InfoBanner/InfoBannerStyle05";
+// import OverLineIconBox from "../../Components/OverlineIconBox/OverLineIconBox";
+// import PageTitle from "../PageTitle";
 import { resetForm, sendEmail } from "../../Functions/Utilities";
 import SideButtons from "../../Components/SideButtons";
 
@@ -287,6 +289,18 @@ const TravelAgencyPage = (props) => {
           </Swiper>
         </section>
         {/* Hero Slider Section End */}
+
+        {/* Unified Search Start */}
+        <section className="-mt-[90px] relative z-[5]">
+          <Container>
+            <Row className="justify-center">
+              <Col lg={10} className="bg-white rounded-md shadow-[0_6px_24px_rgba(0,0,0,0.08)] p-6">
+                {React.createElement(React.lazy(() => import('../../Components/Search/UnifiedSearch')), { className: '' })}
+              </Col>
+            </Row>
+          </Container>
+        </section>
+        {/* Unified Search End */}
 
         {/* Section Start  */}
         <section className="py-[80px] border-b border-mediumgray bg-white md:py-[40px]">

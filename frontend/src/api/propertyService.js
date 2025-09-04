@@ -20,11 +20,13 @@ export const getRecentlyListed = async (params = { page_size: 8 }) => {
     return data
 }
 
-export default {
+const propertyService = {
     searchProperties,
     listProperties,
     getProperty,
     getRecentlyListed,
 }
+
+export default propertyService
 
 

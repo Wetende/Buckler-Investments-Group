@@ -20,11 +20,13 @@ export const getFilters = async () => {
     return data
 }
 
-export default {
+const searchService = {
     unifiedSearch,
     getSuggestions,
     getTrending,
     getFilters,
 }
+
+export default searchService
 
 

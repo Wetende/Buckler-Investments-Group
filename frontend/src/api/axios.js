@@ -109,4 +109,4 @@ axiosPrivate.interceptors.response.use(
 );
 
 export default axiosInstance;
-export { axiosInstance, axiosPrivate, setAuthTokens, clearAuthTokens };
+export { axiosInstance, axiosPrivate };
