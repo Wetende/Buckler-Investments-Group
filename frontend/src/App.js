@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 
 // MVP Pages
@@ -7,26 +7,15 @@ const RentalsList = React.lazy(() => import('./Pages/Rentals/RentalsList'));
 const ToursList = React.lazy(() => import('./Pages/Tours/ToursList'));
 const CarsList = React.lazy(() => import('./Pages/Cars/CarsList'));
 
-// Simple test pages
-const HomePage = () => (
-  <div style={{ padding: '50px' }}>
-    <h1>Homepage</h1>
-    <p>Welcome to the Buckler Investments Group super platform!</p>
-    <nav style={{ marginTop: '20px' }}>
-      <Link to="/properties" style={{ marginRight: '20px' }}>Properties</Link>
-      <Link to="/rentals" style={{ marginRight: '20px' }}>Rentals</Link>
-      <Link to="/tours" style={{ marginRight: '20px' }}>Tours</Link>
-      <Link to="/cars">Cars</Link>
-    </nav>
-  </div>
-);
+// Minimal composed homepage
+const Home = lazy(() => import('./Pages/Home/Decor'))
 
 // All MVP pages are now imported as components
 
 function App() {
   return (
                 <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<Suspense fallback={<div style={{padding: '50px'}}>Loading Home...</div>}><Home /></Suspense>} />
                     <Route
         path="/properties" 
                       element={
@@ -35,25 +24,25 @@ function App() {
           </Suspense>
         } 
       />
-      <Route 
+                    <Route
         path="/rentals" 
-        element={
+                      element={
           <Suspense fallback={<div style={{padding: '50px'}}>Loading Rentals...</div>}>
             <RentalsList />
           </Suspense>
-        } 
-      />
-      <Route 
+                      }
+                    />
+                    <Route
         path="/tours" 
-        element={
+                      element={
           <Suspense fallback={<div style={{padding: '50px'}}>Loading Tours...</div>}>
             <ToursList />
           </Suspense>
-        } 
-      />
-      <Route 
+                      }
+                    />
+                    <Route
         path="/cars" 
-        element={
+                      element={
           <Suspense fallback={<div style={{padding: '50px'}}>Loading Cars...</div>}>
             <CarsList />
           </Suspense>
