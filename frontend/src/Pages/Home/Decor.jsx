@@ -28,83 +28,99 @@ import SideButtons from "../../Components/SideButtons";
 // Data
 import { blogData } from '../../Components/Blogs/BlogData';
 const ClientData = [
-  { img: '/assets/img/webp/logo-white.webp', target: "_blank", link: '#' },
-  { img: '/assets/img/webp/logo-green-black.webp', target: "_blank", link: '#' },
-  { img: '/assets/img/webp/logo-yellow-ochre.webp', target: "_blank", link: '#' },
-  { img: '/assets/img/webp/logo-neon-orange-white.webp', target: "_blank", link: '#' }
+  {
+    img: 'https://via.placeholder.com/140x110',
+    target: "_blank",
+    link: '#'
+  },
+  {
+    img: 'https://via.placeholder.com/140x110',
+    target: "_blank",
+    link: '#'
+  },
+  {
+    img: 'https://via.placeholder.com/140x110',
+    target: "_blank",
+    link: '#'
+  },
+  {
+    img: 'https://via.placeholder.com/140x110',
+    target: "_blank",
+    link: '#'
+  }
 ]
 
 const portfolioBorderedMasonryData = [
   {
-    title: "2BR Apartment, Kilimani",
+    title: "Planters",
     img: "https://via.placeholder.com/800x1200",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/201"
+    category: [""],
+    subtitle: "Spiritual",
+    link: "/portfolio/single-project-page-01"
   },
   {
-    title: "Townhouse, Runda",
+    title: "Chandeliers",
     img: "https://via.placeholder.com/800x798",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/202"
+    category: ["branding"],
+    subtitle: "Seating",
+    link: "/portfolio/single-project-page-02"
   },
   {
-    title: "Beach Villa, Diani",
+    title: "Lounge",
     img: "https://via.placeholder.com/800x1197",
-    category: ["properties"],
-    subtitle: "Kwale",
-    link: "/properties/203"
+    category: ["branding", "graphics"],
+    subtitle: "Cabinetry",
+    link: "/portfolio/single-project-page-03"
   },
   {
-    title: "Studio, Westlands",
+    title: "Natural",
     img: "https://via.placeholder.com/800x1197",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/204"
+    category: ["graphics", "logos"],
+    subtitle: "Garden",
+    link: "/portfolio/single-project-page-04"
   },
   {
-    title: "3BR Bungalow, Mtwapa",
+    title: "Ottomans",
     img: "https://via.placeholder.com/800x798",
-    category: ["properties"],
-    subtitle: "Mombasa",
-    link: "/properties/205"
+    category: ["logos", "photography"],
+    subtitle: "Seating",
+    link: "/portfolio/single-project-page-05"
   },
   {
-    title: "Condo, Kileleshwa",
+    title: "Gestalten",
     img: "https://via.placeholder.com/800x798",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/206"
+    category: ["branding", "photography"],
+    subtitle: "Seating",
+    link: "/portfolio/single-project-page-01"
   }
 ]
 
 const InteractiveBannersData = [
   {
-    subtitle: "Tours",
-    title: "Safaris and guided experiences across East Africa",
-    btnLink: "/tours",
+    subtitle: "Furniture",
+    title: "Four essential mome practices for every reason",
+    btnLink: "/blogs/blog-post-layout-04",
     img: "https://via.placeholder.com/800x557",
     icon: "line-icon-Arrow-OutRight"
   },
   {
-    subtitle: "BnB",
-    title: "Verified short-stay accommodations and holiday homes",
-    btnLink: "/rentals",
+    subtitle: "Bedroom",
+    title: "Simple wall decor inspiration style saturdays",
+    btnLink: "/blogs/blog-post-layout-03",
     img: "https://via.placeholder.com/800x557",
     icon: "line-icon-Arrow-OutRight"
   },
   {
-    subtitle: "Properties",
-    title: "New listings and developments in prime locations",
-    btnLink: "/properties",
+    subtitle: "Decor",
+    title: "Are you looking for the planter based cleaners",
+    btnLink: "/blogs/blog-post-layout-02",
     img: "https://via.placeholder.com/800x557",
     icon: "line-icon-Arrow-OutRight"
   },
   {
-    subtitle: "Cars",
-    title: "Reliable vehicles for self-drive and chauffeur service",
-    btnLink: "/cars",
+    subtitle: "Lighting",
+    title: "I shine with love and light in every moment",
+    btnLink: "/blogs/blog-post-layout-01",
     img: "https://via.placeholder.com/800x557",
     icon: "line-icon-Arrow-OutRight"
   }
@@ -133,7 +149,7 @@ const SocialIconsData = [
   }
 ]
 
-const blogMasonryData = blogData.filter((item) => item.blogType === "masonry").filter(item => item.category.includes("travelagency"));
+const blogMasonryData = blogData.filter((item) => item.blogType === "masonry").filter(item => item.category.includes("decor"));
 
 const HomeDecorPage = (props) => {
   const [activeSlide, setActiveSlide] = useState(0)
@@ -245,18 +261,18 @@ const HomeDecorPage = (props) => {
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 0 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     transition={{ delay: 1, duration: 0.6 }}
-                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">BUCKLER INVESTMENTS GROUP
+                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">CLASSICAL HOME DECOR
                   </m.span>
                   <m.h2 className="heading-6 text-[81px] leading-[86px] p-0 font-bold text-darkgray mb-[45px] lg:text-[60px] lg:leading-[55px] sm:text-[33px] sm:leading-[30px] sm:mb-[25px]"
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 0 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
-                    transition={{ delay: 1.2, duration: 0.6 }}>Invest. Travel. Live East Africa.
+                    transition={{ delay: 1.2, duration: 0.6 }}>New decor collection
                   </m.h2>
                   <m.div
                     initial={{ opacity: 0 }}
                     animate={activeSlide === 0 ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 0.5, delay: 1.5 }}>
-                    <Buttons ariaLabel="Explore Buckler" href="/properties" className="font-semibold hover:text-darkgray flex items-center font-serif uppercase btn-expand rounded md:mb-[15px]" icon="line-icon-Arrow-OutRight text-[30px] inline-block" iconPosition="after" size="xl" color="#232323" themeColor="rgba(191,140,76,0.3)" to="/properties" title="Explore Buckler" />
+                    <Buttons ariaLabel="view collections" href="/shop/shop-wide" className="font-semibold hover:text-darkgray flex items-center font-serif uppercase btn-expand rounded md:mb-[15px]" icon="line-icon-Arrow-OutRight text-[30px] inline-block" iconPosition="after" size="xl" color="#232323" themeColor="rgba(191,140,76,0.3)" to="/" title="view collections" />
                   </m.div>
                 </Col>
                 <Col sm={6} className="relative xs:h-1/2">
@@ -320,18 +336,18 @@ const HomeDecorPage = (props) => {
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 1 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     transition={{ delay: 1, duration: 0.6 }}
-                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">BUCKLER TRAVEL
+                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">CLASSICAL HOME DECOR
                   </m.span>
                   <m.h2 className="heading-6 text-[81px] leading-[86px] p-0 font-bold text-darkgray mb-[45px] lg:text-[60px] lg:leading-[55px] sm:text-[33px] sm:leading-[30px] sm:mb-[25px]"
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 1 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
-                    transition={{ delay: 1.2, duration: 0.6 }}>Handpicked tours and BnB stays
+                    transition={{ delay: 1.2, duration: 0.6 }}>New chair collection
                   </m.h2>
                   <m.div
                     initial={{ opacity: 0 }}
                     animate={activeSlide === 1 ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 0.5, delay: 1.5 }}>
-                    <Buttons ariaLabel="View tours" href="/tours" className="font-semibold hover:text-darkgray flex items-center font-serif uppercase btn-expand rounded md:mb-[15px]" icon="line-icon-Arrow-OutRight text-[30px] inline-block" iconPosition="after" size="xl" color="#232323" themeColor="rgba(191,140,76,0.3)" to="/tours" title="View tours" />
+                    <Buttons ariaLabel="view collections" href="/shop/shop-wide" className="font-semibold hover:text-darkgray flex items-center font-serif uppercase btn-expand rounded md:mb-[15px]" icon="line-icon-Arrow-OutRight text-[30px] inline-block" iconPosition="after" size="xl" color="#232323" themeColor="rgba(191,140,76,0.3)" to="/" title="view collections" />
                   </m.div>
                 </Col>
                 <Col sm={6} className="relative xs:h-1/2">
@@ -395,18 +411,18 @@ const HomeDecorPage = (props) => {
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 2 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     transition={{ delay: 1, duration: 0.6 }}
-                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">BUCKLER INVEST
+                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">CLASSICAL HOME DECOR
                   </m.span>
                   <m.h2 className="heading-6 text-[81px] leading-[86px] p-0 font-bold text-darkgray mb-[45px] lg:text-[60px] lg:leading-[55px] sm:text-[33px] sm:leading-[30px] sm:mb-[25px]"
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 2 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
-                    transition={{ delay: 1.2, duration: 0.6 }}>Accessible investment products
+                    transition={{ delay: 1.2, duration: 0.6 }}>New chair collection
                   </m.h2>
                   <m.div
                     initial={{ opacity: 0 }}
                     animate={activeSlide === 2 ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 0.5, delay: 1.5 }}>
-                    <Buttons ariaLabel="Explore investments" href="/invest" className="font-semibold hover:text-darkgray flex items-center font-serif uppercase btn-expand rounded md:mb-[15px]" icon="line-icon-Arrow-OutRight text-[30px] inline-block" iconPosition="after" size="xl" color="#232323" themeColor="rgba(191,140,76,0.3)" to="/invest" title="Explore investments" />
+                    <Buttons ariaLabel="view collections" href="/shop/shop-wide" className="font-semibold hover:text-darkgray flex items-center font-serif uppercase btn-expand rounded md:mb-[15px]" icon="line-icon-Arrow-OutRight text-[30px] inline-block" iconPosition="after" size="xl" color="#232323" themeColor="rgba(191,140,76,0.3)" to="/" title="view collections" />
                   </m.div>
                 </Col>
                 <Col sm={6} className="relative xs:h-1/2">
@@ -511,12 +527,12 @@ const HomeDecorPage = (props) => {
             <Col lg={{ span: 5, offset: 1 }} md={10}>
               <div className="font-serif text-md font-medium mb-[30px] flex">
                 <span className="w-[40px] h-[1px] bg-basecolor opacity-70 self-center mr-[20px] shrink-0"></span>
-                <div className="grow-[1]"> <span className="text-basecolor uppercase">About Buckler Investments Group</span> </div>
+                <div className="grow-[1]"> <span className="text-basecolor uppercase">About our company</span> </div>
               </div>
-              <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">A unified platform for investments, properties, BnB, tours and cars</h1>
-              <p className="mb-[25px] w-[80%] lg:w-full">We connect investors and travellers with verified opportunities across East Africa — curated properties, flexible investment products, authentic tours, short-stay BnB stays and reliable vehicles.</p>
+              <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">Classic beautiful and modern decor presence of design</h1>
+              <p className="mb-[25px] w-[80%] lg:w-full">Lorem ipsum dolor sit amet consectetur adipiscing do eiusmod tempor incididunt ut labore dolore magna enim veniam nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
               <ScrollTo href='#' to="specialization" offset={0} delay={0} spy={true} smooth={true} duration={800}>
-                <Buttons type="submit" ariaLabel="Explore platform" className="btn-fill btn-fancy rounded-none font-medium font-serif uppercase hover:text-black mt-[20px]" themeColor="#232323" size="md" color="#fff" title="Explore platform" />
+                <Buttons type="submit" ariaLabel="Our services" className="btn-fill btn-fancy rounded-none font-medium font-serif uppercase hover:text-black mt-[20px]" themeColor="#232323" size="md" color="#fff" title="Our services" />
               </ScrollTo>
             </Col>
           </Row>
@@ -531,10 +547,10 @@ const HomeDecorPage = (props) => {
             <Col md={6} className="text-center mb-[4.5rem] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">our domains</div>
+                <div className="font-serif text-xmd text-basecolor px-[10px]">our specialization</div>
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">Invest • Property • BnB • Tours • Cars</h2>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">Distinctive Interiors</h2>
             </Col>
           </Row>
         </Container>
@@ -551,10 +567,10 @@ const HomeDecorPage = (props) => {
             <Col md={6} className="text-center mb-[77px] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">featured categories</div>
+                <div className="font-serif text-xmd text-basecolor px-[10px]">stylish and simple</div>
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">FEATURED CATEGORIES</h2>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">DECOR PRODUCTS</h2>
             </Col>
           </Row>
           <InteractiveBanners13 grid="row row-cols-1 row-cols-lg-4 row-cols-sm-2 gap-y-10 items-center" animation={zoomIn} animationTransition="circOut" animationDuration={1} />
@@ -577,16 +593,16 @@ const HomeDecorPage = (props) => {
                 <m.div
                   className="px-28 py-32 xl:px-12 xl:py-16 md:py-24 bg-[#f9f6f3] bg-no-repeat bg-[right_5px_bottom_-25px] order-2 col-sm-6 order-sm-2"
                   style={{ backgroundImage: `url("https://via.placeholder.com/140x153")` }} {...{ ...fadeIn, transition: { delay: 0.5 } }} >
-                  <span className="font-serif font-semibold text-darkgray text-lg mb-[20px] block"> Featured BnB stays </span>
+                  <span className="font-serif font-semibold text-darkgray text-lg mb-[20px] block"> Creativity ideas </span>
                   <p className="mb-[30px]"> Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore. </p>
-                  <Buttons className="btn-fill font-medium font-serif uppercase rounded-none" themeColor="#bf8c4c" color="#fff" size="sm" title="Explore BnB" />
+                  <Buttons className="btn-fill font-medium font-serif uppercase rounded-none" themeColor="#bf8c4c" color="#fff" size="sm" title="View collection" />
                 </m.div>
                 <m.div
                   className="px-28 py-32 xl:px-12 xl:py-16 md:py-24 bg-[#f9f6f3] bg-no-repeat bg-[right_25px_bottom_-35px] order-4 col-sm-6 order-sm-3"
                   style={{ backgroundImage: `url("https://via.placeholder.com/168x172")`, }} {...{ ...fadeIn, transition: { delay: 0.8 } }} >
-                  <span className="font-serif font-semibold text-darkgray text-lg mb-[20px] block"> Investment products </span>
+                  <span className="font-serif font-semibold text-darkgray text-lg mb-[20px] block"> Innovation concept </span>
                   <p className="mb-[30px]"> Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore. </p>
-                  <Buttons className="btn-fill font-medium font-serif uppercase rounded-none" themeColor="#bf8c4c" color="#fff" size="sm" title="View plans" />
+                  <Buttons className="btn-fill font-medium font-serif uppercase rounded-none" themeColor="#bf8c4c" color="#fff" size="sm" title="View collection" />
                 </m.div>
                 <m.div
                   className="bg-cover bg-center xs:h-[300px] order-3 col-sm-6 order-sm-4"
@@ -613,10 +629,10 @@ const HomeDecorPage = (props) => {
             <Col md={6} className="col-12 text-center mb-[4.5rem] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">latest updates</div>
+                <div className="font-serif text-xmd text-basecolor px-[10px]">stylish and simple</div>
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">LATEST LISTINGS</h2>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">LATEST PRODUCTS</h2>
             </Col>
           </Row>
           <Row className="justify-center">
@@ -649,10 +665,10 @@ const HomeDecorPage = (props) => {
             <Col md={6} className="col-12 text-center mb-[4.5rem] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">travel and investment insights</div>
+                <div className="font-serif text-xmd text-basecolor px-[10px]">home decor idea</div>
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">LATEST ARTICLES</h2>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">DECOR BLOGS</h2>
             </Col>
           </Row>
           <Row>

@@ -35,3 +35,4 @@ export default function FeaturedRentals({ limit = 8 }) {
 }
 
 
+
