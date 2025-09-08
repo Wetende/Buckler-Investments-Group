@@ -98,7 +98,7 @@ const DigitalagencyPage = (props) => {
                     <Container className="relative md:h-full">
                         <Row className="h-[100vh] md:h-full">
                             <Col className="flex flex-col">
-                                <h1 className="font-serif font-semibold text-white text-[130px] leading-[120px] w-[50%] mt-auto mb-0 tracking-[-5px] lg:text-[110px] lg:leading-[100px] md:text-[90px] md:leading-[85px] sm:text-[50px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[70%] xs:text-[60px] xs:leading-[65px]">Digital agency</h1>
+                                <h1 className="font-serif font-semibold text-white text-[130px] leading-[120px] w-[50%] mt-auto mb-0 tracking-[-5px] lg:text-[110px] lg:leading-[100px] md:text-[90px] md:leading-[85px] sm:text-[50px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[70%] xs:text-[60px] xs:leading-[65px]">Property listings</h1>
                                 <div className="flex flex-row items-center mt-auto mb-[7.5rem]">
                                     <span className="bg-[#e6994e] w-[50%] h-[1px] mr-36 md:w-[40%] sm:mr-8 sm:w-[50px] xs:mr-8"></span>
                                     <span className="font-serif text-lg text-[#e6994e] xs:text-xmd">Over 30 years of experience</span>
@@ -114,11 +114,11 @@ const DigitalagencyPage = (props) => {
                     <Container>
                         <Row className="items-center justify-center">
                             <Col xl={5} md={6} xs={11} className="sm:mb-[30px]">
-                                <m.h2  {...{ ...fadeIn, transition: { delay: 0.2 } }} className="heading-4 font-serif font-semibold text-darkgray mb-0">We are creative digital agency working for huge brands</m.h2>
+                                <m.h2  {...{ ...fadeIn, transition: { delay: 0.2 } }} className="heading-4 font-serif font-semibold text-darkgray mb-0">Discover verified properties for rent and sale</m.h2>
                             </Col>
                             <Col xl={{ span: 5, offset: 1 }} md={6} xs={11}>
-                                <m.p  {...{ ...fadeIn, transition: { delay: 0.3 } }} className="text-lg mb-[25px] leading-[38px] md:text-xmd">Lorem ipsum dolor sit amet consectetur adipiscing elit do eiusmod tempor incididunt ut labore et dolore magna ut enim ad minim veniam nostrud exercitation.</m.p>
-                                <m.div  {...{ ...fadeIn, transition: { delay: 0.4 } }}><Buttons ariaLabel="button link for our services page" to="/page/our-services" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-darkgray hover:text-darkgray" size="xl" color="#232323" title="Explore services" /></m.div>
+                                <m.p  {...{ ...fadeIn, transition: { delay: 0.3 } }} className="text-lg mb-[25px] leading-[38px] md:text-xmd">Apartments, townhouses, and land in Nairobi, Mombasa, Naivasha and more — curated by Buckler.</m.p>
+                                <m.div  {...{ ...fadeIn, transition: { delay: 0.4 } }}><Buttons ariaLabel="button link for our services page" to="/page/our-services" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-darkgray hover:text-darkgray" size="xl" color="#232323" title="Browse properties" /></m.div>
                             </Col>
                         </Row>
                     </Container>
@@ -138,16 +138,16 @@ const DigitalagencyPage = (props) => {
                         <Container>
                             <div className="row items-center">
                                 <m.div className="col-12 col-lg-3 col-md-4 col-sm-6 xs:mb-[40px] xs:px-[40px]" {...{ ...fadeIn, transition: { delay: 0.2 } }}>
-                                    <span className="font-serif font-semibold text-xlg text-darkgray tracking-[-.5px] block mb-[15px] lg:text-lg">Different thinking</span>
-                                    <p className="text-lg leading-[38px] xs:w-[90%] md:text-xmd">Lorem ipsum consectetur adipiscing elit do eiusmod tempor incididunt.</p>
+                                    <span className="font-serif font-semibold text-xlg text-darkgray tracking-[-.5px] block mb-[15px] lg:text-lg">Verified listings</span>
+                                    <p className="text-lg leading-[38px] xs:w-[90%] md:text-xmd">All properties are inspected and verified by our team before listing.</p>
                                 </m.div>
                                 <m.div {...{ ...fadeIn, transition: { delay: 0.4 } }} className="xs:px-[40px] col-lg-3 offset-xl-1 col-md-4 col-sm-6">
-                                    <span className="font-serif font-semibold text-xlg text-darkgray -tracking-[.5px] block mb-[15px] lg:text-lg">Digital talents</span>
-                                    <p className="text-lg leading-[38px] xs:w-[90%] md:text-xmd">Lorem ipsum consectetur adipiscing elit do eiusmod tempor incididunt.</p>
+                                    <span className="font-serif font-semibold text-xlg text-darkgray -tracking-[.5px] block mb-[15px] lg:text-lg">Transparent pricing</span>
+                                    <p className="text-lg leading-[38px] xs:w-[90%] md:text-xmd">No hidden fees or surprise costs. All prices clearly stated upfront.</p>
                                 </m.div>
                                 <m.div className="col-md-4 offset-xl-1"{...{ ...fadeIn, transition: { delay: 0.6 } }}>
                                     <div className="-mr-[50vw]">
-                                        <span className="font-serif font-semibold text-darkgray opacity-[.1] text-[300px] tracking-[-10px] leading-[100px] lg:text-[200px] md:text-[150px] sm:hidden break-normal">creative</span>
+                                        <span className="font-serif font-semibold text-darkgray opacity-[.1] text-[300px] tracking-[-10px] leading-[100px] lg:text-[200px] md:text-[150px] sm:hidden break-normal">property</span>
                                     </div>
                                 </m.div>
                             </div>
@@ -164,10 +164,10 @@ const DigitalagencyPage = (props) => {
                                 </div>
                                 <Col xl={7} lg={6} className="cover-background md:h-[500px] sm:h-[350px]" style={{ backgroundImage: `url('https://via.placeholder.com/1139x782')` }}></Col>
                                 <Col xl={5} lg={6} className="bg-darkgray py-40 px-[9%] xl:p-[6%] lg:p-[6%] md:p-[10%] sm:py-[15%] sm:px-[10%]">
-                                    <m.span {...fadeIn} className="font-serif font-medium text-[#e6994e] tracking-[2px] uppercase block mb-[35px]">Let's work together</m.span>
-                                    <m.h2 {...{ ...fadeIn, transition: { delay: 0.4 } }} className="heading-4 font-serif font-semibold text-white -tracking-[.5px] mb-12 w-[90%] sm:w-full">Digital technology and marketing for leading brands</m.h2>
-                                    <m.p {...{ ...fadeIn, transition: { delay: 0.6 } }} className="text-lg leading-[38px] mb-[42px] w-[90%] lg:w-full md:w-[80%] sm:w-full md:text-xmd">Lorem ipsum dolor amet consectetur nostrud eiusmod tempor incididunt et dolore enim minim veniam nostrud exercitation laboris nisi ut aliquip ex ea commodo incididunt.</m.p>
-                                    <m.div {...{ ...fadeIn, transition: { delay: 0.8 } }}><Buttons ariaLabel="link for conatct modern page" to="/page/contact-modern" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-white hover:text-white tracking-[1px]" size="xl" color="#fff" title="Start new projects" /></m.div>
+                                    <m.span {...fadeIn} className="font-serif font-medium text-[#e6994e] tracking-[2px] uppercase block mb-[35px]">List or find a home</m.span>
+                                    <m.h2 {...{ ...fadeIn, transition: { delay: 0.4 } }} className="heading-4 font-serif font-semibold text-white -tracking-[.5px] mb-12 w-[90%] sm:w-full">Transparent pricing, trusted agents, real properties</m.h2>
+                                    <m.p {...{ ...fadeIn, transition: { delay: 0.6 } }} className="text-lg leading-[38px] mb-[42px] w-[90%] lg:w-full md:w-[80%] sm:w-full md:text-xmd">From first homes to investment units — Buckler helps you compare, shortlist, and connect.</m.p>
+                                    <m.div {...{ ...fadeIn, transition: { delay: 0.8 } }}><Buttons ariaLabel="link for conatct modern page" to="/page/contact-modern" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-white hover:text-white tracking-[1px]" size="xl" color="#fff" title="Talk to an advisor" /></m.div>
                                 </Col>
                             </Row>
                         </Container>

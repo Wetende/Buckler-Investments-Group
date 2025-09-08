@@ -513,11 +513,15 @@ const HomeDecorPage = (props) => {
                 <span className="w-[40px] h-[1px] bg-basecolor opacity-70 self-center mr-[20px] shrink-0"></span>
                 <div className="grow-[1]"> <span className="text-basecolor uppercase">About Buckler Investments Group</span> </div>
               </div>
-              <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">A unified platform for investments, properties, BnB, tours and cars</h1>
+              <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">A unified platform for investments, Properties, BnB, Tours and Car-Hire</h1>
               <p className="mb-[25px] w-[80%] lg:w-full">We connect investors and travellers with verified opportunities across East Africa — curated properties, flexible investment products, authentic tours, short-stay BnB stays and reliable vehicles.</p>
-              <ScrollTo href='#' to="specialization" offset={0} delay={0} spy={true} smooth={true} duration={800}>
-                <Buttons type="submit" ariaLabel="Explore platform" className="btn-fill btn-fancy rounded-none font-medium font-serif uppercase hover:text-black mt-[20px]" themeColor="#232323" size="md" color="#fff" title="Explore platform" />
-              </ScrollTo>
+              <div className="flex flex-wrap gap-3 mt-[20px]">
+                <Buttons to="/bnb" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="BnB" />
+                <Buttons to="/tours" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Tours" />
+                <Buttons to="/properties" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Properties" />
+                <Buttons to="/invest" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Invest" />
+                <Buttons to="/cars" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Car-Hire" />
+              </div>
             </Col>
           </Row>
         </Container>
@@ -534,7 +538,7 @@ const HomeDecorPage = (props) => {
                 <div className="font-serif text-xmd text-basecolor px-[10px]">our domains</div>
                 <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">Invest • Property • BnB • Tours • Cars</h2>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">Invest • Property • BnB • Tours • Car Hire</h2>
             </Col>
           </Row>
         </Container>

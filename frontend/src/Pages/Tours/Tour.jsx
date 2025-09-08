@@ -53,15 +53,15 @@ const SwiperSlideData = [
 const ListData = [
   {
     icon: "fas fa-check",
-    title: "A good traveler has no fixed plans",
+    title: "Authentic local experiences",
     content:
-      "Lorem ipsum dolor consectetur adipiscing do eiusmod tempor incididunt labore.",
+      "Small group tours led by knowledgeable local guides across Kenya.",
   },
   {
     icon: "fas fa-check",
-    title: "Places to stay around the world",
+    title: "Flexible packages for all budgets",
     content:
-      "Lorem ipsum dolor consectetur adipiscing do eiusmod tempor incididunt labore.",
+      "Choose from day trips to week-long safaris with accommodation options.",
   },
 ];
 
@@ -259,10 +259,7 @@ const TravelAgencyPage = (props) => {
                   <Container className="h-full  text-center justify-center xs:p-0">
                     <Row className="h-full w-[70%] my-0 mx-auto">
                       <Col className="h-full justify-center flex-col relative flex xs:p-0">
-                        <span className="mb-[35px] font-medium tracking-[2px] text-white text-xmd font-serif uppercase block sm:text-[16px] sm:mb-[15px] xs:w-full">
-                          {" "}
-                          Package start only $250{" "}
-                        </span>
+                        <span className="mb-[35px] font-medium tracking-[2px] text-white text-xmd font-serif uppercase block sm:text-[16px] sm:mb-[15px] xs:w-full">Packages from KES 25,000</span>
                         <h1 className="mb-[45px] text-shadow-large font-extrabold text-white text-[100px] tracking-[-4px] leading-[95px] font-serif uppercase mx-auto text-shadow lg:text-[90px] md:text-[70px] md:leading-[65px] sm:text-[45px] sm:mb-[30px] sm:tracking-[-1px] sm:leading-[43px] xs:tracking-[-1px] xs:w-full xs:leading-none">
                           {" "}
                           {item.title}{" "}
@@ -275,7 +272,7 @@ const TravelAgencyPage = (props) => {
                             size="lg"
                             themeColor="#232323"
                             color="#fff"
-                            title="Discover Tour"
+                            title="Explore tours"
                           />
                         </div>
                       </Col>
@@ -422,8 +419,8 @@ const TravelAgencyPage = (props) => {
                     transition: { ease: "circOut", duration: 1.2 },
                   }}
                 >
-                  Litho specializes in small{" "}
-                  <span className="font-bold">group vacations</span>
+                  Buckler curates authentic{" "}
+                  <span className="font-bold">Kenyan tours</span>
                 </m.h2>
                 <Lists
                   className="travel-agency-list-style"
@@ -451,7 +448,7 @@ const TravelAgencyPage = (props) => {
                     themeColor="#232323"
                     color="#fff"
                     size="sm"
-                    title="About company"
+                    title="About tours"
                   />
                   <Buttons
                     ariaLabel="link for about"
@@ -459,7 +456,7 @@ const TravelAgencyPage = (props) => {
                     className="font-medium font-serif uppercase btn-link after:h-[2px] top-[-5px] text-md after:bg-darkgray md:pt-0 hover:text-darkgray"
                     size="xl"
                     color="#232323"
-                    title="Discover tour"
+                    title="View tours"
                   />
                 </m.div>
               </div>
@@ -480,9 +477,7 @@ const TravelAgencyPage = (props) => {
                 md={7}
                 className="xs:text-center sm:mb-[10px] sm:text-center"
               >
-                <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase mb-[5px] -tracking-[1px]">
-                  Top destination
-                </h2>
+                <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase mb-[5px] -tracking-[1px]">Top destinations in Kenya</h2>
                 <p className="m-0 block">
                   This is the most popular destination in the last month
                 </p>
@@ -633,8 +628,8 @@ const TravelAgencyPage = (props) => {
                   Special hotels for your trip
                 </h2>
                 <p className="w-[75%] lg:mx-auto lg:text-center mb-[35px] xl:w-full lg:w-[65%] mx:xl-0 md:w-full sm:mb-[30px]">
-                  Lorem ipsum dolor sit consectetur adipiscing eiusmod tempor
-                  incididunt ut labore dolore magna ut tempor.
+                  Discover Kenya's wildlife, culture, and landscapes with our
+                  expert guides and carefully planned itineraries.
                 </p>
                 <Buttons
                   ariaLabel="link for hotels"

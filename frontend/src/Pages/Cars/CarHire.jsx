@@ -52,7 +52,7 @@ const RestaurantPage = (props) => {
           </Navbar.Collapse>
           <Col className="col-auto col-lg-2 text-right pe-0 font-size-0 sm:hidden">
             <ScrollTo href="#" to="experience" offset={0} delay={0} spy={true} smooth={true} duration={800}>
-              <Buttons type="submit" className="btn-fill font-medium font-serif rounded-[2px] uppercase md:mb-0" themeColor="#ca943d" color="#fff" size="xs" title="book a table" />
+              <Buttons type="submit" className="btn-fill font-medium font-serif rounded-[2px] uppercase md:mb-0" themeColor="#ca943d" color="#fff" size="xs" title="Hire a car" />
             </ScrollTo>
           </Col>
         </HeaderNav>
@@ -68,8 +68,8 @@ const RestaurantPage = (props) => {
             <Col xl={8} md={10} lg={8} className="flex-col flex justify-center text-center h-[600px]">
               <div className="border-[#ca943d66] border-[8px] py-[7.5rem] px-[6.5rem] lg:p-[4.5rem] xs:p-8">
                 <i className="line-icon-French-Fries text-[70px] inline-block leading-[80px] text-[#ca943d] mb-[3.5rem]"></i>
-                <h1 className="text-[100px] leading-[95px] font-serif font-semibold text-white uppercase -tracking-[4px] mb-[3.5rem] mx-auto lg:text-[90px] lg:leading-[90px] md:text-[70px] md:leading-[65px] sm:text-[45px] sm:leading-[43px] sm:-tracking-[1px]">Delicious<br></br>Cooking</h1>
-                <span className="font-serif text-md uppercase tracking-[3px] text-white opacity-70 block">Experience the taste of italy</span>
+                <h1 className="text-[100px] leading-[95px] font-serif font-semibold text-white uppercase -tracking-[4px] mb-[3.5rem] mx-auto lg:text-[90px] lg:leading-[90px] md:text-[70px] md:leading-[65px] sm:text-[45px] sm:leading-[43px] sm:-tracking-[1px]">Reliable<br></br>Car Hire</h1>
+                <span className="font-serif text-md uppercase tracking-[3px] text-white opacity-70 block">Self-drive and chauffeur options</span>
               </div>
             </Col>
           </Row>
@@ -89,12 +89,12 @@ const RestaurantPage = (props) => {
               <m.img width={150} height={149} className="w-[auto] xs:mx-auto" {...{ ...zoomIn, transition: { duration: 0.8 } }} src="https://via.placeholder.com/150x149" alt="vegetables" />
             </Col>
             <Col xl={4} lg={5} sm={7} className="md:mb-[20px]">
-              <m.h2 {...{ ...fadeIn, transition: { delay: 0.4 } }} className="heading-5 font-serif font-medium text-darkgray mb-0 -tracking-[1px]">Now enjoy a wonderful cafe <span className="font-bold">dining experience</span> and healthy food</m.h2>
+              <m.h2 {...{ ...fadeIn, transition: { delay: 0.4 } }} className="heading-5 font-serif font-medium text-darkgray mb-0 -tracking-[1px]">Affordable, flexible <span className="font-bold">car hire</span> across Kenya</m.h2>
             </Col>
             <Col lg={5} md={7} sm={8} className="pl-24 lg:pl-[15px]">
               <m.div {...{ ...fadeIn, transition: { delay: 0.8 } }}>
-                <p className="mb-[20px]">Lorem ipsum dolor sit amet consectetur adipiscing elit do eiusmod tempor incididunt ut labore et dolore magna ut enim ad minim veniam nostrud exercitation.</p>
-                <Buttons to="/page/about-us" className="font-medium font-serif uppercase btn-link after:h-[2px] hover:text-black md:text-md md:mb-[15px] after:bg-darkgray" size="xl" color="#232323" title="About experience" />
+                <p className="mb-[20px]">Hire quality vehicles for city errands, upcountry trips, and safaris. Daily, weekly, and monthly plans with insurance options.</p>
+                <Buttons to="/cars" className="font-medium font-serif uppercase btn-link after:h-[2px] hover:text-black md:text-md md:mb-[15px] after:bg-darkgray" size="xl" color="#232323" title="About car hire" />
               </m.div>
             </Col>
           </Row>
@@ -118,10 +118,10 @@ const RestaurantPage = (props) => {
             <Col lg={4} md={6} className="text-center mb-[4.5rem] md:mb-16 sm:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[5px]">
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
-                <div className="font-serif text-xmd text-[#ca943d] px-[10px]">special recipes</div>
+                <div className="font-serif text-xmd text-[#ca943d] px-[10px]">popular choices</div>
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">Popular menu</h2>
+              <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">Popular vehicles</h2>
             </Col>
           </m.div>
           <m.div className="row xs:justify-center restaurant-tab-style-03" {...fadeIn}>
@@ -138,10 +138,10 @@ const RestaurantPage = (props) => {
             <Col lg={4} md={6} className="text-center mb-[4.5rem] md:mb-16 sm:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[5px]">
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
-                <div className="font-serif text-xmd text-[#ca943d] px-[10px]">peoples choice</div>
+                <div className="font-serif text-xmd text-[#ca943d] px-[10px]">travellers' choice</div>
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">SPECIAL DISHES</h2>
+              <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">Featured vehicles</h2>
             </Col>
           </Row>
           <Row className="row-cols-1 row-cols-lg-3 row-cols-md-2 justify-center">
@@ -151,13 +151,13 @@ const RestaurantPage = (props) => {
                 <figcaption>
                   <div className="opacity-70 top-0 left-0 absolute w-full h-full bg-darkgray"></div>
                   <div className="flex flex-col items-center justify-center h-full">
-                    <Link aria-label="link" to="#" className="bg-[#ca943d] z-[1] p-6 text-xmd leading-[20px] rounded-full w-[110px] h-[110px] uppercase font-serif text-white flex flex-col justify-center">Only<span className="font-semibold text-darkgray -tracking-[.5px]">$30.00</span></Link>
+                    <Link aria-label="link" to="#" className="bg-[#ca943d] z-[1] p-6 text-xmd leading-[20px] rounded-full w-[110px] h-[110px] uppercase font-serif text-white flex flex-col justify-center">From<span className="font-semibold text-darkgray -tracking-[.5px]"> KES</span></Link>
                   </div>
                 </figcaption>
               </figure>
               <div className="text-center mt-[40px] sm:mt-[20px]">
-                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">PERFECT KENTUCKY</span>
-                <span className="text-spanishgray uppercase inline-block text-sm">TOMATOES <span className="text-xxs inline-block mx-[10px]">◍</span> PARMESAN <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> Basil</span>
+                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">COMPACT CITY CAR</span>
+                <span className="text-spanishgray uppercase inline-block text-sm">AUTOMATIC <span className="text-xxs inline-block mx-[10px]">◍</span> AC <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> 5 SEATS</span>
               </div>
             </m.div>
             <m.div {...{ ...fadeIn, transition: { delay: 0.4 } }} className="col text-center interactive-banners-style-11 md:mb-[50px] sm:mb-[30px]">
@@ -171,8 +171,8 @@ const RestaurantPage = (props) => {
                 </figcaption>
               </figure>
               <div className="text-center mt-[40px] sm:mt-[20px]">
-                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">HOT CHICKEN BREAST</span>
-                <span className="text-spanishgray uppercase inline-block text-sm">CAPSICUM <span className="text-xxs inline-block mx-[10px]">◍</span> PANEER <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> CHEESE</span>
+                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">COMFORT SEDAN</span>
+                <span className="text-spanishgray uppercase inline-block text-sm">SPACIOUS <span className="text-xxs inline-block mx-[10px]">◍</span> AC <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> FUEL EFFICIENT</span>
               </div>
             </m.div>
             <m.div {...{ ...fadeIn, transition: { delay: 0.6 } }} className="col text-center interactive-banners-style-11 md:mb-[50px] sm:mb-[30px]">
@@ -186,8 +186,8 @@ const RestaurantPage = (props) => {
                 </figcaption>
               </figure>
               <div className="text-center mt-[40px] sm:mt-[20px]">
-                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">CHILLY CHEESE STEAK</span>
-                <span className="text-spanishgray uppercase inline-block text-sm">MUSHROOM <span className="text-xxs inline-block mx-[10px]">◍</span> CUCUMBER <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> Basil</span>
+                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">SAFARI-READY 4X4</span>
+                <span className="text-spanishgray uppercase inline-block text-sm">HIGH CLEARANCE <span className="text-xxs inline-block mx-[10px]">◍</span> RUGGED <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> RELIABLE</span>
               </div>
             </m.div>
           </Row>
@@ -204,9 +204,9 @@ const RestaurantPage = (props) => {
                 <Col md={6} className="cover-background sm:h-[700px]" style={{ backgroundImage: `url(https://via.placeholder.com/488x778)` }}></Col>
                 <Col md={6} className="bg-[#f8f4f0] flex flex-col justify-center text-start px-12 xl:px-[15px] lg:p-20 md:px-[2.5rem]">
                   <img width={57} height={40} src="/assets/img/webp/home-restaurant-img-transparent-05.webp" className="self-start mb-[20px]" alt="" />
-                  <h2 className="heading-4 font-serif font-light text-darkgray -tracking-[1px] w-[85%] mb-12 xs:w-full xs:mb-[15px]">Masterchef <span className="font-semibold">message</span></h2>
-                  <span className="text-[18px] text-darkgray leading-[30px] block w-[75%] mb-[20px] xs:mb-[30px] xl:w-[80%] xs:w-full">Unique and delicious dishes from the worlds best masterchefs.</span>
-                  <p className="w-[75%] xs:w-full">Lorem ipsum dolor sit amet consectetur adipiscing elit eiusmod tempor incididunt labore et dolore magna minim veniam nostrud exercitation ullamco.</p>
+                  <h2 className="heading-4 font-serif font-light text-darkgray -tracking-[1px] w-[85%] mb-12 xs:w-full xs:mb-[15px]">Fleet manager <span className="font-semibold">testimonial</span></h2>
+                  <span className="text-[18px] text-darkgray leading-[30px] block w-[75%] mb-[20px] xs:mb-[30px] xl:w-[80%] xs:w-full">Reliable vehicles maintained to the highest standards for your peace of mind.</span>
+                  <p className="w-[75%] xs:w-full">Every car in our fleet undergoes regular maintenance and safety checks. From compact city cars to rugged safari vehicles, we ensure you travel with confidence.</p>
                   <img width={146} height={44} src="/assets/img/webp/home-restaurant-img-transparent-06.webp" className="w-[auto] self-start mt-[25px] pt-[25px] xs:mt-[10px]" alt="" />
                 </Col>
               </m.div>
@@ -215,16 +215,16 @@ const RestaurantPage = (props) => {
               <Row className="g-0">
                 <Col xs={{ order: 1 }} sm={{ span: 6, order: 1 }} className="p-0">
                   <m.div {...fadeIn} className="text-center px-24 py-32 xl:py-24 xl:px-16 lg:px-28 sm:px-24 bg-darkgray">
-                    <span className="font-serif font-medium text-[#ca943d] tracking-[1px] text-md block uppercase mb-[20px]">Best of recipes</span>
-                    <h3 className="heading-4 font-serif text-white mb-0"><span className="font-semibold md:block">Delicious</span> breakfast recipes</h3>
+                    <span className="font-serif font-medium text-[#ca943d] tracking-[1px] text-md block uppercase mb-[20px]">Best for trips</span>
+                    <h3 className="heading-4 font-serif text-white mb-0"><span className="font-semibold md:block">Business</span> travel solutions</h3>
                   </m.div>
                 </Col>
                 <m.div {...{ ...fadeIn, transition: { delay: 0.2 } }} className="col-12 col-sm-6 order-2 cover-background xs:h-[300px]" style={{ backgroundImage: `url(https://via.placeholder.com/960x777)` }}></m.div>
                 <m.div {...{ ...fadeIn, transition: { delay: 0.4 } }} className="col-12 col-sm-6 order-4 order-sm-3 px-0 cover-background xs:h-[300px]" style={{ backgroundImage: `url(https://via.placeholder.com/960x777)` }}></m.div>
                 <Col xs={{ order: 2 }} sm={{ span: 6, order: 4 }}>
                   <m.div {...{ ...fadeIn, transition: { delay: 0.6 } }} className="text-center px-24 py-32 xl:py-24 xl:px-16 lg:px-28 sm:px-24">
-                    <span className="font-serif font-medium text-[#ca943d] tracking-[1px] text-md block uppercase mb-[20px]">Best of foods</span>
-                    <h3 className="heading-4 font-serif text-darkgray mb-0"><span className="font-semibold md:block">Healthy</span> energetic burger</h3>
+                    <span className="font-serif font-medium text-[#ca943d] tracking-[1px] text-md block uppercase mb-[20px]">Best for leisure</span>
+                    <h3 className="heading-4 font-serif text-darkgray mb-0"><span className="font-semibold md:block">Weekend</span> getaway packages</h3>
                   </m.div>
                 </Col>
               </Row>
@@ -239,12 +239,12 @@ const RestaurantPage = (props) => {
         <Container>
           <Row className="justify-center">
             <Col lg={4} md={6} className="text-center mb-[4.5rem] md:mb-16 sm:mb-12">
-              <m.div {...fadeIn} className="flex flex-row items-center justify-center text-center mb-[5px]">
+              <div className="flex flex-row items-center justify-center text-center mb-[5px]">
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
-                <div className="font-serif text-xmd text-[#ca943d] px-[10px]"> restaurant favorite </div>
+                <div className="font-serif text-xmd text-[#ca943d] px-[10px]">customer favorite</div>
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
-              </m.div>
-              <m.h2 {...fadeIn} className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">CHEF'S SPECIAL</m.h2>
+              </div>
+              <m.h2 {...fadeIn} className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">CUSTOMER PICKS</m.h2>
             </Col>
           </Row>
           <Row className="justify-center row-cols-1 row-cols-lg-3 row-cols-md-2">
@@ -253,8 +253,8 @@ const RestaurantPage = (props) => {
               <div className="py-[40px] relative text-start flex items-center justify-center w-auto xs:py-[15px]">
                 <h3 className="heading-5 text-[#ca943d] self-center border-r border-mediumgray -tracking-[.5px] mr-[30px] pr-[25px] mb-0">01</h3>
                 <div className="inline-block align-top">
-                  <div className="text-xmd text-darkgray font-medium">Appeteaser blatter</div>
-                  <span>Ipsum is simply dolor text</span>
+                  <div className="text-xmd text-darkgray font-medium">Compact city car</div>
+                  <span>Fuel efficient, easy parking</span>
                 </div>
               </div>
             </Col>
@@ -263,8 +263,8 @@ const RestaurantPage = (props) => {
               <div className="py-[40px] relative text-start flex items-center justify-center w-auto xs:py-[15px]">
                 <h3 className="heading-5 text-[#ca943d] self-center border-r border-mediumgray -tracking-[.5px] mr-[30px] pr-[25px] mb-0">02</h3>
                 <div className="inline-block align-top">
-                  <div className="text-xmd text-darkgray font-medium">Grilled chicken tikka</div>
-                  <span>Ipsum is simply dolor text</span>
+                  <div className="text-xmd text-darkgray font-medium">Comfort sedan</div>
+                  <span>Spacious boot, AC</span>
                 </div>
               </div>
             </Col>
@@ -273,8 +273,8 @@ const RestaurantPage = (props) => {
               <div className="py-[40px] relative text-start flex items-center justify-center w-auto xs:py-[15px]">
                 <h3 className="heading-5 text-[#ca943d] self-center border-r border-mediumgray -tracking-[.5px] mr-[30px] pr-[25px] mb-0">03</h3>
                 <div className="inline-block align-top">
-                  <div className="text-xmd text-darkgray font-medium">Noodles roulette</div>
-                  <span>Ipsum is simply dolor text</span>
+                  <div className="text-xmd text-darkgray font-medium">Safari-ready 4x4</div>
+                  <span>High clearance, rugged</span>
                 </div>
               </div>
             </Col>
@@ -290,7 +290,7 @@ const RestaurantPage = (props) => {
             <Col lg={4} md={6} className="text-center mb-[4.5rem] md:mb-16 sm:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[5px]">
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
-                <div className="font-serif text-xmd text-[#ca943d] px-[10px]"> cafe experience </div>
+                <div className="font-serif text-xmd text-[#ca943d] px-[10px]">rental experience</div>
                 <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
               </div>
               <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">EXQUISITE SERVICES</h2>
@@ -345,27 +345,27 @@ const RestaurantPage = (props) => {
             <m.div {...fadeInUp} className="col mt-[3.5rem] cover-background h-[650px] px-0 lg:m-0 md:h-[500px] xs:h-[450px]" style={{ backgroundImage: `url(https://via.placeholder.com/800x1081)` }}>
               <div className="absolute top-0 left-0 w-full h-full opacity-70 bg-darkgray"></div>
               <div className="flex flex-col h-full p-20 text-center relative z-[1] xl:px-12 lg:px-16">
-                <span className="font-serif font-medium uppercase text-[#ca943d]">Loaded cheese</span>
-                <h2 className="heading-4 font-serif font-semibold text-white uppercase mb-0 mt-auto -tracking-[.5px]">Delicious burger</h2>
+                <span className="font-serif font-medium uppercase text-[#ca943d]">Weekend getaways</span>
+                <h2 className="heading-4 font-serif font-semibold text-white uppercase -tracking-[.5px]">SUVs for safaris</h2>
                 <div className="mt-auto">
-                  <Buttons aria-label="Book seat link" href="#" className="btn-fill btn-fancy mt-auto inline-block font-medium font-serif rounded uppercase md:mb-[15px]" themeColor="#ca943d" color="#fff" size="sm" title="Book seat now" />
+                  <Buttons aria-label="Hire now" href="#" className="btn-fill btn-fancy mt-auto inline-block font-medium font-serif rounded uppercase md:mb-[15px]" themeColor="#ca943d" color="#fff" size="sm" title="Hire now" />
                 </div>
               </div>
             </m.div>
             <m.div {...fadeInUp} className="cover-background h-[650px] px-0 md:h-[500px] xs:h-[450px]" style={{ backgroundImage: `url(https://via.placeholder.com/800x1081)` }}>
               <div className="flex flex-col h-full justify-start p-24 text-center relative z-index-1 xl:px-10 lg:px-32 md:px-20">
-                <h2 className="heading-4 font-serif font-semibold text-darkgray uppercase mb-[15px] -tracking-[.5px]">Upcoming food events</h2>
-                <p className="mb-[25px]">Lorem ipsum dolor amet consectetur do tempor incididunt labore et dolore</p>
+                <h2 className="heading-4 font-serif font-semibold text-darkgray uppercase mb-[15px] -tracking-[.5px]">Seasonal car hire offers</h2>
+                <p className="mb-[25px]">Weekend specials, weekly discounts, and safari-ready 4x4 packages.</p>
                 <div>
-                  <Buttons aria-label="all events link" href="#" className="btn-fill btn-fancy mt-[10px] font-medium font-serif rounded uppercase md:mb-[15px]" themeColor="#ca943d" color="#fff" size="sm" title="Explore all events" />
+                  <Buttons aria-label="all offers link" href="#" className="btn-fill btn-fancy mt-[10px] font-medium font-serif rounded uppercase md:mb-[15px]" themeColor="#ca943d" color="#fff" size="sm" title="View all offers" />
                 </div>
               </div>
             </m.div>
             <m.div {...fadeInUp} className="mt-14 cover-background h-[650px] px-0 lg:m-0 md:h-[500px] xs:h-[450px]" style={{ backgroundImage: `url(https://via.placeholder.com/800x1081)` }}>
               <div className="absolute top-0 left-0 w-full h-full opacity-70 bg-darkgray"></div>
               <div className="flex flex-col h-full p-20 text-center relative z-[1] xl:px-12 lg:px-32">
-                <span className="font-serif font-medium uppercase text-[#ca943d]">Barbeque lover</span>
-                <h2 className="heading-4 font-serif font-semibold text-white uppercase mb-0 mt-auto -tracking-[.5px]">Barbecue festival</h2>
+                <span className="font-serif font-medium uppercase text-[#ca943d]">Weekend trips</span>
+                <h2 className="heading-4 font-serif font-semibold text-white uppercase mb-0 mt-auto -tracking-[.5px]">Family minivans</h2>
                 <Link aria-label="link Barbecue festival" to="#" className="w-[40px] h-[40px] leading-[40px] bg-[#ca943d] rounded-full self-center mt-auto">
                   <i className="fas fa-arrow-right text-sm text-white"></i>
                 </Link>
@@ -373,8 +373,8 @@ const RestaurantPage = (props) => {
             </m.div>
             <m.div {...fadeInUp} className="cover-background h-[650px] px-0 md:h-[500px] xs:h-[450px]" style={{ backgroundImage: `url(https://via.placeholder.com/800x1081)` }}>
               <div className="flex flex-col h-full justify-start py-20 px-24 text-center relative z-[1] xl:px-12 lg:px-32">
-                <span className="font-serif font-medium uppercase text-darkgray block mb-[15px]">Every saturday</span>
-                <h2 className="heading-4 font-serif font-semibold text-white uppercase -tracking-[.5px]">Healthy cooking night</h2>
+                <span className="font-serif font-medium uppercase text-darkgray block mb-[15px]">All seasons</span>
+                <h2 className="heading-4 font-serif font-semibold text-white uppercase -tracking-[.5px]">Long-term rentals</h2>
                 <Link aria-label="Healthy cooking night" to="#" className="w-[40px] h-[40px] leading-[40px] bg-white rounded-full self-center">
                   <i className="fas fa-arrow-right text-sm text-black"></i>
                 </Link>
@@ -432,10 +432,10 @@ const RestaurantPage = (props) => {
             <Col md={6} className="sm:mb-[15px]">
               <ul className="flex text-sm font-serif text-center justify-start md:justify-start sm:justify-center xs:text-center xs:flex-col">
                 <li className="nav-item mr-[35px] md:mr-[20px] xs:mr-0 xs:mb-[7px]">
-                  <Link aria-label="about link" to="#" className="hover:text-[#ca943d]">ABOUT CAFE</Link>
+                  <Link aria-label="about link" to="#" className="hover:text-[#ca943d]">ABOUT US</Link>
                 </li>
                 <li className="nav-item mr-[35px] md:mr-[20px] xs:mr-0 xs:mb-[7px]">
-                  <Link aria-label="menu link" to="#" className="hover:text-[#ca943d]">MENU</Link>
+                  <Link aria-label="menu link" to="#" className="hover:text-[#ca943d]">FLEET</Link>
                 </li>
                 <li className="nav-item mr-[35px] md:mr-[20px] xs:mr-0 xs:mb-[7px]">
                   <Link aria-label="gallery link" to="#" className="hover:text-[#ca943d]">GALLERY</Link>

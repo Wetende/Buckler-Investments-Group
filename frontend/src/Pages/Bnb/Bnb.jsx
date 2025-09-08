@@ -29,25 +29,25 @@ const SwiperData = [
   {
     number: "01",
     img: "https://via.placeholder.com/1920x1080",
-    title: "De wendell",
-    subtitle: " burnette",
-    btnName: "explore project",
+    title: "Kenya",
+    subtitle: "coastal stays",
+    btnName: "explore stays",
     btnLink: "/portfolio/single-project-page-01"
   },
   {
     number: "02",
     img: "https://via.placeholder.com/1920x1080",
-    title: "Be reuse",
-    subtitle: "hulls forest",
-    btnName: "explore project",
+    title: "Nairobi",
+    subtitle: "city apartments",
+    btnName: "explore stays",
     btnLink: "/portfolio/single-project-page-02"
   },
   {
     number: "03",
     img: "https://via.placeholder.com/1920x1080",
-    title: "Marseille",
-    subtitle: "beach villa",
-    btnName: "explore project",
+    title: "Naivasha",
+    subtitle: "lake cottages",
+    btnName: "explore stays",
     btnLink: "/portfolio/single-project-page-03"
   }
 ]
@@ -265,15 +265,15 @@ const ArchitecturePage = (props) => {
                 <Col lg={7} xl={6} md={10} className="z-[1] absolute bottom-0 right-0 bg-[#23262d] flex py-[49px] px-8 xl:px-8 lg:py-12 sm:relative sm:pt-0 architecture-overlap xs:flex-col xs:items-center xs:text-center">
                   <div className="pl-[49px] pr-[39px] py-[10px] border-r border-[#ffffff1a] xl:px-6 md:px-12 xs:p-0 xs:mb-[20px] xs:border-0">
                     <span className="font-serif font-medium text-white inline-block mb-[5px] mxl:block xs:mr-[10px] xs:mb-0">01</span>
-                    <span className="font-serif text-md uppercase inline-block">Interior design</span>
+                    <span className="font-serif text-md uppercase inline-block">City apartments</span>
                   </div>
                   <div className="pl-[49px] pr-[39px] py-[10px] border-r border-[#ffffff1a] xl:px-6 md:px-12 xs:p-0 xs:mb-[30px] xs:border-r-0">
                     <span className="font-serif font-medium text-white inline-block mb-[5px] mxl:block xs:mr-[10px] xs:mb-0">02</span>
-                    <span className="font-serif text-md uppercase inline-block">Planing design</span>
+                    <span className="font-serif text-md uppercase inline-block">Coastal villas</span>
                   </div>
                   <div className="pl-14 pr-36 py-[10px] xl:px-6 sm:px-12 xs:p-0">
-                    <span className="font-serif font-medium text-basecolor uppercase block mb-[5px]">Experts since 1997</span>
-                    <span className="font-serif text-md uppercase block w-full xs:w-[90%] xs:mx-auto">Award winning architectural company based in United kingdom</span>
+                    <span className="font-serif font-medium text-basecolor uppercase block mb-[5px]">Trusted since 2018</span>
+                    <span className="font-serif text-md uppercase block w-full xs:w-[90%] xs:mx-auto">Verified short-stay rentals across Kenya</span>
                   </div>
                 </Col>
               </Row>
@@ -290,17 +290,17 @@ const ArchitecturePage = (props) => {
                 <m.div className="inline-block text-center w-[300px] py-14 px-[15px] relative xs:p-[30px] xs:w-[315px]" {...{ ...fadeIn, transition: { delay: 0.2 } }}>
                   <div className="border-r-0 border-solid	border-[10px] border-[#ffffff1a] h-full w-[67px] block absolute bottom-0 left-0 xs:left-[25px]"></div>
                   <h1 className="text-[80px] leading-[72px] mb-0 mr-[15px] font-semibold tracking-[-5px] text-basecolor font-serif inline-block align-middle">28</h1>
-                  <div className="w-[40%] leading-[24px] text-white text-xmd font-serif text-left relative inline-block align-middle lg:w-[50%] sm:w-[35%]">Years experience working</div>
+                  <div className="w-[40%] leading-[24px] text-white text-xmd font-serif text-left relative inline-block align-middle lg:w-[50%] sm:w-[35%]">Nights booked with Buckler</div>
                   <div className="border-l-0 border-solid	border-[10px] border-[#ffffff1a] h-full w-[67px] block absolute bottom-0 right-0 xs:right-[25px]"></div>
                 </m.div>
               </Col>
               <m.div className="col-lg-3 col-md-4 text-left sm:text-center" {...{ ...fadeIn, transition: { delay: 0.4 } }}>
-                <span className="mb-[20px] text-[15px] font-serif uppercase block">Since 1992</span>
-                <span className="w-[85%] leading-[34px] font-medium text-white text-xlg font-serif block md:text-lg sm:w-full sm:mb-[15px]">An architectural company based in United kingdom</span>
+                <span className="mb-[20px] text-[15px] font-serif uppercase block">Book with confidence</span>
+                <span className="w-[85%] leading-[34px] font-medium text-white text-xlg font-serif block md:text-lg sm:w-full sm:mb-[15px]">Affordable, flexible short-stay rentals for every trip</span>
               </m.div>
               <m.div className="col-lg-5 col-md-10 text-left sm:text-center" {...{ ...fadeIn, transition: { delay: 0.5 } }}>
-                <p className="w-[85%] mb-[20px] block sm:w-full">Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been standard dummy text ever since ipsum been the industry lorem ipsum has been lorem ipsums dolor.</p>
-                <Buttons ariaLabel="link for About company" to="/page/about-us" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] sm:mb-0 after:bg-spanishgray hover:text-spanishgray" color="#939393" size="xlg" title="About company" />
+                <p className="w-[85%] mb-[20px] block sm:w-full">Discover curated stays from Nairobi apartments to coastal villas and safari lodges – all verified by Buckler.</p>
+                <Buttons ariaLabel="link for About rentals" to="/page/about-us" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] sm:mb-0 after:bg-spanishgray hover:text-spanishgray" color="#939393" size="xlg" title="About Buckler BnB" />
               </m.div>
             </Row>
           </Container>
@@ -320,15 +320,15 @@ const ArchitecturePage = (props) => {
           <Container>
             <Row>
               <Col lg={5} md={9} className="md:mb-[40px] xs:mb-[30px]">
-                <m.h2 className="heading-6 font-serif text-white leading-[44px] mb-0 md:leading-[34px] sm:leading-[30px] sm:w-[80%] xs:w-full" {...{ ...fadeIn, transition: { delay: 0.2 } }}>We are passionate knowing that people work, play and inhabit the spaces and places.</m.h2>
+                <m.h2 className="heading-6 font-serif text-white leading-[44px] mb-0 md:leading-[34px] sm:leading-[30px] sm:w-[80%] xs:w-full" {...{ ...fadeIn, transition: { delay: 0.2 } }}>We host memorable stays for business trips, getaways, and safaris.</m.h2>
               </Col>
               <m.div className="col-12 col-lg-3 offset-lg-1 col-sm-6 xs:mb-[30px]" {...{ ...fadeIn, transition: { delay: 0.4 } }}>
-                <span className="font-serif font-medium text-white uppercase tracking-[1px] block mb-[5px]">Owner managed</span>
-                <p className="w-[85%] lg:w-full md:w-[80%] sm:w-[90%] xs:w-full">Lorem ipsum is simply dummy text of the printing and lorem ipsum has been.</p>
+                <span className="font-serif font-medium text-white uppercase tracking-[1px] block mb-[5px]">Verified hosts</span>
+                <p className="w-[85%] lg:w-full md:w-[80%] sm:w-[90%] xs:w-full">All listings are inspected and verified by our team.</p>
               </m.div>
               <m.div className="col-12 col-lg-3 col-sm-6" {...{ ...fadeIn, transition: { delay: 0.5 } }}>
-                <span className="font-serif font-medium text-white uppercase tracking-[1px] block mb-[5px]">Expect creativity</span>
-                <p className="w-[85%] lg:w-full md:w-[80%] sm:w-[90%] xs:w-full">Lorem ipsum is simply dummy text of the printing and lorem ipsum has been.</p>
+                <span className="font-serif font-medium text-white uppercase tracking-[1px] block mb-[5px]">Flexible stays</span>
+                <p className="w-[85%] lg:w-full md:w-[80%] sm:w-[90%] xs:w-full">Choose nightly, weekly, or monthly options across Kenya.</p>
               </m.div>
             </Row>
           </Container>
@@ -363,8 +363,8 @@ const ArchitecturePage = (props) => {
           <Container fluid>
             <Row className="justify-end">
               <Overlap value={80} className="col col-xl-4 col-lg-6 col-md-7 relative bg-[#23262d] md:text-start sm:text-center py-[5.5rem] px-[6.5rem] xl:px-[4.5rem] lg:p-14 sm:px-[15px] sm:py-0">
-                <h2 className="heading-4 font-serif font-medium text-white mb-0 -tracking-[1px]">We are the leader in the&nbsp;
-                  <span className="text-basecolor inline-block font-semibold text-decoration-line-bottom">architectural</span></h2>
+                <h2 className="heading-4 font-serif font-medium text-white mb-0 -tracking-[1px]">We lead in trusted&nbsp;
+                  <span className="text-basecolor inline-block font-semibold text-decoration-line-bottom">short-stays</span></h2>
               </Overlap>
             </Row>
           </Container>
@@ -443,11 +443,11 @@ const ArchitecturePage = (props) => {
                 <m.img width={458} height={258} src="https://via.placeholder.com/889x501" alt="..." {...{ ...zoomIn, transition: { duration: 0.7 } }} />
               </Col>
               <m.div className="md:mb-[50px] md:text-center col-xl-4 col-lg-5 col-md-7 offset-xl-1 order-lg-2 order-1" {...fadeIn}>
-                <h2 className="heading-5 font-serif font-medium text-white lg:w-[95%] md:w-full">We have offices all round the world</h2>
-                <p className="w-[80%] mb-[20px] md:w-full">Lorem ipsum is simply dummy text of the and typesetting industry lorem ipsum industry's standard text.</p>
+                <h2 className="heading-5 font-serif font-medium text-white lg:w-[95%] md:w-full">Trusted stays across Kenya</h2>
+                <p className="w-[80%] mb-[20px] md:w-full">From Nairobi apartments to Mombasa beach houses, we verify every listing for your peace of mind.</p>
                 <Buttons ariaLabel="link for Get in touch" to="/page/contact-modern" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-spanishgray hover:text-spanishgray" size="xl" color="#939393" title="Get in touch" />
               </m.div>
-              <div className="top-1/2 w-auto font-serif font-semibold text-[200px] text-basecolor -tracking-[10px] -left-[50px] md:hidden md:right-0 md:-bottom-[40px] absolute opacity-20 text-start md:text-center lg:block">world</div>
+              <div className="top-1/2 w-auto font-serif font-semibold text-[200px] text-basecolor -tracking-[10px] -left-[50px] md:hidden md:right-0 md:-bottom-[40px] absolute opacity-20 text-start md:text-center lg:block">kenya</div>
             </Row>
           </Container>
         </section>

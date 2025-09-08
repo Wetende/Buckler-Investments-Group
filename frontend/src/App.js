@@ -14,20 +14,21 @@ import ScrollToTopButton from "./Components/ScrollToTop";
 // Home (kept templates)
 const FinancePage = lazy(() => import("./Pages/Home/Finance"));
 const ApplicationPage = lazy(() => import("./Pages/Home/Application"));
-const RestaurantPage = lazy(() => import("./Pages/Home/Restaurant"));
-const HomeDecorPage = lazy(() => import("./Pages/Home/Decor"));
+const RestaurantPage = lazy(() => import("./Pages/Cars/CarHire"));
+const HomeDecorPage = lazy(() => import("./Pages/Home/Home"));
 
 // MVP Pages
-const PropertiesHomePage = lazy(() => import("./Pages/Properties/DigitalAgency"));
+const PropertiesHomePage = lazy(() => import("./Pages/Properties/Property"));
 const PropertiesListPage = lazy(() => import("./Pages/Properties/PropertiesList"));
 const PropertyDetailPage = lazy(() => import("./Pages/Properties/PropertyDetail"));
-const BnbHomePage = lazy(() => import("./Pages/Bnb/Architecture"));
-const ToursHomePage = lazy(() => import("./Pages/Tours/TravelAgency"));
+const BnbHomePage = lazy(() => import("./Pages/Bnb/Bnb"));
+const ToursHomePage = lazy(() => import("./Pages/Tours/Tour"));
 const ToursListPage = lazy(() => import("./Pages/Tours/ToursList"));
 const TourDetailPage = lazy(() => import("./Pages/Tours/TourDetail"));
+const CarsHomePage = lazy(() => import("./Pages/Cars/CarHire"));
 const CarsListPage = lazy(() => import("./Pages/Cars/CarsList"));
 const CarDetailPage = lazy(() => import("./Pages/Cars/CarDetail"));
-const InvestHomePage = lazy(() => import("./Pages/Invest/Business"));
+const InvestHomePage = lazy(() => import("./Pages/Invest/Invest"));
 const SlugPageComponent = lazy(() => import("./Pages/Blogs/SlugPage"));
 const AccountPage = lazy(() => import("./Pages/Account/Account"));
 
@@ -570,13 +571,14 @@ function App() {
                   <Route path="/properties/:id" element={<PropertyDetailPage />} />
 
                   {/* Rentals (BnB) sub-home */}
-                  <Route path="/rentals" element={<BnbHomePage />} />
+                  <Route path="/bnb" element={<BnbHomePage />} />
 
                   {/* Tours sub-home and list */}
                   <Route path="/tours" element={<ToursHomePage />} />
                   <Route path="/tours/list" element={<ToursListPage />} />
                   <Route path="/tours/:id" element={<TourDetailPage />} />
-                  <Route path="/cars" element={<CarsListPage />} />
+                  <Route path="/cars" element={<CarsHomePage />} />
+                  <Route path="/cars/list" element={<CarsListPage />} />
                   <Route path="/cars/:id" element={<CarDetailPage />} />
                   <Route path="/invest" element={<InvestHomePage />} />
                   <Route path="/blogs/:slug" element={<SlugPageComponent />} />
