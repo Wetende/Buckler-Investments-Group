@@ -1,4 +1,4 @@
-import { useAuth as useAuthFromProvider } from "../Components/auth/AuthProvider";
+import { useAuth as useAuthFromProvider } from "../Components/Auth/AuthProvider";
 
 const useAuth = () => {
     return useAuthFromProvider();

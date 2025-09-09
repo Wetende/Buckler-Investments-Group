@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 
 // Context
 import GlobalContext from "./Context/Context";
+import AuthProvider from "./Components/Auth/AuthProvider";
 
 // Components
 import ScrollToTopButton from "./Components/ScrollToTop";
@@ -557,7 +558,8 @@ function App() {
         setCustomModal,
       }}
     >
-      <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
+      <AuthProvider>
+        <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
         {
           <main style={{ marginTop: headerHeight, marginBottom: footerHeight }}>
             <ScrollToTopButton />
@@ -1634,7 +1636,8 @@ function App() {
             </AnimatePresence>
           </main>
         }
-      </div>
+        </div>
+      </AuthProvider>
     </GlobalContext.Provider>
   );
 }

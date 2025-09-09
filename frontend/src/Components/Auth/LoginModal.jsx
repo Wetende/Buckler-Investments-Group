@@ -5,10 +5,12 @@ import * as Yup from 'yup'
 import { Input, Checkbox } from '../Form/Form'
 import Buttons from '../Button/Buttons'
 import CustomModal from '../CustomModal'
-import { login } from '../../api/authService'
+import { login, getCurrentUser } from '../../api/authService'
 import { resetForm } from '../../Functions/Utilities'
+import { useAuth } from './AuthProvider'
 
 const LoginModal = ({ className = '', onSuccess = () => {} }) => {
+  const { login: setAuthUser } = useAuth()
   return (
     <CustomModal.Wrapper
       className={className}
@@ -33,10 +35,11 @@ const LoginModal = ({ className = '', onSuccess = () => {} }) => {
           onSubmit={async (values, actions) => {
             try {
               await login({ username: values.email, password: values.password })
+              const userData = await getCurrentUser()
+              setAuthUser(userData)
               resetForm(actions)
               onSuccess()
-              // Refresh page to update auth state
-              window.location.reload()
+              actions.setStatus('Login successful!')
             } catch (e) {
               actions.setStatus('Login failed. Please check your credentials.')
             }

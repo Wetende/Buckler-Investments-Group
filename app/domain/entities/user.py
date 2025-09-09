@@ -22,4 +22,4 @@ class User(DomainEntity):
         return self.role == UserRole.ADMIN
     
     def is_buyer(self) -> bool:
-        return self.role == UserRole.BUYER
+        return self.role == UserRole.USER

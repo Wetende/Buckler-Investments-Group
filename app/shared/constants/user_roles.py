@@ -5,16 +5,16 @@ from typing import Dict, Set
 
 
 class UserRole(str, Enum):
-    """User roles in the platform."""
+    """User roles in the platform (canonical, matches DB enum)."""
     
-    GUEST = "guest"                    # Unregistered/anonymous user
-    USER = "user"                      # Regular registered user
-    HOST = "host"                      # Property/listing host
-    TOUR_OPERATOR = "tour_operator"    # Tour package provider
-    VEHICLE_OWNER = "vehicle_owner"    # Vehicle rental provider
-    AGENT = "agent"                    # Real estate agent
-    ADMIN = "admin"                    # Platform administrator
-    SUPER_ADMIN = "super_admin"        # System super administrator
+    GUEST = "GUEST"                    # Unregistered/anonymous user
+    USER = "USER"                      # Regular registered user
+    HOST = "HOST"                      # Property/listing host
+    TOUR_OPERATOR = "TOUR_OPERATOR"    # Tour package provider
+    VEHICLE_OWNER = "VEHICLE_OWNER"    # Vehicle rental provider
+    AGENT = "AGENT"                    # Real estate agent
+    ADMIN = "ADMIN"                    # Platform administrator
+    SUPER_ADMIN = "SUPER_ADMIN"        # System super administrator
 
 
 class Permission(str, Enum):
