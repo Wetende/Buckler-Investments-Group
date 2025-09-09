@@ -426,7 +426,7 @@ const ShopWidePage = lazy(() => import("./Pages/Shop/ShopWide"));
 const HomeBlogMetroPage = lazy(() => import("./Pages/Home/BlogMetro"));
 const ShoppingCart = lazy(() => import("./Pages/Shop/ShoppingCart"));
 const Checkout = lazy(() => import("./Pages/Shop/Checkout"));
-const LoginRegister = lazy(() => import("./Pages/Shop/LoginRegister"));
+const PasswordReset = lazy(() => import("./Pages/Account/PasswordReset"));
 const SingleProduct = lazy(() => import("./Pages/Shop/SingleProduct"));
 const OnlyCategoriesPage = lazy(() => import("./Pages/Shop/OnlyCategories"));
 const RightSidebar = lazy(() => import("./Pages/Shop/RightSidebar"));
@@ -582,8 +582,7 @@ function App() {
                   <Route path="/cars/:id" element={<CarDetailPage />} />
                   <Route path="/invest" element={<InvestHomePage />} />
                   <Route path="/blogs/:slug" element={<SlugPageComponent />} />
-                  <Route path="/login" element={<LoginRegister />} />
-                  <Route path="/register" element={<LoginRegister />} />
+                  <Route path="/password-reset" element={<PasswordReset />} />
                   <Route path="/account" element={<AccountPage />} />
                   <Route path="/" element={<HomeDecorPage style={{ "--base-color": "#bf8c4c" }} />} />
 
@@ -1629,7 +1628,6 @@ function App() {
                       }
                     />
                     <Route path="checkout" element={<Checkout />} />
-                    <Route path="login-register" element={<LoginRegister />} />
                   </Route>
                 </Routes>
               </Suspense>

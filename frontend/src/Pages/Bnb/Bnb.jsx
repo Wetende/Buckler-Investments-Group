@@ -151,9 +151,9 @@ const ArchitecturePage = (props) => {
           <Col className="col-auto col-sm-6 col-lg-2 mr-auto ps-lg-0">
             <Link aria-label="header logo link" className="flex items-center" to="/">
               <Navbar.Brand className="inline-block p-0 m-0">
-                <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-parrot-green.webp' data-rjs='/assets/img/webp/logo-parrot-green@2x.webp' alt='logo' />
-                <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-parrot-green.webp' data-rjs='/assets/img/webp/logo-parrot-green@2x.webp' alt='logo' />
-                <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-parrot-green.webp' data-rjs='/assets/img/webp/logo-parrot-green@2x.webp' alt='logo' />
+                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
+                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
+                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
               </Navbar.Brand>
             </Link>
           </Col>

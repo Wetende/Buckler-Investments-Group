@@ -76,9 +76,9 @@ const DigitalagencyPage = (props) => {
                         <Col lg={2} sm={6} xs={"auto"} className="mr-auto ps-0">
                             <Link aria-label="header logo" className="flex items-center" to="/">
                                 <Navbar.Brand className="inline-block p-0 m-0">
-                                    <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-white.webp' data-rjs='/assets/img/webp/logo-white@2x.webp' alt='logo' />
-                                    <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-brownish-orange-green.webp' data-rjs='/assets/img/webp/logo-brownish-orange-green@2x.webp' alt='logo' />
-                                    <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-brownish-orange-green.webp' data-rjs='/assets/img/webp/logo-brownish-orange-green@2x.webp' alt='logo' />
+                                    <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
+                                    <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
+                                    <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
                                 </Navbar.Brand>
                             </Link>
                         </Col>

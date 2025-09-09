@@ -187,9 +187,9 @@ const HomeBusinessPage = (props) => {
           <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
             <Link aria-label="header logo" className="flex items-center" to="/">
               <Navbar.Brand className="inline-block p-0 m-0">
-                <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-gradient-sky-blue-pink.webp' data-rjs='/assets/img/webp/logo-gradient-sky-blue-pink@2x.webp' alt='logo' />
-                <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-black.webp' data-rjs='/assets/img/webp/logo-black@2x.webp' alt='logo' />
-                <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-gradient-sky-blue-pink.webp' data-rjs='/assets/img/webp/logo-gradient-sky-blue-pink@2x.webp' alt='logo' />
+                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
+                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
+                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
               </Navbar.Brand>
             </Link>
           </Col>

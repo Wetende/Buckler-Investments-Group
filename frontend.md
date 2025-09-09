@@ -34,6 +34,40 @@ This document defines the complete frontend requirements, how the frontend commu
 - `refetchOnWindowFocus`: false.
 - Cache keys must include filters/pagination params.
 
+## General Frontend Plan (Decor Home)
+
+- Homepage uses `Pages/Home/Decor.jsx` at route `/`.
+  - Primary surfaces: unified search, category cards (BnB, Tours, Properties, Cars), featured tours, featured rentals, recently listed properties, trending searches.
+  - Data endpoints:
+    - GET `/api/v1/tours/featured?limit=8`
+    - GET `/api/v1/bnb/listings/featured?limit=8`
+    - GET `/api/v1/property/recently-listed?page_size=8`
+    - GET `/api/v1/search/trending`
+
+- Required routes (MVP):
+  - Auth: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/account`
+    - POST `/auth/token`, `/auth/register`, `/auth/refresh`; GET `/auth/me`
+  - Rentals (BnB): `/rentals` (list/search), `/rentals/:id` (detail + availability + booking)
+    - GET `/bnb/listings?limit&offset` or POST `/bnb/search`
+    - GET `/bnb/listings/{id}`, GET `/bnb/listings/{id}/availability?start_date&end_date`
+    - POST `/bnb/bookings`, GET `/bnb/my-bookings`
+  - Tours: `/tours` (list), `/tours/:id` (detail + availability)
+    - GET `/tours?limit&offset`, GET `/tours/{id}`, GET `/tours/{id}/availability?start_date&end_date`
+    - GET `/tours/featured`, GET `/tours/categories`
+  - Properties: `/properties` (cursor list), `/properties/:id` (detail)
+    - GET `/property?filters...` (returns `{ items, has_more, cursor }`)
+    - GET `/property/{id}`
+  - Cars: `/cars` (search/results)
+    - POST `/cars/search`
+  - Unified Search: surface in header/home
+    - POST `/search/all`, GET `/search/suggestions?query=`, GET `/search/filters`
+
+- Data layer & hooks:
+  - Services in `frontend/src/api/*Service.js`; hooks in `frontend/src/api/use*.js`.
+  - Respect pagination types: limit/offset (bnb/tours/cars) vs cursor (properties).
+
+- Build order (MVP): Home (Decor) → Rentals core → Tours core → Properties discovery → Auth → Cars → Unified search. Payments UI scaffold only until endpoints are live.
+
 ---
 
 ## 2. Backend Endpoint Map (Contracts Summary)

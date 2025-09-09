@@ -10,7 +10,8 @@ import { m } from "framer-motion";
 import { Link as ScrollTo } from "react-scroll"
 
 // Components
-import Header, { HeaderCart, HeaderNav, Menu, SearchBar, Topbar } from '../../Components/Header/Header';
+import Header, { HeaderNav, Menu, SearchBar, Topbar } from '../../Components/Header/Header';
+import AuthButtons from '../../Components/Header/AuthButtons';
 import SocialIcons from '../../Components/SocialIcon/SocialIcons';
 import Buttons from '../../Components/Button/Buttons'
 import { fadeIn, fadeInRight, zoomIn } from "../../Functions/GlobalAnimations";
@@ -27,6 +28,7 @@ import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { blogData } from '../../Components/Blogs/BlogData';
+import Brand from '../../Components/Header/Brand';
 const ClientData = [
   { img: '/assets/img/webp/logo-white.webp', target: "_blank", link: '#' },
   { img: '/assets/img/webp/logo-green-black.webp', target: "_blank", link: '#' },
@@ -191,11 +193,7 @@ const HomeDecorPage = (props) => {
         <HeaderNav fluid="fluid" theme="light" bg="white" expand="lg" containerClass="sm:!px-0" className="py-[0px] px-[35px] md:pr-[15px] md:pl-0">
           <Col className="col-auto mr-auto ps-lg-0">
             <Link aria-label="header logo" className="flex items-center -mr-[35px]" to="/">
-              <Navbar.Brand className="inline-block p-0 m-0">
-                <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-tussock.webp' data-rjs='/assets/img/webp/logo-tussock@2x.webp' alt='logo' />
-                <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-tussock.webp' data-rjs='/assets/img/webp/logo-tussock@2x.webp' alt='logo' />
-                <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-tussock.webp' data-rjs='/assets/img/webp/logo-tussock@2x.webp' alt='logo' />
-              </Navbar.Brand>
+              <Brand defaultClass="text-[#232323]" altClass="text-[#232323]" mobileClass="text-[#232323]" />
             </Link>
           </Col>
           <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
@@ -209,7 +207,7 @@ const HomeDecorPage = (props) => {
           </Navbar.Collapse>
           <Col className="col-auto text-right !pr-0">
             <SearchBar />
-            <HeaderCart />
+            <AuthButtons />
           </Col>
         </HeaderNav>
         {/* Header End */}
