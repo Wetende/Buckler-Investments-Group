@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL follows backend spec: /api/v1 (configurable via env)
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '/api/v1';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 // In-memory access token; refresh token persisted in localStorage
 let accessTokenMemory = null;

@@ -8,6 +8,7 @@ import { Parallax } from "react-scroll-parallax";
 
 // Components
 import Header, { HeaderNav, Menu, MobileMenu } from '../../Components/Header/Header'
+import BucklerMenuData from '../../Components/Header/BucklerMenuData'
 import InteractiveBanners01 from '../../Components/InteractiveBanners/InteractiveBanners01'
 import SocialIcons from '../../Components/SocialIcon/SocialIcons'
 import { fadeIn } from '../../Functions/GlobalAnimations'
@@ -71,8 +72,8 @@ const DigitalagencyPage = (props) => {
             <div className="bg-white">
 
                 {/* Header Start */}
-                <Header topSpace={{ md: true }} type="reverse-scroll">
-                    <HeaderNav fluid="fluid" theme="dark" expand="lg" className="digital-agency-header py-[0px] px-[35px] md:px-[15px] md:py-[20px] sm:px-0" containerClass="md:pr-0">
+                <Header topSpace={{ md: true }} type="header-always-fixed">
+                    <HeaderNav fluid="fluid" theme="dark" bg="dark" expand="lg" className="digital-agency-header py-[0px] px-[35px] md:px-[15px] md:py-[20px] sm:px-0 bg-[#23262d]" containerClass="md:pr-0">
                         <Col lg={2} sm={6} xs={"auto"} className="mr-auto ps-0">
                             <Link aria-label="header logo" className="flex items-center" to="/">
                                 <Navbar.Brand className="inline-block p-0 m-0">
@@ -82,7 +83,15 @@ const DigitalagencyPage = (props) => {
                                 </Navbar.Brand>
                             </Link>
                         </Col>
-                        <Menu className="justify-center col-auto col-lg-8 md:hidden" {...props} />
+                        <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+                            <span className="navbar-toggler-line"></span>
+                            <span className="navbar-toggler-line"></span>
+                            <span className="navbar-toggler-line"></span>
+                            <span className="navbar-toggler-line"></span>
+                        </Navbar.Toggle>
+                        <Navbar.Collapse className="col-auto justify-center px-lg-0">
+                            <Menu {...props} data={BucklerMenuData} />
+                        </Navbar.Collapse>
                         <MobileMenu className="order-last d-lg-none" type="full" {...props} />
                         <Col lg={2} xs={"auto"} className="justify-end pe-0 flex items-center">
                             <SocialIcons theme="social-icon-style-01 block text-center" iconColor="light" size="xs" data={SocialIconsData} />

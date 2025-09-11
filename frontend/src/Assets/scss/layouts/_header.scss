@@ -19,6 +19,26 @@ body {
 }
 
 header {
+  &.header-always-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 9999;
+
+    .navbar {
+      background-color: #23262d !important;
+    }
+
+    .nav-link,
+    .default-logo,
+    .alt-logo,
+    .mobile-logo {
+      color: #ffffff !important;
+    }
+  }
+
   .top-bar {
     transition: var(--default-transition);
   }

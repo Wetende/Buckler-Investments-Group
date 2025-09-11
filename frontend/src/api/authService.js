@@ -2,8 +2,34 @@ import { axiosInstance, axiosPrivate, setAuthTokens, clearAuthTokens } from './a
 
 // Register user
 export const register = async (userData) => {
-    const { data } = await axiosInstance.post('/auth/register', userData);
+    // Backend expects 'name' not 'username' — map if necessary
+    const payload = {
+        email: userData.email,
+        password: userData.password,
+        name: userData.name ?? userData.username ?? undefined,
+        phone: userData.phone,
+        role: userData.role,
+    };
+
+    const { data } = await axiosInstance.post('/auth/register', payload);
     return data;
+};
+
+// Register and automatically log in the user
+export const registerAndLogin = async (userData) => {
+    // First register the user
+    const registrationResult = await register(userData);
+    
+    // Then automatically log them in using their credentials
+    const loginResult = await login({ 
+        username: userData.email, // Backend uses email as username for login
+        password: userData.password 
+    });
+    
+    return {
+        user: registrationResult,
+        tokens: loginResult
+    };
 };
 
 // Backend expects OAuth2 password form or JSON depending on implementation.

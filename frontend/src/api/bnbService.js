@@ -26,6 +26,13 @@ export const getFeaturedListings = async (limit = 8) => {
     return data
 }
 
+export const getNearbyListings = async ({ latitude, longitude, radius_km = 10, limit = 8 }) => {
+    const { data } = await axiosInstance.get('/bnb/listings/nearby', {
+        params: { latitude, longitude, radius_km, limit }
+    })
+    return data
+}
+
 // Bookings
 export const createBooking = async (payload) => {
     // POST with id=0 for create (handled server-side)
@@ -49,6 +56,7 @@ const bnbService = {
     getListing,
     getAvailability,
     getFeaturedListings,
+    getNearbyListings,
     createBooking,
     getBooking,
     listMyBookings,

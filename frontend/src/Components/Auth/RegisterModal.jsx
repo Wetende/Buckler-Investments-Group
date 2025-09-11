@@ -4,12 +4,15 @@ import * as Yup from 'yup'
 import { Input } from '../Form/Form'
 import Buttons from '../Button/Buttons'
 import CustomModal from '../CustomModal'
-import { register as registerUser } from '../../api/authService'
+import { registerAndLogin } from '../../api/authService'
 import { resetForm } from '../../Functions/Utilities'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import RegisterBtn from './RegisterBtn'
+import useAuth from '../../api/useAuth'
 
 const RegisterModal = ({ className = '', onSuccess = () => {} }) => {
+  const navigate = useNavigate()
+  const { login } = useAuth()
   return (
     <CustomModal.Wrapper
       className={className}
@@ -34,11 +37,24 @@ const RegisterModal = ({ className = '', onSuccess = () => {} }) => {
           })}
           onSubmit={async (values, actions) => {
             try {
-              await registerUser({ username: values.username, email: values.email, password: values.password })
+              const result = await registerAndLogin({ 
+                username: values.username, 
+                email: values.email, 
+                password: values.password 
+              })
+              
+              // Update auth context with user data
+              login(result.user)
+              
               resetForm(actions)
               onSuccess()
-              actions.setStatus('Registration successful! Please login to continue.')
+              
+              // Redirect to home page
+              navigate('/')
+              
+              actions.setStatus('Registration successful! Welcome!')
             } catch (e) {
+              console.error('Registration error:', e)
               actions.setStatus('Registration failed. Please try again.')
             }
           }}

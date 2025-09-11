@@ -36,7 +36,9 @@ export const initializeSwiper = (item, params) => {
 };
 
 export const initializeIsotop = (item) => {
-  let filter_menu = item.closest(".grid-wrapper").querySelector(".filter-menu");
+  if (!item) return null;
+  const wrapper = item.closest(".grid-wrapper");
+  const filter_menu = wrapper ? wrapper.querySelector(".filter-menu") : null;
 
   const grid = new Isotope(item, {
     itemSelector: ".grid-item",
@@ -52,21 +54,23 @@ export const initializeIsotop = (item) => {
     grid.arrange({ filter: `*` });
   }, 1000);
 
-  filter_menu &&
+  if (filter_menu) {
     filter_menu.querySelectorAll("li").forEach((el) => {
-      el.querySelector("span").addEventListener("click", function (e) {
+      const spanEl = el.querySelector("span");
+      if (!spanEl) return;
+      spanEl.addEventListener("click", function (e) {
         let element = e.target,
           filtered_text = element.getAttribute("data-filter");
 
-        filter_menu
-          .querySelectorAll("li")
-          .forEach((elm) => elm.classList.remove("active"));
-        element.closest("li").classList.add("active");
+        filter_menu.querySelectorAll("li").forEach((elm) => elm.classList.remove("active"));
+        const li = element.closest("li");
+        li && li.classList.add("active");
         grid.arrange({
           filter: filtered_text === "*" ? "*" : `.${filtered_text}`,
         });
       });
     });
+  }
 
   return grid;
 };

@@ -25,12 +25,24 @@ export const getFeaturedTours = async (limit = 8) => {
     return data
 }
 
+export const getTourCategories = async () => {
+    const { data } = await axiosInstance.get('/tours/categories')
+    return data
+}
+
+export const getCategoryTours = async (category, params = {}) => {
+    const { data } = await axiosInstance.get(`/tours/categories/${category}/tours`, { params })
+    return data
+}
+
 const toursService = {
     searchTours,
     listTours,
     getTour,
     getTourAvailability,
     getFeaturedTours,
+    getTourCategories,
+    getCategoryTours,
 }
 
 export default toursService

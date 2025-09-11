@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 // Libraries
 import { Col, Container, Navbar, Row } from "react-bootstrap";
@@ -8,9 +8,11 @@ import { Autoplay, Pagination, Keyboard, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Components
 import Header, { HeaderNav, Menu } from "../../Components/Header/Header";
+import BucklerMenuData from '../../Components/Header/BucklerMenuData';
 import CustomModal from "../../Components/CustomModal";
 import InteractiveBanners07 from "../../Components/InteractiveBanners/InteractiveBanners07";
 import InteractiveBanners08 from "../../Components/InteractiveBanners/InteractiveBanners08";
@@ -34,6 +36,8 @@ import SideButtons from "../../Components/SideButtons";
 import { InteractiveBannersData08 } from "../../Components/InteractiveBanners/InteractiveBannersData";
 import { TextSliderData01 } from "../../Components/TextSlider/TextSliderData";
 import { blogData } from "../../Components/Blogs/BlogData";
+import { useFeaturedTours, useTourCategories, useToursList, useSearchTours, useCategoryTours } from '../../api/useTours';
+import { getTour, getTourAvailability } from '../../api/toursService';
 
 const SwiperSlideData = [
   {
@@ -110,61 +114,111 @@ const popularpackagedata = [
     link: "#",
     rating: 5,
   },
-  {
-    img: "https://via.placeholder.com/525x431",
-    packageprice: "From $250",
-    days: "10 Days",
-    title: "Maldives super resorts with flights",
-    reviews: "18 Reviews",
-    link: "#",
-    rating: 5,
-  },
-  {
-    img: "https://via.placeholder.com/525x431",
-    packageprice: "From $700",
-    days: "07 Days",
-    title: "Dubai parks & resorts special packages",
-    reviews: "05 Reviews",
-    link: "#",
-    rating: 5,
-  },
-  {
-    img: "https://via.placeholder.com/525x431",
-    packageprice: "From $350",
-    days: "05 Days",
-    title: "Majestic india life and great wildlife",
-    reviews: "30 Reviews",
-    link: "#",
-    rating: 5,
-  },
-  {
-    img: "https://via.placeholder.com/525x431",
-    packageprice: "From $250",
-    days: "10 Days",
-    title: "Maldives super resorts with flights",
-    reviews: "18 Reviews",
-    link: "#",
-    rating: 5,
-  },
 ];
 
-// Filter the blog data category wise
+// Filter the blog data category wise — keep a single fallback item until blog API exists
 const blogClassicData = blogData
   .filter((item) => item.blogType === "classic")
-  .filter((item) => item.category.includes("travelagency"));
+  .filter((item) => item.category.includes("travelagency"))
+  .slice(0, 1); // single-item fallback
 
 const TravelAgencyPage = (props) => {
+  // Load featured tours for Popular Packages (public endpoint)
+  const { data: featuredData, isLoading: featuredLoading, isError: featuredError } = useFeaturedTours(8);
+  const queryClient = useQueryClient();
+  const [searchCriteria, setSearchCriteria] = useState({});
+  
+  // Map API data to InfoBannerStyle05 format
+  const featuredItems = Array.isArray(featuredData)
+    ? featuredData.map((tour) => ({
+        img: tour.image || "https://via.placeholder.com/525x431",
+        packageprice: tour.price ? `From ${tour.price} ${tour.currency || "KES"}` : "From KES 25,000",
+        days: tour.duration || (tour.duration_hours ? `${tour.duration_hours} hrs` : "2 Days"),
+        title: tour.title || tour.name || "Kenya Adventure",
+        reviews: tour.reviews_count ? `${tour.reviews_count} Reviews` : "0 Reviews",
+        link: `/tours/${tour.id}`,
+        rating: tour.rating || 4.5,
+      }))
+    : [];
+  
+  // Use API data when available, fallback to mock only when loading or error
+  const infoBannerItems = featuredItems.length > 0 ? featuredItems : popularpackagedata;
+
+  // Hero slides derived from featured tours (limit 3)
+  const heroSlides = useMemo(() => {
+    if (Array.isArray(featuredData) && featuredData.length > 0) {
+      return featuredData.slice(0, 3).map((t) => ({
+        img: t.image || "https://via.placeholder.com/1920x1080",
+        title: t.title || t.name || "Kenya Adventure",
+        id: t.id,
+      }));
+    }
+    return SwiperSlideData;
+  }, [featuredData]);
+
+  // Prefetch detail and availability for featured items
+  useEffect(() => {
+    if (!Array.isArray(featuredData) || featuredData.length === 0) return;
+    const start = new Date();
+    const end = new Date();
+    end.setDate(start.getDate() + 14);
+    const pad = (n) => String(n).padStart(2, "0");
+    const fmt = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const params = { start_date: fmt(start), end_date: fmt(end) };
+
+    featuredData.forEach((t) => {
+      const id = Number(t?.id);
+      if (!id) return;
+      queryClient.prefetchQuery({ queryKey: ['tours', 'detail', id], queryFn: () => getTour(id), staleTime: 300000 });
+      queryClient.prefetchQuery({ queryKey: ['tours', id, 'availability', params], queryFn: () => getTourAvailability(id, params), staleTime: 120000 });
+    });
+  }, [featuredData, queryClient]);
+
+  // Load tour categories for destinations and interests
+  const { data: categories, isError: categoriesError } = useTourCategories();
+  const categoryItems07 = Array.isArray(categories) && categories.length > 0
+    ? categories.slice(0, 4).map((c) => ({
+        country: c.name || c.title || 'Kenya',
+        img: c.image || 'https://via.placeholder.com/263x263',
+        btnLink: `/tours?category=${encodeURIComponent(c.slug || c.name || '')}`,
+        btnTitle: 'Explore tours',
+      }))
+    : [{ country: 'Kenya', img: 'https://via.placeholder.com/263x263', btnLink: '/tours', btnTitle: 'Explore tours' }];
+
+  const categoryItems09 = Array.isArray(categories) && categories.length > 0
+    ? categories.slice(0, 4).map((c) => ({
+        title: c.name || c.title || 'Safari',
+        subtitle: c.subtitle || 'Wildlife & Nature',
+        img: c.image || 'https://via.placeholder.com/132x132',
+        btnTitle: 'View',
+        btnLink: `/tours?category=${encodeURIComponent(c.slug || c.name || '')}`,
+      }))
+    : [{ title: 'Safari', subtitle: 'Wildlife & Nature', img: 'https://via.placeholder.com/132x132', btnTitle: 'View', btnLink: '/tours' }];
+
+  // Load a different tours slice for the "Special hotels" section (reuse tours list)
+  const { data: toursList } = useToursList({ limit: 6, offset: 0 });
+  const hotelsLikeItems = Array.isArray(toursList) && toursList.length > 0
+    ? toursList.slice(0, 6).map((t) => ({
+        img: t.image || 'https://via.placeholder.com/398x309',
+        title: t.title || t.name || 'Kenya Experience',
+        country: t.location || 'Kenya',
+      }))
+    : [
+        { img: 'https://via.placeholder.com/398x309', title: 'Masai Mara Safari', country: 'Kenya' },
+      ];
+
   return (
     <div style={props.style}>
       <SideButtons />
       {/* Header Start */}
-      <Header topSpace={{ md: true }} type="reverse-scroll">
+      <Header topSpace={{ md: true }} type="header-always-fixed">
         <HeaderNav
           theme="dark"
           fluid="fluid"
+          bg="dark"
           expand="lg"
           containerClass="sm:!px-0"
-          className="py-[0px] border-b border-[#ffffff1a] px-[35px] md:pr-[15px] md:pl-0 md:py-[20px]"
+          className="py-[0px] border-b border-[#ffffff1a] px-[35px] md:pr-[15px] md:pl-0 md:py-[20px] bg-[#23262d]"
         >
           <Col
             xs="auto"
@@ -187,7 +241,7 @@ const TravelAgencyPage = (props) => {
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
           <Navbar.Collapse className="col-xs-auto col-lg-8 menu-order px-lg-0 justify-center">
-            <Menu {...props} />
+            <Menu {...props} data={BucklerMenuData} />
           </Navbar.Collapse>
           <Col
             xs="auto"
@@ -197,7 +251,7 @@ const TravelAgencyPage = (props) => {
             <a
               aria-label="link for top"
               href="#top"
-              className="text-md text-[#fff] font-serif font-medium md:text-[#000]"
+              className="text-md text-[#fff] font-serif font-medium"
             >
               <i className="feather-phone-call mr-[15px]"></i>
               0222 8899900
@@ -208,6 +262,40 @@ const TravelAgencyPage = (props) => {
       {/* Header End */}
 
       <div className="bg-white">
+        {/* Simple Search Section Start */}
+        <section className="py-[60px] border-b border-mediumgray bg-white md:py-[40px]">
+          <Container>
+            <Row className="justify-center">
+              <Col lg={10}>
+                <Formik
+                  initialValues={{ location: '', start_date: '', max_price: '' }}
+                  validationSchema={Yup.object().shape({
+                    location: Yup.string(),
+                    start_date: Yup.string(),
+                    max_price: Yup.number().typeError('Must be a number').min(0, 'Must be >= 0'),
+                  })}
+                  onSubmit={(values) => {
+                    const criteria = {};
+                    if (values.location) criteria.location = values.location;
+                    if (values.start_date) criteria.start_date = values.start_date;
+                    if (values.max_price) criteria.max_price = Number(values.max_price);
+                    setSearchCriteria(criteria);
+                  }}
+                >
+                  {({ isSubmitting }) => (
+                    <Form className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                      <Input name="location" type="text" labelClass="!mb-[10px]" label="Location" placeholder="e.g., Nairobi" />
+                      <Input name="start_date" type="date" labelClass="!mb-[10px]" label="Start date" />
+                      <Input name="max_price" type="number" labelClass="!mb-[10px]" label="Max price (KES)" />
+                      <Buttons ariaLabel="Search tours" type="submit" className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase" themeColor="#232323" color="#fff" title={isSubmitting ? 'Searching...' : 'Search'} />
+                    </Form>
+                  )}
+                </Formik>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+        {/* Simple Search Section End */}
         {/* Hero Slider Section Start */}
         <section className="overflow-hidden full-screen md:h-[650px] sm:h-[500px]">
           <Swiper
@@ -225,7 +313,7 @@ const TravelAgencyPage = (props) => {
               },
             }}
           >
-            {SwiperSlideData.map((item, i) => {
+            {heroSlides.map((item, i) => {
               return (
                 <SwiperSlide
                   key={i}
@@ -243,7 +331,7 @@ const TravelAgencyPage = (props) => {
                         <div className="inline-block">
                           <Buttons
                             ariaLabel="link for swiper img"
-                            href="#"
+                            href={item.id ? `/tours/${item.id}` : '#'}
                             className="btn-fill font-medium font-serif uppercase rounded-none btn-shadow"
                             size="lg"
                             themeColor="#232323"
@@ -333,6 +421,20 @@ const TravelAgencyPage = (props) => {
           </Container>
         </section>
         {/* Section End  */}
+
+        {/* Search Results (below hero) Start */}
+        {Object.keys(searchCriteria || {}).length > 0 && (
+          <section className="py-[80px] border-b border-mediumgray bg-white md:py-[40px]">
+            <Container>
+              <Row>
+                <Col>
+                  {/* Inline loader and error handled through MessageBox if needed later */}
+                </Col>
+              </Row>
+            </Container>
+          </section>
+        )}
+        {/* Search Results End */}
 
         {/* About section Start */}
         <section
@@ -469,12 +571,19 @@ const TravelAgencyPage = (props) => {
                 />
               </Col>
             </Row>
+            {/* Top destinations (categories) - API-backed with single fallback */}
             <InteractiveBanners07
               animation={fadeIn}
               animationDelay={0.1}
               grid="row-cols-1 row-cols-lg-4 row-cols-sm-2 gap-y-[30px]"
               className="justify-center"
+              data={categoryItems07}
             />
+            {categoriesError && (
+              <div className="mt-6">
+                <MessageBox theme="message-box01" variant="error" message="Failed to load categories." />
+              </div>
+            )}
           </Container>
         </m.section>
         {/* Section End */}
@@ -520,11 +629,13 @@ const TravelAgencyPage = (props) => {
                 </h2>
               </Col>
             </Row>
+            {/* Interests (categories) - API-backed with single fallback */}
             <InteractiveBanners09
               grid="row-cols-1 row-cols-sm-2 row-cols-lg-4 gap-y-10"
               animation={zoomIn}
               animationDelay={0.1}
               animationDuration={0.6}
+              data={categoryItems09}
             />
             <Row className="mt-24 xs:mt-16">
               <Col lg={12} className="text-center">
@@ -551,7 +662,7 @@ const TravelAgencyPage = (props) => {
                 {...{ ...fadeIn, transition: { delay: 0.2 } }}
               >
                 <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase mb-[5px] -tracking-[1px]">
-                  POPULAR PACKAGES
+                  FEATURED TOURS
                 </h2>
                 <p className="m-0 block">
                   Amazing tours and fun adventures waiting for you
@@ -562,35 +673,56 @@ const TravelAgencyPage = (props) => {
                 {...{ ...fadeIn, transition: { delay: 0.4 } }}
               >
                 <Buttons
-                  ariaLabel="link for packages"
-                  href="#"
+                  ariaLabel="link for tours"
+                  href="/tours"
                   className="font-medium font-serif uppercase btn-link after:h-[2px] lg:text-md after:bg-darkgray hover:text-darkgray"
                   size="xl"
                   color="#232323"
-                  title="All packages"
+                  title="All tours"
                 />
               </m.div>
             </Row>
             <m.div className="row" {...fadeIn}>
-              <InfoBannerStyle05
-                className="swiper-navigation-04 swiper-navigation-light black-move p-0"
-                carouselOption={{
-                  slidesPerView: 1,
-                  spaceBetween: 30,
-                  loop: true,
-                  autoplay: { delay: 3000, disableOnInteraction: false },
-                  breakpoints: {
-                    1200: { slidesPerView: 4 },
-                    992: { slidesPerView: 3 },
-                    768: { slidesPerView: 2 },
-                  },
-                }}
-                data={popularpackagedata}
-              />
+              {featuredLoading ? (
+                <div className="col-12 text-center py-8">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-neonorange"></div>
+                  <p className="mt-4 text-sm text-gray-600">Loading featured tours...</p>
+                </div>
+              ) : featuredError && featuredItems.length === 0 ? (
+                <MessageBox theme="message-box01" variant="error" message="Failed to load featured tours." />
+              ) : (
+                <InfoBannerStyle05
+                  className="swiper-navigation-04 swiper-navigation-light black-move p-0"
+                  carouselOption={{
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    loop: true,
+                    autoplay: { delay: 3000, disableOnInteraction: false },
+                    breakpoints: {
+                      1200: { slidesPerView: 4 },
+                      992: { slidesPerView: 3 },
+                      768: { slidesPerView: 2 },
+                    },
+                  }}
+                  data={infoBannerItems}
+                />
+              )}
             </m.div>
           </Container>
         </section>
         {/* Info Banner Section End */}
+
+        {/* Category Tours Section Start */}
+        {(() => {
+          const selectedCategory = Array.isArray(categories) && categories.length > 0 ? categories[0] : null;
+          const selectedCategoryKey = selectedCategory?.slug || selectedCategory?.name;
+          const hasCategory = !!selectedCategoryKey;
+          if (!hasCategory) return null;
+          return (
+            <CategoryToursBlock selectedCategory={selectedCategory} />
+          );
+        })()}
+        {/* Category Tours Section End */}
 
         {/* Interactive Banner Section Start */}
         <section className="relative overflow-hidden py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] px-28 bg-white lg:p-[90px] lg:px-8 xl:px-8 xs:px-0">
@@ -621,7 +753,7 @@ const TravelAgencyPage = (props) => {
                 <InteractiveBanners08
                   className=""
                   grid="row-cols-1 row-cols-md-2 row-cols-lg-3 gap-y-10 justify-center"
-                  data={InteractiveBannersData08}
+                  data={hotelsLikeItems}
                   animation={fadeInLeft}
                 />
               </Col>
@@ -860,3 +992,67 @@ const TravelAgencyPage = (props) => {
 };
 
 export default TravelAgencyPage;
+
+// Local block component to render category tours using GET /tours/categories/{category}/tours
+const CategoryToursBlock = ({ selectedCategory }) => {
+  const key = selectedCategory?.slug || selectedCategory?.name;
+  const { data, isLoading, isError } = useCategoryTours(key, { limit: 8, offset: 0 });
+  const items = Array.isArray(data)
+    ? data.map((tour) => ({
+        img: tour.image || 'https://via.placeholder.com/525x431',
+        packageprice: tour.price ? `From ${tour.price} ${tour.currency || 'KES'}` : 'From KES 25,000',
+        days: tour.duration || (tour.duration_hours ? `${tour.duration_hours} hrs` : '2 Days'),
+        title: tour.title || tour.name || 'Kenya Adventure',
+        reviews: tour.reviews_count ? `${tour.reviews_count} Reviews` : '0 Reviews',
+        link: `/tours/${tour.id}`,
+        rating: tour.rating || 4.5,
+      }))
+    : [];
+
+  return (
+    <section className="py-[130px] overflow-hidden border-t border-mediumgray bg-white relative lg:py-[90px] md:py-[75px] sm:py-[50px]">
+      <Container>
+        <Row className="mb-24 md:mb-20 items-center">
+          <m.div className="text-left sm:text-center sm:mb-[10px] col-lg-6 col-md-7" {...{ ...fadeIn, transition: { delay: 0.2 } }}>
+            <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase mb-[5px] -tracking-[1px]">
+              Explore: {selectedCategory?.name || key}
+            </h2>
+            <p className="m-0 block">Popular tours in this category</p>
+          </m.div>
+          <m.div className="text-right sm:text-center col-lg-6 col-md-5" {...{ ...fadeIn, transition: { delay: 0.4 } }}>
+            <Buttons
+              ariaLabel="link for category tours"
+              href={`/tours?category=${encodeURIComponent(key || '')}`}
+              className="font-medium font-serif uppercase btn-link after:h-[2px] lg:text-md after:bg-darkgray hover:text-darkgray"
+              size="xl"
+              color="#232323"
+              title="View all"
+            />
+          </m.div>
+        </Row>
+        <m.div className="row" {...fadeIn}>
+          {isLoading ? (
+            <div className="col-12 text-center py-8">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-neonorange"></div>
+              <p className="mt-4 text-sm text-gray-600">Loading category tours...</p>
+            </div>
+          ) : isError ? (
+            <MessageBox theme="message-box01" variant="error" message="Failed to load category tours." />
+          ) : (
+            <InfoBannerStyle05
+              className="swiper-navigation-04 swiper-navigation-light black-move p-0"
+              carouselOption={{
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                autoplay: { delay: 3000, disableOnInteraction: false },
+                breakpoints: { 1200: { slidesPerView: 4 }, 992: { slidesPerView: 3 }, 768: { slidesPerView: 2 } },
+              }}
+              data={items}
+            />
+          )}
+        </m.div>
+      </Container>
+    </section>
+  );
+};

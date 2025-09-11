@@ -42,6 +42,41 @@ async def list_tours(
     """List all public tours with pagination"""
     return await use_case.execute(limit=limit, offset=offset)
 
+# Static routes must be defined BEFORE dynamic parameterized routes
+@router.get("/featured", response_model=List[TourResponseDTO])
+@inject
+async def get_featured_tours(
+    limit: int = Query(10, ge=1, le=50),
+    use_case: ListToursUseCase = Depends(Provide[AppContainer.list_tours_use_case]),
+):
+    """Get featured tours"""
+    # TODO: Implement featured logic (e.g., high ratings, promoted)
+    return await use_case.execute(limit=limit, offset=0)
+
+@router.get("/categories", response_model=List[TourCategoryDTO])
+async def get_tour_categories():
+    """Get tour categories"""
+    # TODO: Implement categories system
+    return [
+        TourCategoryDTO(id=1, name="Wildlife Safari", description="Safari and wildlife tours", tour_count=15),
+        TourCategoryDTO(id=2, name="Cultural Tours", description="Cultural and heritage tours", tour_count=8),
+        TourCategoryDTO(id=3, name="Adventure", description="Adventure and outdoor activities", tour_count=12),
+        TourCategoryDTO(id=4, name="Beach & Coast", description="Coastal and beach tours", tour_count=6),
+        TourCategoryDTO(id=5, name="City Tours", description="Urban and city exploration", tour_count=10),
+    ]
+
+@router.get("/categories/{category}/tours", response_model=List[TourResponseDTO])
+@inject
+async def get_tours_by_category(
+    category: str,
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    use_case: ListToursUseCase = Depends(Provide[AppContainer.list_tours_use_case]),
+):
+    """Get tours by category"""
+    # TODO: Implement category filtering in use case
+    return await use_case.execute(limit=limit, offset=offset)
+
 @router.get("/{tour_id}", response_model=TourResponseDTO)
 @inject
 async def get_tour_details(
@@ -88,39 +123,7 @@ async def get_tour_availability(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format")
 
-@router.get("/featured", response_model=List[TourResponseDTO])
-@inject
-async def get_featured_tours(
-    limit: int = Query(10, ge=1, le=50),
-    use_case: ListToursUseCase = Depends(Provide[AppContainer.list_tours_use_case]),
-):
-    """Get featured tours"""
-    # TODO: Implement featured logic (e.g., high ratings, promoted)
-    return await use_case.execute(limit=limit, offset=0)
-
-@router.get("/categories", response_model=List[TourCategoryDTO])
-async def get_tour_categories():
-    """Get tour categories"""
-    # TODO: Implement categories system
-    return [
-        TourCategoryDTO(id=1, name="Wildlife Safari", description="Safari and wildlife tours", tour_count=15),
-        TourCategoryDTO(id=2, name="Cultural Tours", description="Cultural and heritage tours", tour_count=8),
-        TourCategoryDTO(id=3, name="Adventure", description="Adventure and outdoor activities", tour_count=12),
-        TourCategoryDTO(id=4, name="Beach & Coast", description="Coastal and beach tours", tour_count=6),
-        TourCategoryDTO(id=5, name="City Tours", description="Urban and city exploration", tour_count=10),
-    ]
-
-@router.get("/categories/{category}/tours", response_model=List[TourResponseDTO])
-@inject
-async def get_tours_by_category(
-    category: str,
-    limit: int = Query(20, ge=1, le=100),
-    offset: int = Query(0, ge=0),
-    use_case: ListToursUseCase = Depends(Provide[AppContainer.list_tours_use_case]),
-):
-    """Get tours by category"""
-    # TODO: Implement category filtering in use case
-    return await use_case.execute(limit=limit, offset=offset)
+# (removed duplicate static routes; static routes are defined above the dynamic ones)
 
 # Operator/Admin tour management
 @router.post("/", response_model=TourResponseDTO)

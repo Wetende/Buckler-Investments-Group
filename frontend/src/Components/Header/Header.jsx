@@ -226,7 +226,9 @@ export const Menu = memo((props) => {
                   <span className="nav-link">{item.title}</span>
                 )
               }
-              <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+              {(item.dropdown || item.megamenu) && (
+                <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+              )}
               {(item.dropdown) && (
                 <ul className="simple-dropdown-menu">
                   {item.dropdown.map((item, i) => {
@@ -427,7 +429,9 @@ export const MobileMenu = (props) => {
                         <span className="nav-link">{item.title}</span>
                       )
                     }
-                    <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+                    {(item.dropdown || item.megamenu) && (
+                      <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+                    )}
                     {item.dropdown && (
                       <ul className="simple-dropdown-menu">
                         {item.dropdown.map((item, i) => {

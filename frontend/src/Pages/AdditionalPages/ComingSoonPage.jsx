@@ -56,19 +56,12 @@ const ComingSoonPage = () => {
           <Row className="justify-center relative z-10">
             <Col xs={12} className="mb-[30px] text-center xs:mb-[15px]">
               <Link aria-label="homepage" to="/" className="inline-block">
-                <m.img
-                  {...{ ...fadeInDown, transition: { ease: "easeOut", duration: 0.5 } }}
-                  height="36" width="111"
-                  alt="logo"
-                  loading="lazy"
-                  src="/assets/img/webp/logo-fast-blue-black-big@2x.webp"
-                  className="w-[142px] xs:w-[100px] inline-block"
-                />
+                <m.h1 {...{ ...fadeInDown, transition: { ease: "easeOut", duration: 0.5 } }} className="font-serif font-semibold text-darkgray tracking-[-.2px] text-[26px] md:text-[22px]">Buckler Investments Group</m.h1>
               </Link>
             </Col>
             <Col xs={12} className="text-center">
-              <m.h1 {...{ ...fadeInDown, transition: { delay: 1, ease: "easeOut", duration: 0.5 } }} className="inline-block font-serif text-gradient bg-gradient-to-r from-[#b783ff] to-[#ff85a6] font-semibold pb-[10px] xl:text-[50px] xl:leading-none xs:text-[38px]">We are <br />launching soon</m.h1>
-              <m.p {...{ ...fadeInDown, transition: { delay: 1.7, ease: "easeOut", duration: 0.5 } }} className="text-xmd w-2/5 mx-auto mb-[30px] xl:text-xs xs:w-[90%]">We're currently working hard on this page. Subscribe our newsletter to get update when it'll be live.</m.p>
+              <m.h1 {...{ ...fadeInDown, transition: { delay: 1, ease: "easeOut", duration: 0.5 } }} className="inline-block font-serif text-darkgray font-semibold pb-[10px] xl:text-[50px] xl:leading-none xs:text-[34px] text-center">New Buckler features are under development</m.h1>
+              <m.p {...{ ...fadeInDown, transition: { delay: 1.7, ease: "easeOut", duration: 0.5 } }} className="text-xmd w-2/5 mx-auto mb-[30px] xl:text-xs xs:w-[90%] text-center">We're building something great. Properties, Cars, and Invest will launch here soon. Stay tuned for the official release.</m.p>
             </Col>
             <Col xs={5}>
               <CountDown
@@ -80,52 +73,11 @@ const ComingSoonPage = () => {
             </Col>
           </Row>
 
-          {/* Elements */}
-          <div className="h-full w-full min-w-[1500px] absolute bottom-0 left-1/2 -translate-x-1/2">
-            <m.img
-              {...{ ...rotateInDown, transition: { delay: 3.5, ease: "easeOut", duration: 0.5 } }}
-              alt="stick"
-              src="https://via.placeholder.com/207x199"
-              className="absolute top-1/4 left-[20%] max-w-[200px] w-[10%]"
-            />
-            <m.img
-              {...{ ...rotateInDown, transition: { delay: 2.7, ease: "easeOut", duration: 0.5 } }}
-              alt="coffee-cup"
-              src="https://via.placeholder.com/154x156"
-              className="absolute top-1/4 right-[20%]"
-            />
-            <m.img
-              {...{ ...rotateInDown, transition: { delay: 2.5, ease: "easeOut", duration: 0.5 } }}
-              alt="envelope"
-              src="https://via.placeholder.com/234x211"
-              className="absolute top-[calc(25%+100px)] right-[15%]"
-            />
-            <m.img
-              {...{ ...fadeInUp, transition: { delay: 3, ease: "easeOut", duration: 0.5 } }}
-              alt="plant"
-              src="https://via.placeholder.com/293x240"
-              className="absolute bottom-[100px] left-[calc(15%-220px)] max-w-[300px] w-[15%]"
-            />
-            <m.img
-              {...{ ...fadeInUp, transition: { delay: 3, ease: "easeOut", duration: 0.5 } }}
-              alt="alphabate"
-              src="https://via.placeholder.com/400x400"
-              className="absolute bottom-[100px] left-[15%] max-w-[200px] w-[10%]"
-              width="200"
-              height="200"
-            />
-            <m.img
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 2.5, ease: "easeOut" }}
-              alt="brush"
-              src="https://via.placeholder.com/285x286"
-              className="absolute -bottom-[160px] right-[calc(50%-650px)]"
-            />
-          </div>
+          {/* Decorative elements (simplified, brand-neutral) */}
+          <div className="h-full w-full min-w-[1500px] absolute bottom-0 left-1/2 -translate-x-1/2 pointer-events-none select-none"></div>
 
           {/* Big Coming Soon Text */}
-          <h2 className="text-white text-shadow-medium text-[150px] leading-none font-serif font-bold absolute -bottom-[60px] left-1/2 -translate-x-1/2 w-max uppercase mb-0 xl:text-[120px] md:bottom-[-50px] xs:text-[50px] xs:-bottom-[15px]">
+          <h2 className="text-white text-shadow-medium text-[150px] leading-none font-serif font-bold absolute -bottom-[60px] left-1/2 -translate-x-1/2 w-max uppercase mb-0 xl:text-[120px] md:bottom-[-50px] xs:text-[44px] xs:-bottom-[15px]">
             <m.span
               className="inline-block"
               initial={{ opacity: 0, y: "100%" }}
@@ -139,7 +91,7 @@ const ComingSoonPage = () => {
           <Container>
             <Row className="justify-center">
               <Col lg={5} md={7}>
-                {/* Newsletter Form Start */}
+                {/* Newsletter Form Start (optional) */}
                 <Formik
                   initialValues={{ email: '' }}
                   validationSchema={Yup.object().shape({ email: Yup.string().email("Invalid email.").required("Field is required."), })}

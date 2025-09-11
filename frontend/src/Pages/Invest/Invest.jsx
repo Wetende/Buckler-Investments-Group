@@ -10,6 +10,7 @@ import { m } from "framer-motion";
 // Components
 import { fadeIn, zoomIn } from '../../Functions/GlobalAnimations';
 import Buttons from '../../Components/Button/Buttons'
+import BucklerMenuData from '../../Components/Header/BucklerMenuData'
 import InteractiveBanners02 from '../../Components/InteractiveBanners/InteractiveBanners02';
 import Clients from '../../Components/Clients/Clients';
 import Piechart from '../../Components/PieChart/PieChart';
@@ -19,7 +20,7 @@ import Counter from '../../Components/Counters/Counter'
 import BlogClassic from '../../Components/Blogs/BlogClassic';
 import SocialIcons from '../../Components/SocialIcon/SocialIcons';
 import CustomModal from '../../Components/CustomModal'
-import Header, { HeaderLanguage, HeaderNav, Menu, SearchBar, Topbar } from '../../Components/Header/Header';
+import Header, { HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header';
 import FooterMenu, { Footer } from '../../Components/Footers/Footer';
 import SideButtons from "../../Components/SideButtons";
 
@@ -165,25 +166,8 @@ const HomeBusinessPage = (props) => {
     <div style={props.style}>
       <SideButtons />
       {/* Header Start */}
-      <Header className="header-with-topbar" topSpace={{ desktop: true }} type="reverse-scroll">
-        <Topbar className="bg-lightgray border-b home-business-topbar border-[#0000001a] sm:hidden md:px-0 header-with-topbar border-bottom px-[35px]">
-          <Container fluid>
-            <Row className="justify-between pl-[15px] lg:pr-[15px] items-center">
-              <Col className="col-12 text-center sm:text-start col-sm-auto me-auto ps-lg-0">
-                <SocialIcons theme="social-icon-style-01" size="xs" iconColor="dark" data={SocialIconsData} />
-              </Col>
-              <Col className="col-auto none sm:block text-end lg:px-0">
-                <span className="top-bar-contact-list border-l border-inherit	py-[9px] px-[18px] text-[13px] inline-block float-left">
-                  <i className="feather-phone-call text-darkgray mr-[6px] text-md relative top-[1px]"></i>  0222 8899900
-                </span>
-                <span className="border-l border-inherit py-[9px] pl-[18px] text-[13px] inline-block float-left border-r-0 pr-0">
-                  <i className="feather-map-pin text-darkgray mr-[6px] text-md relative top-[1px]"></i> 401 Broadway, 24th Floor, San Francisco
-                </span>
-              </Col>
-            </Row>
-          </Container>
-        </Topbar>
-        <HeaderNav fluid="fluid" theme="light" bg="white" menu="light" className="px-[35px] py-[0px] md:px-[15px] sm:px-0" containerClass="md:px-0">
+      <Header topSpace={{ md: true }} type="header-always-fixed">
+        <HeaderNav fluid="fluid" theme="dark" bg="dark" menu="dark" className="px-[35px] py-[0px] md:px-[15px] sm:px-0 bg-[#23262d]" containerClass="md:px-0">
           <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
             <Link aria-label="header logo" className="flex items-center" to="/">
               <Navbar.Brand className="inline-block p-0 m-0">
@@ -199,8 +183,8 @@ const HomeBusinessPage = (props) => {
             <span className="navbar-toggler-line"></span>
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
-          <Navbar.Collapse className="col-auto justify-end p-0">
-            <Menu {...props} />
+          <Navbar.Collapse className="col-auto justify-center p-0">
+            <Menu {...props} data={BucklerMenuData} />
           </Navbar.Collapse>
           <Col className="col-auto text-right !pr-0 pl-[15px] md:pl-0 md:pr-[15px] sm:pr-0">
             <SearchBar className="pl-[17px] xs:px-[15px]" />

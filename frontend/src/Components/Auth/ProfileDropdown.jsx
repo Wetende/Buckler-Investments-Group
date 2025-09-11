@@ -10,7 +10,7 @@ const ProfileDropdown = ({ className = '', style = {} }) => {
   }
 
   return (
-    <div className={`profile-dropdown dropdown mr-[10px] inline-block align-middle pl-[17px] text-[17px]${className ? ` ${className}` : ""}`} style={style}>
+    <div className={`profile-dropdown dropdown mr-[10px] inline-block align-middle pl-[17px] text-[17px] relative${className ? ` ${className}` : ""}`} style={style}>
       <button
         type="button"
         className="bg-transparent border-none p-0 cursor-pointer relative"
@@ -24,7 +24,7 @@ const ProfileDropdown = ({ className = '', style = {} }) => {
           </span>
         )}
       </button>
-      <ul id="profileDropdown" className="dropdown-menu block profile-menu">
+      <ul id="profileDropdown" className="dropdown-menu block profile-menu !left-auto !right-0 !transform !translate-x-0 min-w-[240px]">
         <li className="profile-item border-b border-[#ededed] p-[15px]">
           <div className="flex items-center">
             <div className="profile-avatar w-[40px] h-[40px] bg-[#f8f8f8] rounded-full flex items-center justify-center mr-[10px]">

@@ -11,6 +11,7 @@ import { Link as ScrollTo } from "react-scroll"
 
 // Components
 import Header, { HeaderNav, Menu, SearchBar, Topbar } from '../../Components/Header/Header';
+import HomeMenuData from '../../Components/Header/HomeMenuData';
 import AuthButtons from '../../Components/Header/AuthButtons';
 import SocialIcons from '../../Components/SocialIcon/SocialIcons';
 import Buttons from '../../Components/Button/Buttons'
@@ -203,7 +204,7 @@ const HomeDecorPage = (props) => {
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
           <Navbar.Collapse className="col-auto justify-center">
-            <Menu {...props} />
+            <Menu {...props} data={HomeMenuData} />
           </Navbar.Collapse>
           <Col className="col-auto text-right !pr-0">
             <SearchBar />
@@ -516,8 +517,14 @@ const HomeDecorPage = (props) => {
               <div className="flex flex-wrap gap-3 mt-[20px]">
                 <Buttons to="/bnb" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="BnB" />
                 <Buttons to="/tours" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Tours" />
+                {/* Replaced real properties link with coming soon page */}
+                {/* <Buttons to="/properties/list" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Properties" /> */}
                 <Buttons to="/properties" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Properties" />
+                {/* Replaced real invest link with coming soon page */}
+                {/* <Buttons to="/invest/home" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Invest" /> */}
                 <Buttons to="/invest" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Invest" />
+                {/* Replaced real cars link with coming soon page */}
+                {/* <Buttons to="/cars/list" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Car-Hire" /> */}
                 <Buttons to="/cars" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Car-Hire" />
               </div>
             </Col>

@@ -414,6 +414,9 @@ const MaintenancePage = lazy(() =>
 const ComingSoonPage = lazy(() =>
   import("./Pages/AdditionalPages/ComingSoonPage")
 );
+const PropertyComingSoon = lazy(() => import("./Pages/AdditionalPages/PropertyComingSoon"));
+const CarComingSoon = lazy(() => import("./Pages/AdditionalPages/CarComingSoon"));
+const InvestComingSoon = lazy(() => import("./Pages/AdditionalPages/InvestComingSoon"));
 const ComingSoonV2Page = lazy(() =>
   import("./Pages/AdditionalPages/ComingSoonV2Page")
 );
@@ -568,7 +571,7 @@ function App() {
                 <Routes>
                   {/* MVP Routes */}
                   {/* Properties sub-home and list */}
-                  <Route path="/properties" element={<PropertiesHomePage />} />
+                  <Route path="/properties" element={<PropertyComingSoon />} />
                   <Route path="/properties/list" element={<PropertiesListPage />} />
                   <Route path="/properties/:id" element={<PropertyDetailPage />} />
 
@@ -579,10 +582,10 @@ function App() {
                   <Route path="/tours" element={<ToursHomePage />} />
                   <Route path="/tours/list" element={<ToursListPage />} />
                   <Route path="/tours/:id" element={<TourDetailPage />} />
-                  <Route path="/cars" element={<CarsHomePage />} />
+                  <Route path="/cars" element={<CarComingSoon />} />
                   <Route path="/cars/list" element={<CarsListPage />} />
                   <Route path="/cars/:id" element={<CarDetailPage />} />
-                  <Route path="/invest" element={<InvestHomePage />} />
+                  <Route path="/invest" element={<InvestComingSoon />} />
                   <Route path="/blogs/:slug" element={<SlugPageComponent />} />
                   <Route path="/password-reset" element={<PasswordReset />} />
                   <Route path="/account" element={<AccountPage />} />

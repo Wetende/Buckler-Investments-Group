@@ -9,6 +9,7 @@ import { Link as ScrollTo } from "react-scroll"
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
+import BucklerMenuData from '../../Components/Header/BucklerMenuData'
 import Buttons from '../../Components/Button/Buttons'
 import Overlap from '../../Components/Overlap/Overlap'
 import Tab03 from '../../Components/Tab/Tab03'
@@ -30,8 +31,8 @@ const RestaurantPage = (props) => {
     <div>
       <SideButtons />
       {/* Header Start */}
-      <Header topSpace={{ dekstop: false, md: true }} type="reverse-scroll">
-        <HeaderNav fluid="fluid" theme="dark" expand="lg" className="px-[35px] py-[0px] md:pr-[15px] sm:pr-0 md:pl-0 md:py-[20px]">
+      <Header topSpace={{ md: true }} type="header-always-fixed">
+        <HeaderNav fluid="fluid" theme="dark" bg="dark" expand="lg" className="px-[35px] py-[0px] md:pr-[15px] sm:pr-0 md:pl-0 md:py-[20px] bg-[#23262d]">
           <Col lg={2} sm={6} className="col-auto me-auto ps-lg-0 sm:!pl-0">
             <Link aria-label="header home link" className="flex items-center" to="/">
               <Navbar.Brand className="inline-block p-0 m-0">
@@ -48,7 +49,7 @@ const RestaurantPage = (props) => {
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
           <Navbar.Collapse className="col-auto justify-center menu-order px-lg-0 restaurant-header-menu">
-            <Menu {...props} />
+            <Menu {...props} data={BucklerMenuData} />
           </Navbar.Collapse>
           <Col className="col-auto col-lg-2 text-right pe-0 font-size-0 sm:hidden">
             <ScrollTo href="#" to="experience" offset={0} delay={0} spy={true} smooth={true} duration={800}>
