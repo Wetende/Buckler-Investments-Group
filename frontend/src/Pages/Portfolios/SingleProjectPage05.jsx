@@ -23,7 +23,6 @@ import {
   fadeInLeft,
   fadeInRight,
 } from "../../Functions/GlobalAnimations";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { imageGalleryData02 } from "../../Components/ImageGallery/ImageGalleryData";
@@ -114,7 +113,7 @@ const SingleProjectPage05 = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="py-0 relative">
         <Swiper

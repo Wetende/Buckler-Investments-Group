@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom'
 import { Header, HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from "../../Components/Header/Header";
 import PortfolioScattered from '../../Components/Portfolio/PortfolioScattered';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { portfolioScatteredData } from '../../Components/Portfolio/PortfolioData'
@@ -47,7 +46,7 @@ const WhiteHeaderPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
 
       {/* Section start */}
       <section className="overflow-visible cover-background" style={{ backgroundImage: `url("https://via.placeholder.com/1920x1080")` }}>

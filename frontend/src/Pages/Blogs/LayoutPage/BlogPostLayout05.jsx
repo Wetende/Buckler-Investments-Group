@@ -17,7 +17,6 @@ import { TiltBox } from '../../../Components/FancyText/FancyText'
 import FooterStyle01 from '../../../Components/Footers/FooterStyle01';
 
 import CustomModal from '../../../Components/CustomModal'
-import SideButtons from "../../../Components/SideButtons";
 import { fadeIn } from '../../../Functions/GlobalAnimations';
 import CommentBox from '../../../Components/Blogs/HelperComponents/CommentBox';
 
@@ -118,7 +117,7 @@ const BlogPostLayout05 = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Stat */}
       <section className="cover-background py-[130px] overflow-hidden lg:py-[90px] md:py-[75px] sm:py-[50px]" style={{ backgroundImage: "url(https://via.placeholder.com/1920x900)" }}>
         <div className="absolute top-0 left-0 w-full h-full opacity-60 bg-darkgray"></div>

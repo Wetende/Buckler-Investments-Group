@@ -15,7 +15,6 @@ import CountDown from "../../Components/Countdown/Countdown";
 import SocialIcons from "../../Components/SocialIcon/SocialIcons";
 import { Input } from "../../Components/Form/Form";
 import MessageBox from "../../Components/MessageBox/MessageBox";
-import SideButtons from "../../Components/SideButtons";
 import { fadeIn } from "../../Functions/GlobalAnimations";
 import { resetForm, sendEmail } from "../../Functions/Utilities";
 
@@ -64,7 +63,7 @@ const ComingSoonV2Page = () => {
 
   return (
     <>
-      <SideButtons animation={false} />
+      
       <div className="coming-soon-v2">
         {/* Section Start */}
         <section

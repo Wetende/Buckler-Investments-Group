@@ -12,7 +12,6 @@ import MultiRangeSlider from "../../Components/Products/MultiRangeSlider";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import ShopWide from "../../Components/Products/ShopWide";
 import { fadeIn } from '../../Functions/GlobalAnimations';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { shopWideData } from "../../Components/Products/ProductData";
@@ -51,7 +50,7 @@ const RightSidebar = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Section Start */}
       <m.div className="overflow-hidden pb-[80px] md:py-[40px]" {...fadeIn}>
         <Parallax className="lg-no-parallax bg-cover absolute top-0 left-0 w-full h-full" translateY={[-40, 40]} style={{ backgroundImage: `url(/assets/img/webp/portfolio-bg.webp)` }}></Parallax>

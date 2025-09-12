@@ -19,7 +19,6 @@ import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { fadeIn } from "../../Functions/GlobalAnimations";
 import ReCAPTCHA from 'react-google-recaptcha';
 import { sendEmail, resetForm } from "../../Functions/Utilities";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 const SwiperImgData = [
@@ -71,7 +70,7 @@ const ContactUsModernPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-gradient-to-tr from-[#f5bb8d] via-[#ffaea8] to-[#f3aaca] py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
         <Container className="h-[300px] sm:h-[250px] flex justify-center sm:justify-end">
@@ -245,7 +244,7 @@ const ContactUsModernPage = (props) => {
       </section>
 
       {/* Footer Start */}
-      <FooterStyle01 theme="dark" className="bg-[#262b35] text-slateblue" />
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer End */}
     </div>
   )

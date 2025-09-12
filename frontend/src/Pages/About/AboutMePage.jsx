@@ -21,7 +21,6 @@ import { Input } from '../../Components/Form/Form'
 import MessageBox from '../../Components/MessageBox/MessageBox';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 import Buttons from '../../Components/Button/Buttons'
-import SideButtons from "../../Components/SideButtons";
 import { fadeIn } from '../../Functions/GlobalAnimations'
 import Counter from '../../Components/Counters/Counter'
 import { resetForm, sendEmail } from '../../Functions/Utilities';
@@ -328,7 +327,7 @@ const AboutMePage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="p-0 bg-cover bg-center relative" style={{ backgroundImage: "url('https://via.placeholder.com/1903x800')" }}>
         <Container className="relative h-[800px] md:h-[600px] sm:h-[400px]">
@@ -628,7 +627,7 @@ const AboutMePage = (props) => {
       {/* Section End */}
 
       {/* Footer Start */}
-      <FooterStyle01 theme="dark" className="bg-[#262b35] text-slateblue" />
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer End */}
     </div>
 

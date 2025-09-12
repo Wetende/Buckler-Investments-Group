@@ -9,7 +9,6 @@ import { m } from "framer-motion";
 import Header, { HeaderNav, Menu } from "../../Components/Header/Header";
 import FooterStyle10 from "../../Components/Footers/FooterStyle10";
 import Buttons from "../../Components/Button/Buttons";
-import SideButtons from "../../Components/SideButtons";
 import { fadeIn, fadeInLeft } from "../../Functions/GlobalAnimations";
 
 // API hooks
@@ -62,7 +61,6 @@ const TourDetail = (props) => {
 
   return (
     <div style={props.style}>
-      <SideButtons />
       
       {/* Header Start */}
       <Header topSpace={{ md: true }} type="reverse-scroll">

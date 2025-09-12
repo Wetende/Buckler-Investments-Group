@@ -25,7 +25,6 @@ import BlogMasonry from '../../Components/Blogs/BlogMasonry';
 import Instagram from '../../Components/Instagram/Instagram';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 import MouseMove from "../../Components/MouseMove";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { blogData } from '../../Components/Blogs/BlogData';
@@ -142,7 +141,6 @@ const HomeDecorPage = (props) => {
   const [activeSlide, setActiveSlide] = useState(0)
   return (
     <div style={props.style}>
-      <SideButtons />
       {/* Header start */}
       <Header className="header-with-topbar decor-header" topSpace={{ desktop: true }} type="reverse-scroll">
         <Topbar className="bg-lightgray border-b border-[#0000001a] sm:hidden md:px-[15px]">
@@ -154,11 +152,11 @@ const HomeDecorPage = (props) => {
               <Col className="col-auto flex xs:hidden text-right">
                 <div className="top-bar-contact flex">
                   <span className="border-l border-[#0000001a] py-[13px] px-[18px] text-sm flex items-center">
-                    <i className="far fa-envelope mr-[10px] text-md relative text-basecolor"></i>
+                    <i className="far fa-envelope mr-[10px] text-md relative text-red-600"></i>
                     <a aria-label="gmail for link" href="mailto:info@yourdomain.com" className="hover:text-darkgray">info@yourdomain.com</a>
                   </span>
                   <span className="border-l border-[#0000001a] py-[13px] px-[18px] md:pr-0 text-sm flex items-center sm:hidden">
-                    <i className="far fa-clock mr-[10px] text-md relative text-basecolor"></i>
+                    <i className="far fa-clock mr-[10px] text-md relative text-red-600"></i>
                     Mon - Fri: 10:00 - 22:00
                   </span>
                 </div>
@@ -244,7 +242,7 @@ const HomeDecorPage = (props) => {
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 0 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     transition={{ delay: 1, duration: 0.6 }}
-                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">BUCKLER INVESTMENTS GROUP
+                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-red-600 font-medium sm:text-xs">BUCKLER INVESTMENTS GROUP
                   </m.span>
                   <m.h2 className="heading-6 text-[81px] leading-[86px] p-0 font-bold text-darkgray mb-[45px] lg:text-[60px] lg:leading-[55px] sm:text-[33px] sm:leading-[30px] sm:mb-[25px]"
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
@@ -319,7 +317,7 @@ const HomeDecorPage = (props) => {
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 1 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     transition={{ delay: 1, duration: 0.6 }}
-                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">BUCKLER TRAVEL
+                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-red-600 font-medium sm:text-xs">BUCKLER TRAVEL
                   </m.span>
                   <m.h2 className="heading-6 text-[81px] leading-[86px] p-0 font-bold text-darkgray mb-[45px] lg:text-[60px] lg:leading-[55px] sm:text-[33px] sm:leading-[30px] sm:mb-[25px]"
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
@@ -394,7 +392,7 @@ const HomeDecorPage = (props) => {
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     animate={{ clipPath: activeSlide === 2 ? 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
                     transition={{ delay: 1, duration: 0.6 }}
-                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-basecolor font-medium sm:text-xs">BUCKLER INVEST
+                    className="uppercase inline-block mb-[20px] text-left leading-[15px] text-red-600 font-medium sm:text-xs">BUCKLER INVEST
                   </m.span>
                   <m.h2 className="heading-6 text-[81px] leading-[86px] p-0 font-bold text-darkgray mb-[45px] lg:text-[60px] lg:leading-[55px] sm:text-[33px] sm:leading-[30px] sm:mb-[25px]"
                     initial={{ clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)' }}
@@ -466,26 +464,26 @@ const HomeDecorPage = (props) => {
           <Row className="row row-cols-1 row-cols-lg-4 row-cols-sm-2 justify-center gap-y-10">
             <Col>
               <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.2, duration: 1.2 } }}>
-                <i className="line-icon-Headset text-[35px] text-basecolor mr-[30px] lg:mr-[25px] inline-block"></i>
+                <i className="line-icon-Headset text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div> <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Expert support</div> <span>Contact support team</span>
                 </div>
               </m.div>
             </Col>
             <Col>
               <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.4, duration: 1.2 } }}>
-                <i className="line-icon-Like-2 text-[35px] text-basecolor mr-[30px] lg:mr-[25px] inline-block"></i>
+                <i className="line-icon-Like-2 text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div> <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Perfect quality</div> <span>Perfect design quality</span> </div>
               </m.div>
             </Col>
             <Col>
               <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.6, duration: 1.2 } }}>
-                <i className="line-icon-Shield text-[35px] text-basecolor mr-[30px] lg:mr-[25px] inline-block"></i>
+                <i className="line-icon-Shield text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div> <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Security checkout</div> <span>Safe and trustworthy</span> </div>
               </m.div>
             </Col>
             <Col>
               <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.8, duration: 1.2 } }}>
-                <i className="line-icon-Coin text-[35px] text-basecolor mr-[30px] lg:mr-[25px] inline-block"></i>
+                <i className="line-icon-Coin text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div>
                   <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Instant discounts</div> <span>Use your coupon now</span> </div>
               </m.div>
@@ -509,8 +507,8 @@ const HomeDecorPage = (props) => {
             </Col>
             <Col lg={{ span: 5, offset: 1 }} md={10}>
               <div className="font-serif text-md font-medium mb-[30px] flex">
-                <span className="w-[40px] h-[1px] bg-basecolor opacity-70 self-center mr-[20px] shrink-0"></span>
-                <div className="grow-[1]"> <span className="text-basecolor uppercase">About Buckler Investments Group</span> </div>
+                <span className="w-[40px] h-[1px] bg-red-600 opacity-70 self-center mr-[20px] shrink-0"></span>
+                <div className="grow-[1]"> <span className="text-red-600 uppercase">About Buckler Investments Group</span> </div>
               </div>
               <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">A unified platform for investments, Properties, BnB, Tours and Car-Hire</h1>
               <p className="mb-[25px] w-[80%] lg:w-full">We connect investors and travellers with verified opportunities across East Africa — curated properties, flexible investment products, authentic tours, short-stay BnB stays and reliable vehicles.</p>
@@ -539,9 +537,9 @@ const HomeDecorPage = (props) => {
           <Row className="justify-center">
             <Col md={6} className="text-center mb-[4.5rem] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">our domains</div>
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">our domains</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
               </div>
               <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">Invest • Property • BnB • Tours • Car Hire</h2>
             </Col>
@@ -559,9 +557,9 @@ const HomeDecorPage = (props) => {
           <Row className="justify-center">
             <Col md={6} className="text-center mb-[77px] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">featured categories</div>
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">featured categories</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
               </div>
               <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">FEATURED CATEGORIES</h2>
             </Col>
@@ -621,9 +619,9 @@ const HomeDecorPage = (props) => {
           <Row className="justify-center">
             <Col md={6} className="col-12 text-center mb-[4.5rem] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">latest updates</div>
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">latest updates</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
               </div>
               <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">LATEST LISTINGS</h2>
             </Col>
@@ -657,9 +655,9 @@ const HomeDecorPage = (props) => {
           <Row className="justify-center">
             <Col md={6} className="col-12 text-center mb-[4.5rem] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
-                <div className="font-serif text-xmd text-basecolor px-[10px]">travel and investment insights</div>
-                <span className="w-[25px] h-[1px] bg-basecolor opacity-40"></span>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">travel and investment insights</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
               </div>
               <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">LATEST ARTICLES</h2>
             </Col>
@@ -695,7 +693,7 @@ const HomeDecorPage = (props) => {
       {/* Section Start */}
 
       {/* Footer Start */}
-      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" language="en" />
       {/* Footer End */}
 
     </div>)

@@ -10,7 +10,6 @@ import FooterStyle04 from "../../Components/Footers/FooterStyle04";
 import { fadeIn } from "../../Functions/GlobalAnimations";
 import IconWithText from '../../Components/IconWithText/IconWithText'
 import Testimonials from "../../Components/Testimonials/Testimonials";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { TestimonialsData03 } from "../../Components/Testimonials/TestimonialsData";
@@ -19,7 +18,7 @@ import { IconWithTextData_03 } from "../../Components/IconWithText/IconWithTextD
 const FooterStyle04Page = (props) => {
   return (
     <div style={props.style}>
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-darkgray py-[25px]">
         <Container>

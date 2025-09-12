@@ -11,7 +11,6 @@ import { Header, HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from "
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { fadeIn } from "../../Functions/GlobalAnimations";
 import { InputField } from "../../Functions/Utilities";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 const cartData = [
@@ -73,7 +72,7 @@ const ShoppingCart = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[25px]">
         <Container>

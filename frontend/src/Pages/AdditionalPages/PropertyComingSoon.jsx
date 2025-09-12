@@ -14,7 +14,6 @@ import { Input } from '../../Components/Form/Form'
 import MessageBox from "../../Components/MessageBox/MessageBox"
 import SocialIcons from "../../Components/SocialIcon/SocialIcons"
 import { fadeIn, fadeInDown, fadeInUp, rotateInDown } from "../../Functions/GlobalAnimations"
-import SideButtons from "../../Components/SideButtons";
 import { resetForm, sendEmail } from '../../Functions/Utilities'
 
 // Data
@@ -44,7 +43,7 @@ const SocialIconsData = [
 const PropertyComingSoon = () => {
   return (
     <>
-      <SideButtons animation={false} />
+      
       <Header topSpace={{ desktop: false }} type="reverse-scroll"></Header>
       <div className="h-[100vh] md:landscape:h-auto flex flex-col">
         <section className="p-[0px] md:landscape:py-[50px] overflow-hidden bg-[#f9f6f3] flex-1 flex items-center justify-center relative">

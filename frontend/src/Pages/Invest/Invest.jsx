@@ -21,8 +21,7 @@ import BlogClassic from '../../Components/Blogs/BlogClassic';
 import SocialIcons from '../../Components/SocialIcon/SocialIcons';
 import CustomModal from '../../Components/CustomModal'
 import Header, { HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header';
-import FooterMenu, { Footer } from '../../Components/Footers/Footer';
-import SideButtons from "../../Components/SideButtons";
+import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 
 // Data
 import { InteractiveBannersData02 } from '../../Components/InteractiveBanners/InteractiveBannersData';
@@ -164,7 +163,6 @@ const blogClassicdData = blogData.filter((item) => item.blogType === "classic").
 const HomeBusinessPage = (props) => {
   return (
     <div style={props.style}>
-      <SideButtons />
       {/* Header Start */}
       <Header topSpace={{ md: true }} type="header-always-fixed">
         <HeaderNav fluid="fluid" theme="dark" bg="dark" menu="dark" className="px-[35px] py-[0px] md:px-[15px] sm:px-0 bg-[#23262d]" containerClass="md:px-0">
@@ -448,22 +446,7 @@ const HomeBusinessPage = (props) => {
         {/* Section End */}
 
         {/* Footer Start */}
-        <Footer className="bg-[#262b35] text-slateblue" theme="dark">
-          <div className="py-[7%] lg:py-[8%] sm:py-[50px]">
-            <Container>
-              <Row className="justify-between md:justify-center sm:justify-between">
-                <Col className="m-0 md:text-center sm:text-start" lg={{ offSet: 0, span: 3, order: 0 }} sm={{ span: 6, order: 5, offSet: 2 }} md={{ span: 4, offset: 0, order: 5 }} xs={{ span: 12, order: 5, offSet: 2 }}>
-                  <Link to="/" className="text-slateblue mb-[15px] mt-[5px] inline-block">
-                    <img loading="lazy" src="/assets/img/webp/logo-gradient-sky-blue-pink-white.webp" alt="logo" width="111" height="36" />
-                  </Link>
-                  <p className="mb-[25px] text-slateblue sm:w-[90%] md:mb-[15px] md:text-center sm:text-start">Buckler Invest helps you plan, allocate, and track your investments.</p>
-                  <p>© Copyright {new Date().getFullYear()} <Link to="/" className="underline underline-offset-4 text-white font-normal">Buckler Invest</Link></p>
-                </Col>
-                <FooterMenu data={FooterData.slice(0, 4)} lg={{ span: 2, offSet: 1, order: 0 }} md={{ span: 3, order: 0 }} sm={{ span: 4, offSet: 1, order: 2 }} className="xl:px-[15px] md:mb-[40px] xs:mb-[25px]" titleClass="capitalize" />
-              </Row>
-            </Container>
-          </div>
-        </Footer>
+        <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
         {/* Footer End */}
       </InViewPort>
     </div>

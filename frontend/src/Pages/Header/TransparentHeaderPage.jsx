@@ -15,7 +15,6 @@ import Testimonials from "../../Components/Testimonials/Testimonials";
 import BlogClassic from "../../Components/Blogs/BlogClassic";
 import CustomModal from '../../Components/CustomModal'
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
-import SideButtons from "../../Components/SideButtons";
 
 // Functions
 import { fadeIn, zoomIn } from "../../Functions/GlobalAnimations";
@@ -87,7 +86,7 @@ const TransparentHeaderPage = (props) => {
       </Header>
       {/* Header End */}
 
-      <SideButtons />
+      
 
       {/* Parallax Scrolling Start */}
       <div className="full-screen landscape:md:h-[600px] md:flex md:items-center overflow-hidden relative">

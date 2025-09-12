@@ -42,7 +42,25 @@ module.exports = {
         coolgray: '#d6d5d5',
         neonorange: '#ff7a56',
         slateblue: '#8890a4',
-        error: 'red'
+        error: 'red',
+        // Brand Colors - Red Theme
+        basecolor: '#dc2626',
+        brandcolor: '#dc2626',
+        primary: '#dc2626',
+        'primary-red': '#dc2626',
+        'red-hover': '#b91c1c',
+        'red-light': '#f87171',
+        'red-dark': '#991b1b',
+        'red-50': '#fef2f2',
+        'red-100': '#fee2e2',
+        'red-200': '#fecaca',
+        'red-300': '#fca5a5',
+        'red-400': '#f87171',
+        'red-500': '#ef4444',
+        'red-600': '#dc2626',
+        'red-700': '#b91c1c',
+        'red-800': '#991b1b',
+        'red-900': '#7f1d1d'
       }
     },
   },

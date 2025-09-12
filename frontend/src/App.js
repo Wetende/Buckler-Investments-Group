@@ -1497,9 +1497,9 @@ function App() {
                     }
                   />
                   <Route
-                    path="/page/about-us"
+                    path="/about-us"
                     element={
-                      <AboutUsPage style={{ "--base-color": "#0038e3" }} />
+                      <AboutUsPage style={{ "--base-color": "#dc2626" }} />
                     }
                   />
                   <Route
@@ -1537,10 +1537,10 @@ function App() {
 
                   {/* Contact Pages */}
                   <Route
-                    path="/page/contact-simple"
+                    path="/contact-us"
                     element={
                       <ContactUsSimplePage
-                        style={{ "--base-color": "#0038e3" }}
+                        style={{ "--base-color": "#dc2626" }}
                       />
                     }
                   />

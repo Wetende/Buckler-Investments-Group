@@ -12,7 +12,6 @@ import Buttons from '../../Components/Button/Buttons'
 import Overlap from '../../Components/Overlap/Overlap';
 import CustomModal from '../../Components/CustomModal'
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
-import SideButtons from "../../Components/SideButtons";
 import { fadeIn } from '../../Functions/GlobalAnimations';
 
 const SingleProjectPage03 = (props) => {
@@ -50,7 +49,7 @@ const SingleProjectPage03 = (props) => {
                 </HeaderNav>
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
             {/* Section Start */}
             <section className="p-0 h-[900px] lg:h-[750px] sm:h-[450px] xs:h-[350px] bg-cover flex items-end overflow-hidden relative bg-center" style={{ backgroundImage: "url('https://via.placeholder.com/1920x915')" }}>
                 <Container>

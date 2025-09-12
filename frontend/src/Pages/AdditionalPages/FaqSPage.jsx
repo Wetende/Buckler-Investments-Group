@@ -13,7 +13,6 @@ import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { Input } from '../../Components/Form/Form'
 import Accordions from '../../Components/Accordion/Accordion'
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header'
-import SideButtons from "../../Components/SideButtons";
 import Buttons from '../../Components/Button/Buttons'
 import { fadeIn } from '../../Functions/GlobalAnimations'
 
@@ -105,7 +104,7 @@ const FaqSPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax section End */}
       <div className="md:flex md:items-center overflow-hidden relative py-[80px]">
         <Parallax className="lg-no-parallax bg-cover cover-background w-full h-[100vh] absolute top-[0px] left-0 xl:h-[700px] xl:-top-[90px] xs:h-[480px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1100)` }}></Parallax>

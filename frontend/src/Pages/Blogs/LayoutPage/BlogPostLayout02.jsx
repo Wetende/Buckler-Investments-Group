@@ -14,7 +14,6 @@ import Dropcaps from "../../../Components/Dropcaps/Dropcaps";
 import Buttons from "../../../Components/Button/Buttons";
 import SocialIcons from "../../../Components/SocialIcon/SocialIcons";
 import BlogClean from "../../../Components/Blogs/BlogClean";
-import SideButtons from "../../../Components/SideButtons";
 import Overlap from "../../../Components/Overlap/Overlap";
 import CustomModal from "../../../Components/CustomModal";
 import FooterStyle01 from "../../../Components/Footers/FooterStyle01";
@@ -195,7 +194,7 @@ const BlogPostLayout02 = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section
         className="pt-[160px] pb-[500px] cover-background xl:pb-[345px] lg:pt-[120px] lg:pb-[200px] md:pt-[95px] md:pb-[270px] sm:py-[80px] xs:py-[50px] sm:mb-[60px]"

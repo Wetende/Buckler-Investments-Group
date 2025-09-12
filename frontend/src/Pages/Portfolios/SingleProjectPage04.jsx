@@ -16,7 +16,6 @@ import CustomModal from '../../Components/CustomModal'
 import { fadeIn, zoomIn } from '../../Functions/GlobalAnimations';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import Overlap from '../../Components/Overlap/Overlap';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 
@@ -109,7 +108,7 @@ const SingleProjectPage04 = (props) => {
                 </HeaderNav>
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
             {/* Section Start */}
             <section className="py-[130px] h-[700px] sm:h-[400px] cover-background lg:py-[90px] md:py-[75px] sm:py-[50px]" style={{ backgroundImage: "url(https://via.placeholder.com/1920x700)" }}></section>
             {/* Section End */}

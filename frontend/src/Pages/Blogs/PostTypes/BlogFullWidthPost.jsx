@@ -14,7 +14,6 @@ import FooterStyle01 from '../../../Components/Footers/FooterStyle01';
 import CommentBox from '../../../Components/Blogs/HelperComponents/CommentBox';
 import { fadeIn } from "../../../Functions/GlobalAnimations"
 import AuthorBox from '../../../Components/Blogs/HelperComponents/AuthorBox';
-import SideButtons from "../../../Components/SideButtons";
 
 // Data
 import { authorData, blogData } from '../../../Components/Blogs/BlogData'
@@ -89,7 +88,7 @@ const BlogFullWidthPost = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {data ? (
         <>
           <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">

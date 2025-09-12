@@ -9,7 +9,9 @@ import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import BucklerMenuData from '../../Components/Header/BucklerMenuData'
+import BnbMenuData from '../../Components/Header/BnbMenuData'
+import EnhancedBnbSearch from '../../Components/BnbSearch/EnhancedBnbSearch'
+import BnbCategoriesGrid from '../../Components/BnbCategories/BnbCategoriesGrid'
 import SocialIcons from '../../Components/SocialIcon/SocialIcons'
 import Buttons from '../../Components/Button/Buttons'
 import Clients from '../../Components/Clients/Clients'
@@ -17,8 +19,7 @@ import Overlap from '../../Components/Overlap/Overlap'
 import CustomModal from '../../Components/CustomModal'
 import BlogMetro from '../../Components/Blogs/BlogMetro'
 import InteractiveBanners15 from '../../Components/InteractiveBanners/InteractiveBanners15'
-import { Footer } from '../../Components/Footers/Footer';
-import SideButtons from "../../Components/SideButtons";
+import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { fadeIn, zoomIn } from '../../Functions/GlobalAnimations'
 
 // Data
@@ -139,7 +140,6 @@ const ArchitecturePage = (props) => {
 
   return (
     <div style={props.style}>
-      <SideButtons />
       {/* Header Start */}
       <Header topSpace={{ md: true }} type="header-always-fixed">
         <HeaderNav
@@ -166,7 +166,7 @@ const ArchitecturePage = (props) => {
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
           <Navbar.Collapse className="col-xs-auto col-lg-8 menu-order px-lg-0 justify-center">
-            <Menu {...props} data={BucklerMenuData} />
+            <Menu {...props} data={BnbMenuData} />
           </Navbar.Collapse>
           <Col xs="auto" lg={2} className="nav-bar-contact text-end xs:hidden pe-0">
             <a aria-label="link for top" href="#top" className="text-md text-[#fff] font-serif font-medium">
@@ -181,7 +181,7 @@ const ArchitecturePage = (props) => {
       <div className="bg-white">
         <div className="relative">
           {/* Section Start */}
-          <section className="overflow-hidden full-screen md:h-[650px] sm:h-[500px]">
+          <section className="overflow-hidden h-[800px] md:h-[500px] sm:h-[400px]">
             <Swiper
               className="white-move swiper-pagination-light swiper-pagination-medium h-full relative swiper-navigation-04 swiper-navigation-dark travel-agency-slider"
               slidesPerView={1}
@@ -236,59 +236,40 @@ const ArchitecturePage = (props) => {
                 })
               }
             </Swiper>
-            {/* Hero Search Form */}
-            <Container className="absolute bottom-[30px] left-0 right-0">
+          </section>
+          {/* Section End */}
+
+          {/* Enhanced BnB Search Section Start */}
+          <EnhancedBnbSearch onSearch={setSearchCriteria} />
+          {/* Enhanced BnB Search Section End */}
+
+          {/* BnB Categories Section Start */}
+          <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] bg-lightgray">
+            <Container>
               <Row className="justify-center">
-                <Col lg={10} className="bg-[rgba(255,255,255,0.85)] backdrop-blur-sm p-6 rounded-md">
-                  <Formik
-                    initialValues={{ location: '', start_date: '', end_date: '', guests: 1 }}
-                    validationSchema={Yup.object({
-                      location: Yup.string().trim(),
-                      start_date: Yup.string(),
-                      end_date: Yup.string(),
-                      guests: Yup.number().min(1).max(12),
-                    })}
-                    onSubmit={(values) => {
-                      const criteria = {
-                        location: values.location || undefined,
-                        start_date: values.start_date || undefined,
-                        end_date: values.end_date || undefined,
-                        guests: values.guests || undefined,
-                      }
-                      setSearchCriteria(criteria)
-                    }}
-                  >
-                    {({ isSubmitting }) => (
-                      <Form className="grid grid-cols-12 gap-4 items-end">
-                        <div className="col-span-12 md:col-span-4">
-                          <Input name="location" label={<span className="text-darkgray">Location</span>} className="w-full" placeholder="City or area" />
-                        </div>
-                        <div className="col-span-6 md:col-span-2">
-                          <Input name="start_date" type="date" label={<span className="text-darkgray">Check-in</span>} className="w-full" />
-                        </div>
-                        <div className="col-span-6 md:col-span-2">
-                          <Input name="end_date" type="date" label={<span className="text-darkgray">Check-out</span>} className="w-full" />
-                        </div>
-                        <div className="col-span-6 md:col-span-2">
-                          <Input name="guests" type="number" min={1} max={12} label={<span className="text-darkgray">Guests</span>} className="w-full" />
-                        </div>
-                        <div className="col-span-6 md:col-span-2 text-right">
-                          <Buttons ariaLabel="search stays" type="submit" className="btn-fancy btn-fill" themeColor="#cee002" color="#232323" title={isSubmitting ? 'Searching...' : 'Search'} />
-                        </div>
-                      </Form>
-                    )}
-                  </Formik>
+                <Col lg={7} className="text-center mb-16 md:mb-12 sm:mb-8">
+                  <h2 className="heading-4 font-serif font-semibold text-darkgray">
+                    Find your perfect stay that suits your needs
+                  </h2>
+                  <p className="text-lg md:text-md">
+                    From entire homes to private rooms, find accommodation that fits your travel style
+                  </p>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <BnbCategoriesGrid filter={false} />
                 </Col>
               </Row>
             </Container>
           </section>
-          {/* Section End */}
+          {/* BnB Categories Section End */}
 
           {/* Section Start */}
-          <section className="overflow-hidden sm:py-[50px] xs:pb-0">
+          <section className="py-[80px] md:py-[60px] sm:py-[50px] xs:pb-0">
             <Container fluid className="md:p-0">
               <Row className="justify-end">
-                <Col lg={7} xl={6} md={10} className="z-[1] absolute bottom-0 right-0 bg-[#23262d] flex py-[49px] px-8 xl:px-8 lg:py-12 sm:relative sm:pt-0 architecture-overlap xs:flex-col xs:items-center xs:text-center">
+                <Col lg={7} xl={6} md={10} className="bg-[#23262d] flex py-[49px] px-8 xl:px-8 lg:py-12 xs:flex-col xs:items-center xs:text-center">
                   <div className="pl-[49px] pr-[39px] py-[10px] border-r border-[#ffffff1a] xl:px-6 md:px-12 xs:p-0 xs:mb-[20px] xs:border-0">
                     <span className="font-serif font-medium text-white inline-block mb-[5px] mxl:block xs:mr-[10px] xs:mb-0">01</span>
                     <span className="font-serif text-md uppercase inline-block">City accommodations</span>
@@ -435,13 +416,12 @@ const ArchitecturePage = (props) => {
         </section>
         {/* Section End */}
 
-        {/* Section Start */}
-        <m.section className="cover-background p-0" style={{ backgroundImage: `url(https://via.placeholder.com/1920x640)` }} {...fadeIn}>
+        {/* Section Start - COMMENTED OUT FOR NOW */}
+        {/* <m.section className="cover-background p-0" style={{ backgroundImage: `url(https://via.placeholder.com/1920x640)` }} {...fadeIn}>
           <div className="absolute top-0 left-0 w-full h-full opacity-50 bg-darkslateblue"></div>
           <Container>
             <Row className="justify-center">
               <Col md={6} className="h-[600px] items-center flex flex-col justify-center text-center lg:h-[500px] sm:h-[400px] xs:h-[300px]">
-                {/* Modal Component Start */}
                 <CustomModal.Wrapper
                   modalBtn={<Buttons ariaLabel="modal button" type="submit" className="btn-sonar border-0" themeColor="#fff" color="#ff7a56" size="lg" title={<i className="icon-control-play" />} />
                   } >
@@ -451,15 +431,14 @@ const ArchitecturePage = (props) => {
                     </div>
                   </div>
                 </CustomModal.Wrapper>
-                {/* Modal Component End */}
               </Col>
             </Row>
           </Container>
-        </m.section>
-        {/* Section End */}
+        </m.section> */}
+        {/* Section End - COMMENTED OUT FOR NOW */}
 
-        {/* Section Start */}
-        <m.section className="overflow-visible pb-0 md:pt-0 sm:pt-[50px] sm:pb-0" {...{ ...fadeIn, transition: { delay: 0.8 } }}>
+        {/* Section Start - COMMENTED OUT FOR NOW */}
+        {/* <m.section className="overflow-visible pb-0 md:pt-0 sm:pt-[50px] sm:pb-0" {...{ ...fadeIn, transition: { delay: 0.8 } }}>
           <Container fluid>
             <Row className="justify-end">
               <Overlap value={80} className="col col-xl-4 col-lg-6 col-md-7 relative bg-[#23262d] md:text-start sm:text-center py-[5.5rem] px-[6.5rem] xl:px-[4.5rem] lg:p-14 sm:px-[15px] sm:py-0">
@@ -468,8 +447,8 @@ const ArchitecturePage = (props) => {
               </Overlap>
             </Row>
           </Container>
-        </m.section>
-        {/* Section End */}
+        </m.section> */}
+        {/* Section End - COMMENTED OUT FOR NOW */}
 
         {/* Section Start */}
         <section className="pt-[80px] pb-0 md:pt-[50px]">
@@ -542,30 +521,12 @@ const ArchitecturePage = (props) => {
         {/* Section End */}
 
         {/* Section Start */}
-        <section className="bg-[rgba(0,0,0,0.02)] relative py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] overflow-hidden">
-          <Container>
-            <Row className="items-center justify-center">
-              <Col lg={{ span: 5, offset: 2, order: 1 }} xs={{ order: 2 }}>
-                <m.img width={458} height={258} src="https://via.placeholder.com/889x501" alt="..." {...{ ...zoomIn, transition: { duration: 0.7 } }} />
-              </Col>
-              <m.div className="md:mb-[50px] md:text-center col-xl-4 col-lg-5 col-md-7 offset-xl-1 order-lg-2 order-1" {...fadeIn}>
-                <h2 className="heading-5 font-serif font-medium text-darkgray lg:w-[95%] md:w-full">Trusted stays across Kenya</h2>
-                <p className="w-[80%] mb-[20px] md:w-full">From Nairobi apartments to Mombasa beach houses, we verify every listing for your peace of mind.</p>
-                <Buttons ariaLabel="link for Get in touch" to="/page/contact-modern" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-darkgray hover:text-darkgray" size="xl" color="#232323" title="Get in touch" />
-              </m.div>
-              <div className="top-1/2 w-auto font-serif font-semibold text-[200px] text-basecolor -tracking-[10px] -left-[50px] md:hidden md:right-0 md:-bottom-[40px] absolute opacity-20 text-start md:text-center lg:block">kenya</div>
-            </Row>
-          </Container>
-        </section>
-        {/* Section End */}
-
-        {/* Section Start */}
         <section className="pt-[130px] lg:pt-[90px] md:pt-[75px] sm:pt-[50px]  pb-[90px] md:pb-[75px] sm:pb-[50px] bg-white">
           <Container fluid>
             <Row className="justify-center">
               <Col className="text-center divider-full mb-32 p-0 lg:mb-[5.5rem] xs:mb-14">
                 <m.div className="divider-border divider-light flex items-center w-full" {...fadeIn}>
-                  <span className="font-serif font-medium text-darkgray uppercase tracking-[1px] block px-[30px]">LATEST BLOGS</span>
+                  <span className="font-serif font-medium text-darkgray uppercase tracking-[1px] block px-[30px]">HOMES</span>
                 </m.div>
               </Col>
             </Row>
@@ -584,26 +545,26 @@ const ArchitecturePage = (props) => {
         </section>
         {/* Section End */}
 
+        {/* Section Start */}
+        <section className="bg-[rgba(0,0,0,0.02)] relative py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] overflow-hidden">
+          <Container>
+            <Row className="items-center justify-center">
+              <Col lg={{ span: 5, offset: 2, order: 1 }} xs={{ order: 2 }}>
+                <m.img width={458} height={258} src="https://via.placeholder.com/889x501" alt="..." {...{ ...zoomIn, transition: { duration: 0.7 } }} />
+              </Col>
+              <m.div className="md:mb-[50px] md:text-center col-xl-4 col-lg-5 col-md-7 offset-xl-1 order-lg-2 order-1" {...fadeIn}>
+                <h2 className="heading-5 font-serif font-medium text-darkgray lg:w-[95%] md:w-full">Trusted stays across Kenya</h2>
+                <p className="w-[80%] mb-[20px] md:w-full">From Nairobi apartments to Mombasa beach houses, we verify every listing for your peace of mind.</p>
+                <Buttons ariaLabel="link for Get in touch" to="/page/contact-modern" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-darkgray hover:text-darkgray" size="xl" color="#232323" title="Get in touch" />
+              </m.div>
+              <div className="top-1/2 w-auto font-serif font-semibold text-[200px] text-basecolor -tracking-[10px] -left-[50px] md:hidden md:right-0 md:-bottom-[40px] absolute opacity-20 text-start md:text-center lg:block">kenya</div>
+            </Row>
+          </Container>
+        </section>
+        {/* Section End */}
+
         {/* Footer Start */}
-        <Footer className="overflow-hidden" theme="light">
-          <div className="py-[70px] xs:py-[50px] border-t border-[#ffffff1a]">
-            <Container fluid>
-              <Row className="justify-center">
-                <Col md={2} className="sm:mb-[20px]">
-                  <Link to="/" className="sm:flex sm:justify-center">
-                    <img className="max-h-[36px] align-middle" alt='logo' src="/assets/img/webp/logo-parrot-green.webp" width={111} height={36} />
-                  </Link>
-                </Col>
-                <Col xl={8} md={6} className="text-center flex justify-center sm:mb-[20px]">
-                  <p className="font-serif uppercase text-md items-center inline-block">+1 234 567 8910 <span className="mx-[5px]">•</span> 27 Eden walk eden centre, Paris, France <span className="mx-[5px]">•</span> <a href="mailto:info@yourdomain.com">info@yourdomain.com</a></p>
-                </Col>
-                <Col xl={2} md="auto" className="text-right footer-icon xs:text-center">
-                  <SocialIcons theme="social-icon-style-01" size="xs" iconColor="light" className="justify-end sm:justify-center" data={FooterIconData} />
-                </Col>
-              </Row>
-            </Container>
-          </div>
-        </Footer>
+        <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
         {/* Footer End */}
       </div>
     </div>

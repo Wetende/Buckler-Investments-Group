@@ -10,7 +10,6 @@ import { m } from "framer-motion";
 import FooterStyle05 from "../../Components/Footers/FooterStyle05";
 import { fadeIn } from "../../Functions/GlobalAnimations";
 import IconWithText from '../../Components/IconWithText/IconWithText'
-import SideButtons from "../../Components/SideButtons";
 import Testimonials from "../../Components/Testimonials/Testimonials";
 
 // Data
@@ -21,7 +20,7 @@ import { TestimonialsData03 } from "../../Components/Testimonials/TestimonialsDa
 const FooterStyle05Page = (props) => {
   return (
     <div style={props.style}>
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-darkgray py-[25px]">
         <Container>

@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header'
 import Videos from '../../Components/Videos/Videos'
-import SideButtons from "../../Components/SideButtons";
 
 const BackgroundVideoPage = (props) => {
   return (
@@ -43,7 +42,7 @@ const BackgroundVideoPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Background video section start */}
       <Videos
         className="py-[160px] pb-0 xl:py-[120px] md:py-[95px] sm:py-[80px] xs:py-0 h-[700px] md:h-[550px] sm:h-[350px]"

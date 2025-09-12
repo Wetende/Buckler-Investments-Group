@@ -14,7 +14,6 @@ import {
   SearchBar,
 } from "../Components/Header/Header";
 import FooterStyle01 from "../Components/Footers/FooterStyle01";
-const SideButtons = lazy(() => import("../Components/SideButtons"))
 
 const PortfolioPage = (props) => {
   return (
@@ -50,7 +49,7 @@ const PortfolioPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       <Outlet />
 
       {/* Section Start */}

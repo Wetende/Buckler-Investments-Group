@@ -15,11 +15,10 @@ import { fadeIn } from '../../Functions/GlobalAnimations'
 import Buttons from '../../Components/Button/Buttons'
 import Counter from '../../Components/Counters/Counter'
 import PortfolioColorful from '../../Components/Portfolio/PortfolioColorful';
-import FooterStyle12 from '../../Components/Footers/FooterStyle12';
+import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import TestimonialsCarousel07 from '../../Components/TestimonialCarousel/TestimonialsCarousel07';
 import Clients from '../../Components/Clients/Clients';
 import BlogOverlayImg from '../../Components/Blogs/BlogOverlayImg';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { InteractiveBannersData01 } from '../../Components/InteractiveBanners/InteractiveBannersData'
@@ -68,7 +67,6 @@ const blogOverlayImgData = blogData.filter((item) => item.blogType === "overlayI
 const DigitalagencyPage = (props) => {
     return (
         <div style={props.style}>
-            <SideButtons />
             <div className="bg-white">
 
                 {/* Header Start */}
@@ -279,7 +277,7 @@ const DigitalagencyPage = (props) => {
             </div>
 
             {/* Footer Start */}
-            <FooterStyle12 className="footer-digitalagency text-[#828282] bg-white" theme="light" logo="/assets/img/webp/logo-light-brownish-orange-black.webp" />
+            <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
             {/* Footer End */}
         </div>
     )

@@ -17,7 +17,6 @@ import Team from '../../Components/Team/Team';
 import InteractiveBanners05 from '../../Components/InteractiveBanners/InteractiveBanners05';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import Buttons from '../../Components/Button/Buttons'
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { InteractiveBannersData05 } from '../../Components/InteractiveBanners/InteractiveBannersData';
@@ -330,7 +329,7 @@ const OurTeamPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <m.section className="overflow-hidden pt-[130px] pb-[100px] lg:py-[90px] md:py-[70px] sm:py-[50px] relative bg-cover bg-center bg-no-repeat bg-fixed lg:bg-local" style={{ backgroundImage: 'url(/assets/img/webp/our-team-bg2.webp)' }} {...fadeIn}>
         <Container fluid className="text-center">

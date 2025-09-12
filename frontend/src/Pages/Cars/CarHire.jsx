@@ -15,7 +15,7 @@ import Overlap from '../../Components/Overlap/Overlap'
 import Tab03 from '../../Components/Tab/Tab03'
 import Testimonials from '../../Components/Testimonials/Testimonials'
 import TextSlider03 from '../../Components/TextSlider/TextSlider03'
-import SideButtons from "../../Components/SideButtons";
+import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 
 // Data
 import { TestimonialsData04 } from '../../Components/Testimonials/TestimonialsData'
@@ -29,7 +29,6 @@ const RestaurantPage = (props) => {
 
   return (
     <div>
-      <SideButtons />
       {/* Header Start */}
       <Header topSpace={{ md: true }} type="header-always-fixed">
         <HeaderNav fluid="fluid" theme="dark" bg="dark" expand="lg" className="px-[35px] py-[0px] md:pr-[15px] sm:pr-0 md:pl-0 md:py-[20px] bg-[#23262d]">
@@ -427,31 +426,7 @@ const RestaurantPage = (props) => {
       {/* Section Start */}
 
       {/* Footer Start */}
-      <footer className="text-[#828282] py-[60px] border-t border-mediumgray md:pt-[80px] md:pb-[60px]">
-        <Container>
-          <Row className="items-center">
-            <Col md={6} className="sm:mb-[15px]">
-              <ul className="flex text-sm font-serif text-center justify-start md:justify-start sm:justify-center xs:text-center xs:flex-col">
-                <li className="nav-item mr-[35px] md:mr-[20px] xs:mr-0 xs:mb-[7px]">
-                  <Link aria-label="about link" to="#" className="hover:text-[#ca943d]">ABOUT US</Link>
-                </li>
-                <li className="nav-item mr-[35px] md:mr-[20px] xs:mr-0 xs:mb-[7px]">
-                  <Link aria-label="menu link" to="#" className="hover:text-[#ca943d]">FLEET</Link>
-                </li>
-                <li className="nav-item mr-[35px] md:mr-[20px] xs:mr-0 xs:mb-[7px]">
-                  <Link aria-label="gallery link" to="#" className="hover:text-[#ca943d]">GALLERY</Link>
-                </li>
-                <li className="nav-item">
-                  <Link aria-label="contact link" to="#" className="hover:text-[#ca943d]">CONTACT</Link>
-                </li>
-              </ul>
-            </Col>
-            <Col md={6} className="text-right sm:text-center">
-              <p className="text-sm uppercase flex items-center justify-end sm:justify-center">© {new Date().getFullYear()} Litho is Proudly Powered by&nbsp;<Buttons target="_blank" href="https://www.themezaa.com/" aria-label="button" className="font-semibold p-0 font-serif text-decoration-line-bottom uppercase btn-link md:text-md hover:text-[#828282] !text-sm landscape:md:!leading-[18px]" color="#000" title="ThemeZaa" /></p>
-            </Col>
-          </Row>
-        </Container>
-      </footer>
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer End */}
 
     </div>

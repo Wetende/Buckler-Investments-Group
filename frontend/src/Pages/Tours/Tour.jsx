@@ -26,11 +26,10 @@ import { TiltBox } from "../../Components/FancyText/FancyText";
 import { Input } from "../../Components/Form/Form";
 import MessageBox from "../../Components/MessageBox/MessageBox";
 import Overlap from "../../Components/Overlap/Overlap";
-import FooterStyle10 from "../../Components/Footers/FooterStyle10";
+import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import { fadeIn, fadeInLeft, zoomIn } from "../../Functions/GlobalAnimations";
 import InfoBannerStyle05 from "../../Components/InfoBanner/InfoBannerStyle05";
 import { resetForm, sendEmail } from "../../Functions/Utilities";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { InteractiveBannersData08 } from "../../Components/InteractiveBanners/InteractiveBannersData";
@@ -209,7 +208,6 @@ const TravelAgencyPage = (props) => {
 
   return (
     <div style={props.style}>
-      <SideButtons />
       {/* Header Start */}
       <Header topSpace={{ md: true }} type="header-always-fixed">
         <HeaderNav
@@ -262,42 +260,8 @@ const TravelAgencyPage = (props) => {
       {/* Header End */}
 
       <div className="bg-white">
-        {/* Simple Search Section Start */}
-        <section className="py-[60px] border-b border-mediumgray bg-white md:py-[40px]">
-          <Container>
-            <Row className="justify-center">
-              <Col lg={10}>
-                <Formik
-                  initialValues={{ location: '', start_date: '', max_price: '' }}
-                  validationSchema={Yup.object().shape({
-                    location: Yup.string(),
-                    start_date: Yup.string(),
-                    max_price: Yup.number().typeError('Must be a number').min(0, 'Must be >= 0'),
-                  })}
-                  onSubmit={(values) => {
-                    const criteria = {};
-                    if (values.location) criteria.location = values.location;
-                    if (values.start_date) criteria.start_date = values.start_date;
-                    if (values.max_price) criteria.max_price = Number(values.max_price);
-                    setSearchCriteria(criteria);
-                  }}
-                >
-                  {({ isSubmitting }) => (
-                    <Form className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                      <Input name="location" type="text" labelClass="!mb-[10px]" label="Location" placeholder="e.g., Nairobi" />
-                      <Input name="start_date" type="date" labelClass="!mb-[10px]" label="Start date" />
-                      <Input name="max_price" type="number" labelClass="!mb-[10px]" label="Max price (KES)" />
-                      <Buttons ariaLabel="Search tours" type="submit" className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase" themeColor="#232323" color="#fff" title={isSubmitting ? 'Searching...' : 'Search'} />
-                    </Form>
-                  )}
-                </Formik>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-        {/* Simple Search Section End */}
         {/* Hero Slider Section Start */}
-        <section className="overflow-hidden full-screen md:h-[650px] sm:h-[500px]">
+        <section className="overflow-hidden h-[500px] md:h-[450px] sm:h-[400px]">
           <Swiper
             className="white-move swiper-pagination-light swiper-pagination-medium h-full relative swiper-navigation-04 swiper-navigation-dark travel-agency-slider"
             slidesPerView={1}
@@ -348,6 +312,41 @@ const TravelAgencyPage = (props) => {
           </Swiper>
         </section>
         {/* Hero Slider Section End */}
+
+        {/* Simple Search Section Start */}
+        <section className="py-[60px] border-b border-mediumgray bg-white md:py-[40px]">
+          <Container>
+            <Row className="justify-center">
+              <Col lg={10}>
+                <Formik
+                  initialValues={{ location: '', start_date: '', max_price: '' }}
+                  validationSchema={Yup.object().shape({
+                    location: Yup.string(),
+                    start_date: Yup.string(),
+                    max_price: Yup.number().typeError('Must be a number').min(0, 'Must be >= 0'),
+                  })}
+                  onSubmit={(values) => {
+                    const criteria = {};
+                    if (values.location) criteria.location = values.location;
+                    if (values.start_date) criteria.start_date = values.start_date;
+                    if (values.max_price) criteria.max_price = Number(values.max_price);
+                    setSearchCriteria(criteria);
+                  }}
+                >
+                  {({ isSubmitting }) => (
+                    <Form className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                      <Input name="location" type="text" labelClass="!mb-[10px]" label="Location" placeholder="e.g., Nairobi" />
+                      <Input name="start_date" type="date" labelClass="!mb-[10px]" label="Start date" />
+                      <Input name="max_price" type="number" labelClass="!mb-[10px]" label="Max price (KES)" />
+                      <Buttons ariaLabel="Search tours" type="submit" className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase" themeColor="#232323" color="#fff" title={isSubmitting ? 'Searching...' : 'Search'} />
+                    </Form>
+                  )}
+                </Formik>
+              </Col>
+            </Row>
+          </Container>
+        </section>
+        {/* Simple Search Section End */}
 
         {/* Section Start  */}
         <section className="py-[80px] border-b border-mediumgray bg-white md:py-[40px]">
@@ -981,12 +980,9 @@ const TravelAgencyPage = (props) => {
         {/* Blog Section End */}
       </div>
 
-      {/* Footer Start */}
-      <FooterStyle10
-        className="text-slateblue"
-        logo="/assets/img/webp/logo-neon-orange-white.webp"
-      />
-      {/* Footer End */}
+        {/* Footer Start */}
+        <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
+        {/* Footer End */}
     </div>
   );
 };

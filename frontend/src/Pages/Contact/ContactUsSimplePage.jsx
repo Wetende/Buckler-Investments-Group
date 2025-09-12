@@ -8,7 +8,10 @@ import { Formik, Form } from 'formik';
 import { m } from "framer-motion";
 
 // Component
-import { Header, HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from "../../Components/Header/Header";
+import Header, { HeaderNav, Menu, Topbar } from "../../Components/Header/Header";
+import HomeMenuData from "../../Components/Header/HomeMenuData";
+import AuthButtons from "../../Components/Header/AuthButtons";
+import Brand from "../../Components/Header/Brand";
 import { Checkbox, Input, TextArea } from '../../Components/Form/Form'
 import Buttons from '../../Components/Button/Buttons'
 import { ContactFormStyle03Schema } from '../../Components/Form/FormSchema';
@@ -19,7 +22,6 @@ import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import CustomModal from '../../Components/CustomModal'
 import { fadeIn } from '../../Functions/GlobalAnimations'
 import { resetForm, sendEmail } from '../../Functions/Utilities';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 const SocialIconsData = [
@@ -53,49 +55,43 @@ const ContactUsSimplePage = (props) => {
     <div style={props.style}>
       {/* Header Start */}
       <Header topSpace={{ desktop: true }} type="reverse-scroll">
-        <HeaderNav theme="light" expand="lg" menu="light" className="py-[0px] lg:px-[15px] md:px-0" containerClass="sm:px-0">
-          <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
-            <Link aria-label="header logo" className="flex items-center" to="/">
-              <Navbar.Brand className="inline-block p-0 m-0">
-                <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
-                <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
-                <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
-              </Navbar.Brand>
+        {/* Header Start */}
+        <HeaderNav fluid="fluid" theme="light" bg="white" expand="lg" containerClass="sm:!px-0" className="py-[0px] px-[35px] md:pr-[15px] md:pl-0">
+          <Col className="col-auto mr-auto ps-lg-0">
+            <Link aria-label="header logo" className="flex items-center -mr-[35px]" to="/">
+              <Brand defaultClass="text-[#232323]" altClass="text-[#232323]" mobileClass="text-[#232323]" />
             </Link>
           </Col>
-          <div className="col-auto hidden order-last md:block">
-            <Navbar.Toggle className="md:ml-[10px] sm:ml-0">
-              <span className="navbar-toggler-line"></span>
-              <span className="navbar-toggler-line"></span>
-              <span className="navbar-toggler-line"></span>
-              <span className="navbar-toggler-line"></span>
-            </Navbar.Toggle>
-          </div>
-          <Navbar.Collapse className="col-auto px-0 justify-end">
-            <Menu {...props} />
+          <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+          </Navbar.Toggle>
+          <Navbar.Collapse className="col-auto justify-center">
+            <Menu {...props} data={HomeMenuData} />
           </Navbar.Collapse>
-          <Col className="col-auto text-right pe-0">
-            <SearchBar className="pr-0 xs:pl-[15px]" />
-            <HeaderLanguage className="xs:pl-[15px]" />
-            <HeaderCart className="xs:pl-[15px]" style={{ "--base-color": "#0038e3" }} />
+          <Col className="col-auto text-right !pr-0">
+            <AuthButtons />
           </Col>
         </HeaderNav>
+        {/* Header End */}
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[40px] sm:py-[30px]">
         <Container>
           <Row className="xs:text-center">
             <Col xl={8} lg={6} className="flex md:justify-center md:mb-[15px] sm:block sm:text-center sm:mb-[9px]">
-              <h1 className="text-lg leading-[28px] text-darkgray font-medium mb-0 font-serif inline-block">Contact us</h1>
-              <span className="font-serif text-md leading-[28px] relative pl-[25px] ml-[30px] block sm:p-0 before:absolute before:bg-darkgray before:content-[''] before:h-[12px] before:top-[8px] before:w-[2px] before:left-0 sm:before:hidden sm:ml-0">Short tagline goes here</span>
+              <h1 className="text-lg leading-[28px] text-darkgray font-medium mb-0 font-serif inline-block">Contact Buckler</h1>
+              <span className="font-serif text-md leading-[28px] relative pl-[25px] ml-[30px] block sm:p-0 before:absolute before:bg-darkgray before:content-[''] before:h-[12px] before:top-[8px] before:w-[2px] before:left-0 sm:before:hidden sm:ml-0">Let's explore opportunities together</span>
             </Col>
             <Col xl={4} lg={6} className="breadcrumb justify-end px-[15px] text-sm font-serif m-0 md:justify-center">
               <ul>
                 <li className="!leading-[30px]"><Link aria-label="link for" to="/">Home</Link></li>
                 <li className="!leading-[30px]"><Link aria-label="link for" to="#">Pages</Link></li>
-                <li className="!leading-[30px]">Contact us</li>
+                <li className="!leading-[30px]">Contact</li>
               </ul>
             </Col>
           </Row>
@@ -108,27 +104,27 @@ const ContactUsSimplePage = (props) => {
         <Container>
           <Row className="row-cols-1 row-cols-lg-4 row-cols-sm-2 md:gap-y-[50px] sm:gap-y-[30px] text-center">
             <Col>
-              <i className="line-icon-Geo2-Love text-gradient bg-fastblue text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
-              <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">LITHO DESIGN</div>
-              <p className="w-[75%] lg:w-[90%] md:w-[60%] sm:w-[75%] xs:w-full mx-auto">401 Broadway, 24th Floor New York, NY 10013</p>
+              <i className="line-icon-Geo2-Love text-red-600 text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
+              <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">BUCKLER HQ</div>
+              <p className="w-[75%] lg:w-[90%] md:w-[60%] sm:w-[75%] xs:w-full mx-auto">Westlands, Nairobi<br />Kenya, East Africa</p>
             </Col>
             <Col>
-              <i className="line-icon-Headset text-gradient bg-fastblue text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
+              <i className="line-icon-Headset text-red-600 text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
               <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">Let's Talk</div>
-              <p className="w-[70%] lg:w-full mx-auto">Phone: 1-800-222-000<br />Fax: 1-800-222-002</p>
+              <p className="w-[70%] lg:w-full mx-auto">Phone: +254 700 000 000<br />WhatsApp: +254 700 000 001</p>
             </Col>
             <Col>
-              <i className="line-icon-Mail-Read text-gradient bg-fastblue text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
+              <i className="line-icon-Mail-Read text-red-600 text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
               <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">E-MAIL US</div>
               <p className="w-[70%] lg:w-full mx-auto">
-                <a aria-label="mail" href="mailto:info@yourdomain.com" className="hover:text-basecolor">info@yourdomain.com</a><br />
-                <a aria-label="mail" href="mailto:hr@yourdomain.com" className="hover:text-basecolor">hr@yourdomain.com</a>
+                <a aria-label="mail" href="mailto:info@buckler.co.ke" className="hover:text-red-600">info@buckler.co.ke</a><br />
+                <a aria-label="mail" href="mailto:invest@buckler.co.ke" className="hover:text-red-600">invest@buckler.co.ke</a>
               </p>
             </Col>
             <Col>
-              <i className="line-icon-Information text-gradient bg-fastblue text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
-              <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">CUSTOMER SERVICES</div>
-              <p className="w-[75%] lg:w-full md:w-[60%] sm:w-[75%] mx-auto">Lorem ipsum is simply dummy text printing</p>
+              <i className="line-icon-Information text-red-600 text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
+              <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">CUSTOMER SUPPORT</div>
+              <p className="w-[75%] lg:w-full md:w-[60%] sm:w-[75%] mx-auto">24/7 support for investments, bookings, and inquiries</p>
             </Col>
           </Row>
         </Container>
@@ -223,8 +219,8 @@ const ContactUsSimplePage = (props) => {
         <Container>
           <Row className="items-center">
             <Col lg={6} md={7} sm={6} className="xl:text-start xs:text-center sm:my-[25px] xs:mb-[30px]">
-              <h6 className="font-serif text-darkgray font-medium mb-[10px]">Are you ready to work with us?</h6>
-              <Buttons to="/page/contact-classic" className="font-medium after:bg-fastblue !leading-[25px] font-serif uppercase btn-link after:h-[2px] md:text-md hover:opacity-50" color="#0038e3" size="xl" title="Start a Project" />
+              <h6 className="font-serif text-darkgray font-medium mb-[10px]">Ready to explore opportunities with Buckler?</h6>
+              <Buttons to="/invest" className="font-medium after:bg-red-600 !leading-[25px] font-serif uppercase btn-link after:h-[2px] md:text-md hover:opacity-50" color="#dc2626" size="xl" title="Start Investing" />
             </Col>
             <Col lg={6} md={5} sm={6} className="sm:my-[25px] xs:mt-0">
               <span className="font-serif text-md text-right xs:text-center block mb-[10px]">Connect with social media</span>
@@ -236,7 +232,7 @@ const ContactUsSimplePage = (props) => {
       {/* Section End */}
 
       {/* Footer Start */}
-      <FooterStyle01 theme="dark" className="bg-[#262b35] text-slateblue" />
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer End */}
     </div>
   )

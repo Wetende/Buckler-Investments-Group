@@ -24,7 +24,6 @@ import { Input } from '../../Components/Form/Form'
 import { resetForm, sendEmail } from "../../Functions/Utilities";
 import { ContactFormStyle02Schema } from "../../Components/Form/FormSchema";
 import FooterStyle04 from "../../Components/Footers/FooterStyle04";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { fancyTextBox01 } from "../../Components/FancyTextBox/FancyTextBoxData";
@@ -74,7 +73,7 @@ const blogClassicData = blogData.filter((item) => item.blogType === "classic").f
 const FinancePages = (props) => {
   return (
     <div className="financepage" style={props.style}>
-      <SideButtons />
+      
       {/* Header Start */}
       <Header topSpace={{ md: true }} type="reverse-scroll">
         <HeaderNav

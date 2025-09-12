@@ -18,7 +18,6 @@ import ProcessStep from '../../Components/ProcessStep/ProcessStep';
 import Testimonials from '../../Components/Testimonials/Testimonials';
 import { fadeIn, fadeInRight } from '../../Functions/GlobalAnimations';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { ClientData03 } from '../../Components/Clients/ClientsData';
@@ -86,7 +85,7 @@ const OurProcessPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Section Start */}
       <div className="h-[660px] lg:h-[580px] md:h-[550px] sm:h-[500px] xs:h-[380px] overflow-hidden relative">
         <div className='absolute top-0 left-0 w-full h-full bg-darkgray opacity-30 z-[1]'></div>

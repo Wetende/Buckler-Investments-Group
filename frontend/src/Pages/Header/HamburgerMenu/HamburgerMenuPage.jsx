@@ -16,7 +16,6 @@ import IconWithText from '../../../Components/IconWithText/IconWithText'
 import Buttons from '../../../Components/Button/Buttons'
 import { fadeIn } from "../../../Functions/GlobalAnimations"
 import BlogClassic from "../../../Components/Blogs/BlogClassic"
-import SideButtons from "../../../Components/SideButtons";
 import PortfolioSwitchImg from '../../../Components/Portfolio/PortfolioSwitchImg'
 
 // Data
@@ -111,7 +110,7 @@ const HamburgerMenuPage = (props) => {
                 </HeaderNav>
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
             {/* Parallax Scrolling Start */}
             <div className="full-screen landscape:md:h-[600px] md:flex md:items-center overflow-hidden relative">
                 <Parallax className="lg-no-parallax bg-cover cover-background absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] landscape:md:h-[600px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }}></Parallax>

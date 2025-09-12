@@ -15,7 +15,6 @@ import { Checkbox, Input } from '../../Components/Form/Form'
 import Buttons from '../../Components/Button/Buttons'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { fadeIn } from "../../Functions/GlobalAnimations";
-import SideButtons from "../../Components/SideButtons";
 import { resetForm } from '../../Functions/Utilities';
 
 const LoginRegister = (props) => {
@@ -52,7 +51,7 @@ const LoginRegister = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[25px]">
         <Container>

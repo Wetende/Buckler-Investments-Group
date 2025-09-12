@@ -25,7 +25,6 @@ import BlogGrid from "../../Components/Blogs/BlogGrid";
 import MessageBox from "../../Components/MessageBox/MessageBox";
 import { Input } from "../../Components/Form/Form";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
-import SideButtons from "../../Components/SideButtons";
 import { resetForm, sendEmail } from "../../Functions/Utilities";
 
 // Data
@@ -149,7 +148,7 @@ const LatestNewsPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="py-0 relative latestnews-swiper">
         <Swiper

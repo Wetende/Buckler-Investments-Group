@@ -17,7 +17,6 @@ import Buttons from '../../../Components/Button/Buttons';
 import BlogClean from '../../../Components/Blogs/BlogClean';
 import Header, { HeaderNav, Menu } from '../../../Components/Header/Header';
 import FooterStyle01 from '../../../Components/Footers/FooterStyle01';
-import SideButtons from "../../../Components/SideButtons";
 import CommentBox from '../../../Components/Blogs/HelperComponents/CommentBox';
 
 // Data
@@ -126,7 +125,7 @@ const BlogPostLayout01 = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="h-[700px] sm:h-[400px] xs:h-[300px] cover-background" style={{ backgroundImage: "url(https://via.placeholder.com/1920x730)" }}></section>
       {/* Section End */}

@@ -14,7 +14,6 @@ import IconWithText from '../../Components/IconWithText/IconWithText'
 import Accordions from '../../Components/Accordion/Accordion'
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import PricingTable01 from "../../Components/PricingTable/PricingTable01"
-import SideButtons from "../../Components/SideButtons";
 import { fadeIn } from '../../Functions/GlobalAnimations'
 
 // Data
@@ -134,7 +133,7 @@ const PricingPackagesPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax section End */}
       <m.div className="md:flex md:items-center overflow-hidden relative py-[80px] md:py-[40px]" {...fadeIn}>
         <Parallax className="lg-no-parallax cover-background absolute top-[0px] left-0 w-full h-[100vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1100)` }}></Parallax>

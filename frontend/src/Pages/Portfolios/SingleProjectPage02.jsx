@@ -12,7 +12,6 @@ import ImageGallery from "../../Components/ImageGallery/ImageGallery";
 import SocialIcons from "../../Components/SocialIcon/SocialIcons";
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar, } from "../../Components/Header/Header";
 import CustomModal from '../../Components/CustomModal'
-import SideButtons from "../../Components/SideButtons";
 
 // Function
 import { fadeIn, fadeInRight } from "../../Functions/GlobalAnimations";
@@ -77,7 +76,7 @@ const SingleProjectPage02 = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section
         className="h-[600px] bg-no-repeat bg-cover overflow-hidden relative bg-center items-center py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] lg:h-[400px] flex"

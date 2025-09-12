@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 import { Input } from '../../Components/Form/Form'
 import MessageBox from '../../Components/MessageBox/MessageBox';
 import SocialIcons from "../../Components/SocialIcon/SocialIcons";
-import SideButtons from "../../Components/SideButtons";
 import { resetForm, sendEmail } from "../../Functions/Utilities";
 import { fadeIn, fadeInRight, fadeInUp } from "../../Functions/GlobalAnimations";
 
@@ -56,7 +55,7 @@ const svgBlobPathTwo = {
 const MaintenancePage = () => {
   return (
     <div>
-      <SideButtons animation={false} />
+      
       <section className="overflow-hidden relative px-[130px] lg:px-[0px]" style={{ backgroundImage: "linear-gradient(to right top,#0039e3,#4132e0,#5e28dd,#741bd9,#8600d4)" }}>
         {/* Big Circle */}
         <m.svg

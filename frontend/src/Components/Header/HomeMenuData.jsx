@@ -25,11 +25,11 @@ const HomeMenuData = [
   },
   {
     title: 'About',
-    link: '/page/about-us'
+    link: '/about-us'
   },
   {
     title: 'Contact',
-    link: '/page/contact-modern'
+    link: '/contact-us'
   }
 ]
 
