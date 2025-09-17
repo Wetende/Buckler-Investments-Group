@@ -4,8 +4,8 @@ from typing import Dict, Any
 
 from ...containers import AppContainer
 from application.use_cases.payment.create_payment_intent import CreatePaymentIntentUseCase
-# from application.use_cases.payment.confirm_payment import ConfirmPaymentUseCase
-# from application.use_cases.payment.get_payment_status import GetPaymentStatusUseCase
+from application.use_cases.payment.get_payment_status import GetPaymentStatusUseCase
+from application.use_cases.payment.get_booking_payments import GetBookingPaymentsUseCase
 from application.dto.payment import (
     PaymentIntentRequestDTO,
     PaymentIntentResponseDTO,
@@ -49,19 +49,19 @@ async def create_payment_intent(
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-# @router.get("/{payment_id}/status", response_model=PaymentStatusResponseDTO)
-# @inject
-# async def get_payment_status(
-#     payment_id: str,
-#     use_case: GetPaymentStatusUseCase = Depends(Provide[AppContainer.get_payment_status_use_case]),
-# ):
-#     """Get payment status by payment ID"""
-#     try:
-#         return await use_case.execute(payment_id)
-#     except PaymentNotFoundError:
-#         raise HTTPException(status_code=404, detail="Payment not found")
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+@router.get("/{payment_id}/status", response_model=PaymentStatusResponseDTO)
+@inject
+async def get_payment_status(
+    payment_id: str,
+    use_case: GetPaymentStatusUseCase = Depends(Provide[AppContainer.get_payment_status_use_case]),
+):
+    """Get payment status by payment ID"""
+    try:
+        return await use_case.execute(payment_id)
+    except PaymentNotFoundError:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @router.post("/webhook", response_model=dict)
 async def payment_webhook(
@@ -148,6 +148,14 @@ async def get_payment_methods():
             }
         ]
     }
+
+@router.get("/bookings/{booking_id}")
+@inject
+async def list_booking_payments(
+    booking_id: int,
+    use_case: GetBookingPaymentsUseCase = Depends(Provide[AppContainer.get_booking_payments_use_case]),
+):
+    return await use_case.execute(booking_id, booking_type="tours")
 
 @router.get("/exchange-rates", response_model=Dict[str, Any])
 async def get_exchange_rates():

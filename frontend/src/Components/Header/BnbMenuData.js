@@ -1,8 +1,8 @@
 const BnbMenuData = [
   {
     title: "Stays",
-    link: "#",
-    submenu: [
+    link: "/bnb/list",
+    dropdown: [
       {
         title: "Entire places",
         link: "/bnb/list?type=entire",
@@ -37,8 +37,8 @@ const BnbMenuData = [
   },
   {
     title: "Experiences",
-    link: "#",
-    submenu: [
+    link: "/tours",
+    dropdown: [
       {
         title: "Tours & Safaris",
         link: "/tours",
@@ -63,8 +63,8 @@ const BnbMenuData = [
   },
   {
     title: "Host",
-    link: "#",
-    submenu: [
+    link: "/host/dashboard",
+    dropdown: [
       {
         title: "List your space",
         link: "/host/onboarding",
@@ -89,8 +89,13 @@ const BnbMenuData = [
   },
   {
     title: "Destinations",
-    link: "#",
-    submenu: [
+    link: "/bnb/list",
+    dropdown: [
+      {
+        title: "All",
+        link: "/bnb/list",
+        megamenu: false
+      },
       {
         title: "Nairobi",
         link: "/bnb/list?location=nairobi",
@@ -119,6 +124,27 @@ const BnbMenuData = [
       {
         title: "Masai Mara",
         link: "/bnb/list?location=masai-mara",
+        megamenu: false
+      }
+    ]
+  },
+  {
+    title: "Account",
+    link: "/account",
+    dropdown: [
+      {
+        title: "My bookings",
+        link: "/account/bnb-bookings",
+        megamenu: false
+      },
+      {
+        title: "Wishlist",
+        link: "/account/wishlist",
+        megamenu: false
+      },
+      {
+        title: "Host dashboard",
+        link: "/host/dashboard",
         megamenu: false
       }
     ]

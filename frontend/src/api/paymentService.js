@@ -1,27 +1,35 @@
 import { axiosPrivate } from './axios'
 
-export const createPayment = async (payload) => {
-    const { data } = await axiosPrivate.post('/payments', payload)
+// Create a payment intent following backend contract: POST /payments/intent
+export const createPaymentIntent = async (payload) => {
+    const { data } = await axiosPrivate.post('/payments/intent', payload)
     return data
 }
 
+// Get payment status (if exposed)
 export const getPaymentStatus = async (paymentId) => {
     const { data } = await axiosPrivate.get(`/payments/${paymentId}/status`)
     return data
 }
 
+// Booking payments history (if/when backend exposes under payments domain)
 export const getBookingPayments = async (bookingId) => {
-    const { data } = await axiosPrivate.get(`/bookings/${bookingId}/payments`)
-    return data
+    // Fallback: return empty until backend endpoint is added
+    try {
+        const { data } = await axiosPrivate.get(`/payments/bookings/${bookingId}`)
+        return data
+    } catch (e) {
+        return []
+    }
 }
 
-export const refundPayment = async (paymentId, payload) => {
-    const { data } = await axiosPrivate.post(`/payments/${paymentId}/refund`, payload)
+export const refundPayment = async (payload) => {
+    const { data } = await axiosPrivate.post(`/payments/refund`, payload)
     return data
 }
 
 const paymentService = {
-    createPayment,
+    createPaymentIntent,
     getPaymentStatus,
     getBookingPayments,
     refundPayment,

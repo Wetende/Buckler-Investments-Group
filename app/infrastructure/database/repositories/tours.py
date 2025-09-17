@@ -6,6 +6,7 @@ from domain.repositories.tours import TourRepository, TourBookingRepository
 from domain.entities.tours import Tour, TourBooking
 from infrastructure.database.models.tours import Tour as TourModel
 from infrastructure.database.models.tour_booking import TourBooking as TourBookingModel
+from infrastructure.database.models.tour_availability import TourAvailability as TourAvailabilityModel
 from shared.mappers.tours import TourMapper
 
 class SqlAlchemyTourRepository(TourRepository):
@@ -117,3 +118,53 @@ class SqlAlchemyTourBookingRepository(TourBookingRepository):
         result = await self._session.execute(stmt)
         models = result.scalars().all()
         return [TourMapper.booking_model_to_entity(model) for model in models]
+
+
+from domain.repositories.tours import TourAvailabilityRepository
+from domain.entities.tours.availability import TourAvailability
+
+
+class SqlAlchemyTourAvailabilityRepository(TourAvailabilityRepository):
+    def __init__(self, session: AsyncSession):
+        self._session = session
+
+    async def create(self, entity: TourAvailability) -> TourAvailability:
+        model = TourMapper.availability_entity_to_model(entity)
+        self._session.add(model)
+        await self._session.commit()
+        await self._session.refresh(model)
+        return TourMapper.availability_model_to_entity(model)
+
+    async def get_by_id(self, id: int) -> Optional[TourAvailability]:
+        stmt = select(TourAvailabilityModel).where(TourAvailabilityModel.id == id)
+        result = await self._session.execute(stmt)
+        model = result.scalar_one_or_none()
+        return TourMapper.availability_model_to_entity(model) if model else None
+
+    async def update(self, entity: TourAvailability) -> TourAvailability:
+        model = TourMapper.availability_entity_to_model(entity)
+        await self._session.merge(model)
+        await self._session.commit()
+        return entity
+
+    async def delete(self, id: int) -> None:
+        model = await self._session.get(TourAvailabilityModel, id)
+        if model:
+            await self._session.delete(model)
+            await self._session.commit()
+
+    async def list(self, limit: int = 100, offset: int = 0) -> List[TourAvailability]:
+        stmt = select(TourAvailabilityModel).limit(limit).offset(offset)
+        result = await self._session.execute(stmt)
+        models = result.scalars().all()
+        return [TourMapper.availability_model_to_entity(m) for m in models]
+
+    async def get_range(self, tour_id: int, start_date: date, end_date: date) -> List[TourAvailability]:
+        stmt = select(TourAvailabilityModel).where(
+            TourAvailabilityModel.tour_id == tour_id,
+            TourAvailabilityModel.date >= start_date,
+            TourAvailabilityModel.date <= end_date,
+        )
+        result = await self._session.execute(stmt)
+        models = result.scalars().all()
+        return [TourMapper.availability_model_to_entity(m) for m in models]

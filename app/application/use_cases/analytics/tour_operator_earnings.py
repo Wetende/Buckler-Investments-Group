@@ -43,28 +43,28 @@ class TourOperatorEarningsUseCase:
         
         for booking in all_bookings:
             # Check if booking is in the specified period
-            booking_date = booking.created_at.date()
-            if start_date <= booking_date <= end_date:
+            created_date = booking.created_at.date()
+            if start_date <= created_date <= end_date:
                 bookings_count += 1
-                
+
                 booking_amount = (
-                    booking.total_amount.amount 
-                    if hasattr(booking.total_amount, 'amount') 
-                    else booking.total_amount
+                    booking.total_price.amount
+                    if hasattr(booking.total_price, 'amount')
+                    else booking.total_price
                 )
-                
+
                 if booking.status == 'COMPLETED':
                     # Assume 12% platform fee for tours
                     operator_earning = booking_amount * Decimal('0.88')
                     total_earnings += operator_earning
-                    
+
                     # Check if payout has been completed (simplified logic)
-                    days_since_completion = (end_date - booking.tour_date).days
+                    days_since_completion = (end_date - booking.booking_date).days
                     if days_since_completion > 5:  # Assume 5-day payout delay for tours
                         completed_payouts += operator_earning
                     else:
                         pending_payouts += operator_earning
-                
+
                 elif booking.status == 'CONFIRMED':
                     # Future earnings (tour not yet completed)
                     operator_earning = booking_amount * Decimal('0.88')

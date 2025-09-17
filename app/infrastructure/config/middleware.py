@@ -87,7 +87,13 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
 # ---------------------------------------------------------------------------
 # Error handler for rate limit exceeded
 # ---------------------------------------------------------------------------
-async def _rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):  # noqa: D401
+from typing import Any
+from fastapi import Request
+from slowapi.errors import RateLimitExceeded
+from starlette.responses import JSONResponse
+
+
+async def rate_limit_exceeded_handler(request: Request, exc: Exception) -> JSONResponse:  # noqa: D401
     return JSONResponse(
         status_code=429,
         content={"detail": "Rate limit exceeded"},

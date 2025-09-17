@@ -79,6 +79,36 @@ const ToursList = (props) => {
                 </p>
               </Col>
             </Row>
+            {/* Simple Filters */}
+            <Row className="justify-center mt-8">
+              <Col lg={10}>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Max price (KES)"
+                    className="w-full p-3 border border-gray-300 rounded-md"
+                    onChange={(e) => setFilters((f) => ({ ...f, max_price: e.target.value ? Number(e.target.value) : undefined }))}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Operator ID"
+                    className="w-full p-3 border border-gray-300 rounded-md"
+                    onChange={(e) => setFilters((f) => ({ ...f, operator_id: e.target.value ? Number(e.target.value) : undefined }))}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Category"
+                    className="w-full p-3 border border-gray-300 rounded-md"
+                    onChange={(e) => setFilters((f) => ({ ...f, category: e.target.value || undefined }))}
+                  />
+                  <Buttons
+                    className="btn-fancy btn-outline"
+                    title="Clear Filters"
+                    onClick={() => setFilters({})}
+                  />
+                </div>
+              </Col>
+            </Row>
           </Container>
         </section>
 

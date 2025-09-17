@@ -13,6 +13,8 @@ import Buttons from '../../Components/Button/Buttons'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 import BnbBookingModal from '../../Components/BookingModal/BnbBookingModal'
 import { fadeIn, fadeInLeft, zoomIn } from '../../Functions/GlobalAnimations'
+import WishlistButton from '../../Components/Wishlist/WishlistButton'
+import LiveChatWidget from '../../Components/LiveChat/LiveChatWidget'
 
 // API Hooks
 import { useListing, useAvailability } from '../../api/useBnb'
@@ -52,11 +54,12 @@ const BnbDetail = (props) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-  
+  const [isChatOpen, setIsChatOpen] = useState(false)
+
   // Fetch listing data
-  const { 
-    data: listing, 
-    isLoading: listingLoading, 
+  const {
+    data: listing,
+    isLoading: listingLoading,
     isError: listingError,
     error: listingErrorDetails
   } = useListing(id)
@@ -65,10 +68,10 @@ const BnbDetail = (props) => {
   const today = new Date()
   const thirtyDaysLater = new Date(today)
   thirtyDaysLater.setDate(today.getDate() + 30)
-  
-  const { 
-    data: availability, 
-    isLoading: availabilityLoading 
+
+  const {
+    data: availability,
+    isLoading: availabilityLoading
   } = useAvailability(id, {
     start_date: today.toISOString().split('T')[0],
     end_date: thirtyDaysLater.toISOString().split('T')[0]
@@ -385,6 +388,10 @@ const BnbDetail = (props) => {
                     <div className="text-gray-600">per night</div>
                   </div>
 
+                  <div className="flex justify-end mb-4">
+                    <WishlistButton itemId={Number(id)} itemType="bnb" size="md" />
+                  </div>
+
                   <BnbBookingModal
                     listing={listing}
                     triggerButton={
@@ -425,6 +432,7 @@ const BnbDetail = (props) => {
                     color="#232323"
                     title="Message Host"
                     size="md"
+                    onClick={() => setIsChatOpen((v) => !v)}
                   />
                 </div>
               </m.div>
@@ -433,6 +441,9 @@ const BnbDetail = (props) => {
         </Container>
       </section>
       {/* Details Section End */}
+
+      {/* Live Chat */}
+      <LiveChatWidget isOpen={isChatOpen} onToggle={() => setIsChatOpen((v) => !v)} tourId={null} bookingId={null} />
 
       {/* Footer Start */}
       <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />

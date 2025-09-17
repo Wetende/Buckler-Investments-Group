@@ -33,6 +33,7 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Input } from '../../Components/Form/Form'
 import BnbBookingModal from '../../Components/BookingModal/BnbBookingModal'
+import WishlistButton from '../../Components/Wishlist/WishlistButton'
 
 // Skeletons and States
 import {
@@ -97,17 +98,20 @@ const transformListingToInteractiveBanner = (listing) => ({
   btnLink: `/bnb/${listing.id}`,
   // Add booking modal
   customButton: (
-    <BnbBookingModal
-      listing={listing}
-      triggerButton={
-        <Buttons
-          className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase ml-2"
-          themeColor="#232323"
-          color="#fff"
-          title="Book Now"
-        />
-      }
-    />
+    <div className="flex items-center space-x-2">
+      <WishlistButton itemId={listing.id} itemType="bnb" size="sm" />
+      <BnbBookingModal
+        listing={listing}
+        triggerButton={
+          <Buttons
+            className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase ml-2"
+            themeColor="#232323"
+            color="#fff"
+            title="Book Now"
+          />
+        }
+      />
+    </div>
   ),
 });
 

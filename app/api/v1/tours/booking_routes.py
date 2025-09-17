@@ -3,9 +3,13 @@ from dependency_injector.wiring import inject, Provide
 from typing import List
 
 from ...containers import AppContainer
+from application.use_cases.tours.cancel_tour_booking import CancelTourBookingUseCase
+from application.use_cases.tours.confirm_tour_booking import ConfirmTourBookingUseCase
+from application.use_cases.tours.complete_tour_booking import CompleteTourBookingUseCase
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
 from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
 from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
+from application.use_cases.tours.modify_tour_booking import ModifyTourBookingUseCase
 from application.use_cases.analytics.tour_operator_dashboard import TourOperatorDashboardUseCase
 from application.use_cases.analytics.tour_operator_earnings import TourOperatorEarningsUseCase
 from application.dto.tours import (
@@ -53,21 +57,42 @@ async def get_my_tour_bookings(
     """Get all tour bookings for the authenticated user"""
     return await use_case.execute(customer_id)
 
-@router.post("/bookings/{booking_id}/cancel", response_model=dict)
+@router.post("/bookings/{booking_id}/modify", response_model=TourBookingResponseDTO)
+@inject
+async def modify_tour_booking(
+    booking_id: int,
+    request: TourBookingCreateUpdateDTO,
+    use_case: ModifyTourBookingUseCase = Depends(Provide[AppContainer.modify_tour_booking_use_case]),
+):
+    """Modify an existing tour booking (date/participants/requests)."""
+    try:
+        return await use_case.execute(booking_id, request)
+    except TourBookingNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour booking not found")
+
+@router.post("/bookings/{booking_id}/cancel", response_model=TourBookingResponseDTO)
+@inject
 async def cancel_tour_booking_post(
     booking_id: int,
+    use_case: CancelTourBookingUseCase = Depends(Provide[AppContainer.cancel_tour_booking_use_case]),
 ):
     """Cancel a tour booking (POST method)"""
-    # TODO: Implement booking cancellation logic
-    return {"ok": True, "message": "Tour booking cancelled", "booking_id": booking_id}
+    try:
+        return await use_case.execute(booking_id)
+    except TourBookingNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour booking not found")
 
-@router.get("/bookings/{booking_id}/cancel", response_model=dict)
+@router.get("/bookings/{booking_id}/cancel", response_model=TourBookingResponseDTO)
+@inject
 async def cancel_tour_booking_get(
     booking_id: int,
+    use_case: CancelTourBookingUseCase = Depends(Provide[AppContainer.cancel_tour_booking_use_case]),
 ):
     """Cancel a tour booking (GET method alternative)"""
-    # TODO: Implement booking cancellation logic
-    return {"ok": True, "message": "Tour booking cancelled", "booking_id": booking_id}
+    try:
+        return await use_case.execute(booking_id)
+    except TourBookingNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour booking not found")
 
 # Operator booking management
 @router.get("/operator/bookings", response_model=List[TourBookingResponseDTO])
@@ -79,21 +104,29 @@ async def get_operator_tour_bookings(
     # TODO: Implement operator booking retrieval
     return []
 
-@router.post("/bookings/{booking_id}/confirm", response_model=dict)
+@router.post("/bookings/{booking_id}/confirm", response_model=TourBookingResponseDTO)
+@inject
 async def confirm_tour_booking(
     booking_id: int,
+    use_case: ConfirmTourBookingUseCase = Depends(Provide[AppContainer.confirm_tour_booking_use_case]),
 ):
     """Confirm a tour booking"""
-    # TODO: Implement booking confirmation logic
-    return {"ok": True, "message": "Tour booking confirmed", "booking_id": booking_id}
+    try:
+        return await use_case.execute(booking_id)
+    except TourBookingNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour booking not found")
 
-@router.post("/bookings/{booking_id}/complete", response_model=dict)
+@router.post("/bookings/{booking_id}/complete", response_model=TourBookingResponseDTO)
+@inject
 async def complete_tour_booking(
     booking_id: int,
+    use_case: CompleteTourBookingUseCase = Depends(Provide[AppContainer.complete_tour_booking_use_case]),
 ):
     """Mark tour as completed"""
-    # TODO: Implement booking completion logic
-    return {"ok": True, "message": "Tour marked as completed", "booking_id": booking_id}
+    try:
+        return await use_case.execute(booking_id)
+    except TourBookingNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour booking not found")
 
 # Payment integration
 @router.post("/bookings/{booking_id}/payment", response_model=dict)

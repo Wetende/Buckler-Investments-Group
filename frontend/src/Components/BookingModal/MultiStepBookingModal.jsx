@@ -13,7 +13,8 @@ import AvailabilityCalendar from '../AvailabilityCalendar/AvailabilityCalendar';
 
 // API Services
 import { getTourAvailability, createTourBooking } from '../../api/toursService';
-import { createPayment } from '../../api/paymentService';
+import { createPaymentIntent } from '../../api/paymentService';
+import useAuth from '../../api/useAuth';
 
 // Animation variants
 const slideIn = {
@@ -30,6 +31,7 @@ const MultiStepBookingModal = ({
   onBookingSuccess,
   preSelectedDate = null 
 }) => {
+  const { user, isAuthenticated } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingData, setBookingData] = useState({});
@@ -171,19 +173,22 @@ const MultiStepBookingModal = ({
         id: 0 // Create new booking
       };
 
-      const booking = await createTourBooking(bookingPayload);
+      const booking = await createTourBooking({ ...bookingPayload, customer_id: user?.id });
 
-      // Process payment
-      if (values.payment_method === 'mpesa') {
-        const paymentPayload = {
-          booking_id: booking.id,
-          amount: pricingBreakdown.finalTotal,
-          phone_number: values.guest_phone,
-          payment_method: 'mpesa'
-        };
-        
-        await createPayment(paymentPayload);
-      }
+      // Process payment intent
+      const mappedMethod = values.payment_method === 'card' ? 'stripe' : (values.payment_method === 'bank' ? 'bank_transfer' : values.payment_method);
+      const paymentPayload = {
+        booking_id: booking.id,
+        amount: pricingBreakdown.finalTotal,
+        currency: tour.currency || 'KES',
+        payment_method: mappedMethod,
+        booking_type: 'tours',
+        customer_id: user?.id,
+        customer_email: values.guest_email,
+        customer_phone: values.guest_phone,
+        metadata: { tour_id: tour.id }
+      };
+      await createPaymentIntent(paymentPayload);
 
       if (onBookingSuccess) {
         onBookingSuccess(booking);

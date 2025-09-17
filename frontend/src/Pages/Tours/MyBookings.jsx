@@ -455,6 +455,72 @@ const MyBookingsPage = () => {
         </div>
       </CustomModal>
 
+      {/* Modify Booking Modal (date/participants) */}
+      <CustomModal
+        show={showModifyModal}
+        onHide={() => setShowModifyModal(false)}
+        size="md"
+      >
+        <div className="p-6">
+          <h3 className="text-xl font-semibold mb-4">Modify Booking</h3>
+          {selectedBooking && (
+            <div className="space-y-4">
+              <div>
+                <label className="block font-medium mb-1">New Date</label>
+                <input
+                  type="date"
+                  className="w-full p-3 border border-gray-300 rounded-md"
+                  defaultValue={new Date(selectedBooking.start_date).toISOString().slice(0,10)}
+                  onChange={(e) => (selectedBooking._new_date = e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Participants</label>
+                <input
+                  type="number"
+                  min={1}
+                  className="w-full p-3 border border-gray-300 rounded-md"
+                  defaultValue={selectedBooking.participants || 1}
+                  onChange={(e) => (selectedBooking._new_participants = Number(e.target.value))}
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <Buttons
+                  className="btn-fancy btn-outline"
+                  title="Cancel"
+                  onClick={() => setShowModifyModal(false)}
+                />
+                <Buttons
+                  className="btn-fancy btn-fill"
+                  themeColor="#232323"
+                  color="#fff"
+                  title={isProcessing ? 'Saving...' : 'Save Changes'}
+                  onClick={async () => {
+                    try {
+                      setIsProcessing(true)
+                      await modifyTourBooking(selectedBooking.id, {
+                        id: selectedBooking.id,
+                        tour_id: selectedBooking.tour_id,
+                        customer_id: selectedBooking.customer_id,
+                        booking_date: selectedBooking._new_date || selectedBooking.start_date,
+                        participants: selectedBooking._new_participants || selectedBooking.participants,
+                      })
+                      setShowModifyModal(false)
+                      setSelectedBooking(null)
+                      await loadBookings()
+                    } catch (e) {
+                      console.error('Failed to modify booking', e)
+                    } finally {
+                      setIsProcessing(false)
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </CustomModal>
+
       {/* Footer Start */}
       <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer End */}
