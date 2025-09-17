@@ -51,7 +51,7 @@ const SwiperData = [
     title: "Mombasa",
     subtitle: "coastal villas",
     btnName: "explore bnbs",
-    btnLink: "/bnb"
+    btnLink: "/bnb/list"
   }
 ]
 
@@ -92,7 +92,7 @@ const formatKes = (value) => {
 const transformListingToInteractiveBanner = (listing) => ({
   img: listing.images?.[0] || "https://via.placeholder.com/800x1113",
   title: listing.title,
-  content: `${formatKes(listing.price_per_night)}/night • Max ${listing.max_guests} guests`,
+  content: `${formatKes(listing.nightly_price)}/night • Max ${listing.capacity} guests`,
   btnTitle: "View Details",
   btnLink: `/bnb/${listing.id}`,
   // Add booking modal
@@ -113,7 +113,7 @@ const transformListingToInteractiveBanner = (listing) => ({
 
 const transformListingToPortfolio = (listing) => ({
   title: listing.title,
-  subtitle: `${formatKes(listing.price_per_night)}/night`,
+  subtitle: `${formatKes(listing.nightly_price)}/night`,
   img: listing.images?.[0] || "https://via.placeholder.com/818x1048",
   link: `/bnb/${listing.id}`
 });
@@ -520,7 +520,7 @@ const ArchitecturePage = (props) => {
               <div className="mt-6 text-center">
                 <Buttons 
                   ariaLabel="view all stays" 
-                  to="/bnb" 
+                  to="/bnb/list" 
                   className="font-medium font-serif uppercase btn-link after:h-[2px] after:bg-spanishgray" 
                   color="#939393" 
                   size="xlg" 

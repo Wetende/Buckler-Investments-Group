@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { m, AnimatePresence } from 'framer-motion';
@@ -6,7 +6,58 @@ import CustomModal from '../CustomModal';
 import { Input } from '../Form/Form';
 import Buttons from '../Button/Buttons';
 import MessageBox from '../MessageBox/MessageBox';
-import { useCreateBooking } from '../../api/useBnb';
+import { useCreateBooking, useAvailability } from '../../api/useBnb';
+
+// Child component to handle availability hooks at top-level of a component
+const AvailabilityStatus = ({ listingId, checkIn, checkOut, guests, onChange }) => {
+  const availabilityParams = useMemo(() => ({
+    check_in: checkIn,
+    check_out: checkOut,
+    guests,
+  }), [checkIn, checkOut, guests]);
+
+  const { data: availability, isLoading: checkingAvailability } = useAvailability(
+    listingId,
+    availabilityParams
+  );
+
+  useEffect(() => {
+    onChange?.({ availability, checkingAvailability });
+  }, [availability, checkingAvailability, onChange]);
+
+  if (!checkIn || !checkOut) return null;
+
+  return (
+    <div className="mb-4">
+      {checkingAvailability ? (
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+          <div className="flex items-center">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+            <span className="text-sm text-blue-800">Checking availability...</span>
+          </div>
+        </div>
+      ) : availability?.available === false ? (
+        <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
+          <div className="flex items-center">
+            <i className="feather-x-circle text-red-600 mr-2"></i>
+            <span className="text-sm text-red-800">
+              These dates are not available. Please select different dates.
+            </span>
+          </div>
+        </div>
+      ) : availability?.available === true ? (
+        <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
+          <div className="flex items-center">
+            <i className="feather-check-circle text-green-600 mr-2"></i>
+            <span className="text-sm text-green-800">
+              Great! These dates are available.
+            </span>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 const BnbBookingModal = ({ 
   listing, 
@@ -15,6 +66,7 @@ const BnbBookingModal = ({
 }) => {
   const [bookingSuccess, setBookingSuccess] = useState(null);
   const createBooking = useCreateBooking();
+  const [availabilityData, setAvailabilityData] = useState({ availability: null, checkingAvailability: false });
 
   const bookingSchema = Yup.object().shape({
     check_in: Yup.date()
@@ -38,7 +90,7 @@ const BnbBookingModal = ({
     guests: Yup.number()
       .required('Number of guests is required')
       .min(1, 'At least 1 guest required')
-      .max(listing?.max_guests || 10, `Maximum ${listing?.max_guests || 10} guests allowed`),
+      .max(listing?.capacity || 10, `Maximum ${listing?.capacity || 10} guests allowed`),
     guest_email: Yup.string()
       .email('Invalid email address')
       .required('Email is required'),
@@ -133,7 +185,7 @@ const BnbBookingModal = ({
                 Book Your Stay
               </h3>
               <div className="text-sm text-gray-600">
-                {listing?.title} • {formatPrice(listing?.price_per_night)}/night
+                {listing?.title} • {formatPrice(listing?.nightly_price)}/night
               </div>
             </div>
 
@@ -153,9 +205,11 @@ const BnbBookingModal = ({
                 const nights = values.check_in && values.check_out 
                   ? Math.ceil((new Date(values.check_out) - new Date(values.check_in)) / (1000 * 60 * 60 * 24))
                   : 0;
-                const totalAmount = nights > 0 && listing?.price_per_night 
-                  ? nights * listing.price_per_night 
+                const totalAmount = nights > 0 && listing?.nightly_price 
+                  ? nights * listing.nightly_price 
                   : 0;
+                const isUnavailable = availabilityData.availability?.available === false;
+                const checkingAvailability = availabilityData.checkingAvailability;
 
                 return (
                   <Form className="space-y-4">
@@ -183,7 +237,7 @@ const BnbBookingModal = ({
                       type="number"
                       label="Number of Guests"
                       min="1"
-                      max={listing?.max_guests || 10}
+                      max={listing?.capacity || 10}
                       labelClass="!mb-[5px] font-medium"
                     />
 
@@ -215,12 +269,21 @@ const BnbBookingModal = ({
                     />
 
                     {/* Booking Info */}
+                    {/* Availability Status */}
+                    <AvailabilityStatus
+                      listingId={listing?.id}
+                      checkIn={values.check_in}
+                      checkOut={values.check_out}
+                      guests={values.guests}
+                      onChange={setAvailabilityData}
+                    />
+
                     {values.check_in && values.check_out && (
                       <div className="bg-lightgray p-4 rounded-lg">
                         {nights > 0 ? (
                           <>
                             <div className="flex justify-between text-sm mb-2">
-                              <span>{formatPrice(listing?.price_per_night)} × {nights} night{nights !== 1 ? 's' : ''}</span>
+                              <span>{formatPrice(listing?.nightly_price)} × {nights} night{nights !== 1 ? 's' : ''}</span>
                               <span>{formatPrice(totalAmount)}</span>
                             </div>
                             {listing?.min_nights && nights < listing.min_nights && (
@@ -266,9 +329,9 @@ const BnbBookingModal = ({
                     <div className="flex gap-4 pt-4">
                       <Buttons
                         type="submit"
-                        disabled={isSubmitting || createBooking.isLoading || !isValid || (listing?.min_nights && nights < listing.min_nights)}
+                        disabled={isSubmitting || createBooking.isLoading || !isValid || (listing?.min_nights && nights < listing.min_nights) || isUnavailable || checkingAvailability}
                         className={`btn-fancy btn-fill font-medium font-serif rounded-none uppercase flex-1 ${
-                          isSubmitting || createBooking.isLoading || !isValid || (listing?.min_nights && nights < listing.min_nights)
+                          isSubmitting || createBooking.isLoading || !isValid || (listing?.min_nights && nights < listing.min_nights) || isUnavailable || checkingAvailability
                             ? 'opacity-50 cursor-not-allowed' 
                             : ''
                         }`}
@@ -277,6 +340,10 @@ const BnbBookingModal = ({
                         title={
                           isSubmitting || createBooking.isLoading 
                             ? 'Creating Booking...' 
+                            : checkingAvailability
+                              ? 'Checking availability...'
+                              : isUnavailable
+                              ? 'Dates not available'
                             : (listing?.min_nights && nights < listing.min_nights)
                               ? `Min ${listing.min_nights} night${listing.min_nights !== 1 ? 's' : ''} required`
                               : 'Confirm Booking'

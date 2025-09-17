@@ -23,6 +23,11 @@ const PropertiesHomePage = lazy(() => import("./Pages/Properties/Property"));
 const PropertiesListPage = lazy(() => import("./Pages/Properties/PropertiesList"));
 const PropertyDetailPage = lazy(() => import("./Pages/Properties/PropertyDetail"));
 const BnbHomePage = lazy(() => import("./Pages/Bnb/Bnb"));
+const BnbListPage = lazy(() => import("./Pages/Bnb/BnbList"));
+const BookingConfirmationPage = lazy(() => import("./Pages/Bnb/BookingConfirmation"));
+const MyBnbBookingsPage = lazy(() => import("./Pages/Account/MyBnbBookings"));
+const WishlistPage = lazy(() => import("./Pages/Account/Wishlist"));
+const HostDashboardPage = lazy(() => import("./Pages/Host/HostDashboard"));
 const BnbDetailPage = lazy(() => import("./Pages/Bnb/BnbDetail"));
 const ToursHomePage = lazy(() => import("./Pages/Tours/Tour"));
 const ToursListPage = lazy(() => import("./Pages/Tours/ToursList"));
@@ -447,9 +452,18 @@ function App() {
                   <Route path="/properties/list" element={<PropertiesListPage />} />
                   <Route path="/properties/:id" element={<PropertyDetailPage />} />
 
-                  {/* Rentals (BnB) sub-home */}
+                  {/* Rentals (BnB) sub-home and list */}
                   <Route path="/bnb" element={<BnbHomePage />} />
+                  <Route path="/bnb/list" element={<BnbListPage />} />
                   <Route path="/bnb/:id" element={<BnbDetailPage />} />
+                  <Route path="/bnb/booking/:bookingId/confirmation" element={<BookingConfirmationPage />} />
+                  
+                  {/* Account pages */}
+                  <Route path="/account/bnb-bookings" element={<MyBnbBookingsPage />} />
+                  <Route path="/account/wishlist" element={<WishlistPage />} />
+                  
+                  {/* Host pages */}
+                  <Route path="/host/dashboard" element={<HostDashboardPage />} />
 
                   {/* Tours sub-home and list */}
                   <Route path="/tours" element={<ToursHomePage />} />

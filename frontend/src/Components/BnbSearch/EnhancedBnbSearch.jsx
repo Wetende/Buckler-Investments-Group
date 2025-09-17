@@ -55,9 +55,13 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                   amenities: []
                 }}
                 validationSchema={Yup.object({
-                  location: Yup.string(),
-                  check_in: Yup.string(),
-                  check_out: Yup.string(),
+                  location: Yup.string().required('Location is required for search'),
+                  check_in: Yup.string().required('Check-in date is required'),
+                  check_out: Yup.string().required('Check-out date is required')
+                    .test('after-checkin', 'Check-out must be after check-in', function(value) {
+                      const { check_in } = this.parent;
+                      return !check_in || !value || new Date(value) > new Date(check_in);
+                    }),
                   adults: Yup.number().min(1).max(16),
                   children: Yup.number().min(0).max(10),
                   infants: Yup.number().min(0).max(5),
@@ -66,10 +70,10 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                 })}
                 onSubmit={(values) => {
                   const searchCriteria = {
-                    location: values.location || undefined,
-                    check_in: values.check_in || undefined,
-                    check_out: values.check_out || undefined,
-                    guests: values.adults + values.children || undefined,
+                    location: values.location,
+                    check_in: values.check_in,
+                    check_out: values.check_out,
+                    guests: values.adults + values.children,
                     property_type: values.property_type || undefined,
                     min_price: values.min_price || undefined,
                     max_price: values.max_price || undefined,

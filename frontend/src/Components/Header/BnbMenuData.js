@@ -5,32 +5,32 @@ const BnbMenuData = [
     submenu: [
       {
         title: "Entire places",
-        link: "/bnb?type=entire",
+        link: "/bnb/list?type=entire",
         megamenu: false
       },
       {
         title: "Private rooms", 
-        link: "/bnb?type=private",
+        link: "/bnb/list?type=private",
         megamenu: false
       },
       {
         title: "Shared rooms",
-        link: "/bnb?type=shared", 
+        link: "/bnb/list?type=shared", 
         megamenu: false
       },
       {
         title: "Unique stays",
-        link: "/bnb?category=unique",
+        link: "/bnb/list?category=unique",
         megamenu: false
       },
       {
         title: "Business travel",
-        link: "/bnb?category=business",
+        link: "/bnb/list?category=business",
         megamenu: false
       },
       {
         title: "Monthly stays",
-        link: "/bnb?duration=monthly",
+        link: "/bnb/list?duration=monthly",
         megamenu: false
       }
     ]
@@ -93,32 +93,32 @@ const BnbMenuData = [
     submenu: [
       {
         title: "Nairobi",
-        link: "/bnb?location=nairobi",
+        link: "/bnb/list?location=nairobi",
         megamenu: false
       },
       {
         title: "Mombasa", 
-        link: "/bnb?location=mombasa",
+        link: "/bnb/list?location=mombasa",
         megamenu: false
       },
       {
         title: "Kisumu",
-        link: "/bnb?location=kisumu",
+        link: "/bnb/list?location=kisumu",
         megamenu: false
       },
       {
         title: "Nakuru",
-        link: "/bnb?location=nakuru",
+        link: "/bnb/list?location=nakuru",
         megamenu: false
       },
       {
         title: "Diani Beach",
-        link: "/bnb?location=diani",
+        link: "/bnb/list?location=diani",
         megamenu: false
       },
       {
         title: "Masai Mara",
-        link: "/bnb?location=masai-mara",
+        link: "/bnb/list?location=masai-mara",
         megamenu: false
       }
     ]
