@@ -1,3 +1,5 @@
+const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173'
+
 const BnbMenuData = [
   {
     title: "Stays",
@@ -127,6 +129,11 @@ const BnbMenuData = [
         megamenu: false
       }
     ]
+  },
+  {
+    title: "Dashboard",
+    link: ADMIN_BASE_URL,
+    megamenu: false
   },
   {
     title: "Account",

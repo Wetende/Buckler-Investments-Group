@@ -1,0 +1,594 @@
+---
+description: DashLite SCSS styling conventions and admin design system rules
+globs: admin/src/**/*.scss,admin/src/**/*.css,admin/src/**/*.jsx,admin/src/**/*.tsx
+alwaysApply: true
+---
+
+# Admin Styling Conventions (DashLite)
+
+Goal: Keep visual consistency by reusing DashLite SCSS architecture, admin-specific components, and maintaining the professional admin UI aesthetic.
+
+## Reuse First
+- Reuse DashLite SCSS in `admin/src/assets/scss/**` and existing class patterns
+- Follow DashLite's component-based SCSS structure
+- Keep admin typography, spacing, and color schemes consistent
+- Leverage DashLite's built-in responsive utilities
+
+## DashLite SCSS Architecture
+
+### Core Files to Reference
+```scss
+// Main stylesheet structure
+admin/src/assets/scss/
+├── _dashlite_variables.scss    // Core variables and tokens
+├── dashlite.scss              // Main import file
+├── core/                      // Core DashLite styles
+├── extend/                    // Bootstrap extensions
+├── global/                    // Global admin styles
+├── apps/                      // Application-specific styles
+└── vendors/                   // Third-party library styles
+```
+
+### Variable Usage
+```scss
+// Always use DashLite variables from _dashlite_variables.scss
+@import "~@/assets/scss/dashlite_variables";
+
+// Primary admin colors
+.admin-primary { 
+    color: $primary; 
+    background-color: $primary-bg;
+}
+
+// Admin status colors
+.status-active { color: $success; }
+.status-pending { color: $warning; }
+.status-inactive { color: $gray-500; }
+.status-error { color: $danger; }
+
+// Admin typography
+.admin-title {
+    font-family: $font-family-base;
+    font-weight: $font-weight-medium;
+    color: $text-color-primary;
+}
+```
+
+## DashLite CSS Classes to Reuse
+
+### Layout & Structure
+```jsx
+// Use DashLite's admin layout classes
+<div className="nk-app-root">
+  <div className="nk-wrap">
+    <div className="nk-content ">
+      <div className="container-fluid">
+        <div className="nk-content-inner">
+          <div className="nk-content-body">
+            {/* Admin content */}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+// Block system for admin sections
+<div className="nk-block nk-block-lg">
+  <div className="nk-block-head nk-block-head-sm">
+    <div className="nk-block-between">
+      <div className="nk-block-head-content">
+        <h4 className="nk-block-title">Admin Dashboard</h4>
+        <div className="nk-block-des text-soft">
+          <p>Manage your platform data and users.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### Card Components
+```jsx
+// DashLite card patterns for admin
+<div className="card card-bordered card-full">
+  <div className="card-inner">
+    <div className="card-title-group align-start mb-0">
+      <div className="card-title">
+        <h6 className="title">User Statistics</h6>
+      </div>
+      <div className="card-tools">
+        <em className="card-hint-icon icon ni ni-help-fill" 
+            data-toggle="tooltip" 
+            data-placement="left" 
+            title="Statistics overview"></em>
+      </div>
+    </div>
+  </div>
+  <div className="card-inner p-0">
+    {/* Card content */}
+  </div>
+</div>
+
+// Preview cards for admin sections
+<div className="card card-preview">
+  <div className="card-inner">
+    <div className="preview-block">
+      {/* Preview content */}
+    </div>
+  </div>
+</div>
+```
+
+### Form Styling
+```jsx
+// DashLite admin form patterns
+<div className="form-group">
+  <label className="form-label">Admin Field</label>
+  <div className="form-control-wrap">
+    <input type="text" className="form-control" />
+  </div>
+  <div className="form-note">Field description or help text</div>
+</div>
+
+// Form groups with validation
+<div className="form-group">
+  <label className="form-label" htmlFor="email">Email Address</label>
+  <div className="form-control-wrap">
+    <input 
+      type="email" 
+      className="form-control form-control-lg" 
+      id="email"
+    />
+    <div className="form-icon form-icon-right">
+      <em className="icon ni ni-mail"></em>
+    </div>
+  </div>
+  <div className="form-note-error">
+    <span>Please provide a valid email.</span>
+  </div>
+</div>
+
+// Switch controls for admin settings
+<div className="custom-control custom-switch">
+  <input type="checkbox" className="custom-control-input" id="customSwitch" />
+  <label className="custom-control-label" htmlFor="customSwitch">
+    Enable Feature
+  </label>
+</div>
+```
+
+### Table Styling
+```jsx
+// DashLite admin table patterns
+<div className="nk-tb-list nk-tb-ulist">
+  <div className="nk-tb-item nk-tb-head">
+    <div className="nk-tb-col">
+      <span className="sub-text">User</span>
+    </div>
+    <div className="nk-tb-col tb-col-mb">
+      <span className="sub-text">Email</span>
+    </div>
+    <div className="nk-tb-col tb-col-md">
+      <span className="sub-text">Status</span>
+    </div>
+    <div className="nk-tb-col nk-tb-col-tools text-right">
+      <span className="sub-text">Action</span>
+    </div>
+  </div>
+  
+  <div className="nk-tb-item">
+    <div className="nk-tb-col">
+      <div className="user-card">
+        <div className="user-avatar bg-primary">
+          <span>JD</span>
+        </div>
+        <div className="user-info">
+          <span className="tb-lead">John Doe</span>
+          <span className="sub-text">john@example.com</span>
+        </div>
+      </div>
+    </div>
+    <div className="nk-tb-col tb-col-mb">
+      <span className="tb-amount">john@example.com</span>
+    </div>
+    <div className="nk-tb-col tb-col-md">
+      <span className="tb-status text-success">Active</span>
+    </div>
+    <div className="nk-tb-col nk-tb-col-tools">
+      <ul className="nk-tb-actions gx-1">
+        <li>
+          <a href="#" className="btn btn-trigger btn-icon">
+            <em className="icon ni ni-edit"></em>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+### Button Styling
+```jsx
+// DashLite admin button patterns
+<div className="btn-group">
+  <button className="btn btn-primary">Primary Action</button>
+  <button className="btn btn-outline-primary">Secondary</button>
+  <button className="btn btn-light">Cancel</button>
+</div>
+
+// Button with icons
+<button className="btn btn-primary">
+  <em className="icon ni ni-plus"></em>
+  <span>Add New</span>
+</button>
+
+// Admin action buttons
+<div className="nk-block-head-content">
+  <div className="toggle-wrap nk-block-tools-toggle">
+    <a href="#" className="btn btn-icon btn-trigger toggle-expand mr-n1">
+      <em className="icon ni ni-menu-alt-r"></em>
+    </a>
+    <div className="toggle-expand-content">
+      <ul className="nk-block-tools g-3">
+        <li>
+          <button className="btn btn-white btn-outline-light">
+            <em className="icon ni ni-download-cloud"></em>
+            <span>Export</span>
+          </button>
+        </li>
+        <li className="nk-block-tools-opt">
+          <button className="btn btn-primary">
+            <em className="icon ni ni-plus"></em>
+            <span>Add User</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+
+### Status & Badge Styling
+```jsx
+// Admin status indicators
+<span className="badge badge-outline-success">Active</span>
+<span className="badge badge-outline-warning">Pending</span>
+<span className="badge badge-outline-danger">Suspended</span>
+<span className="badge badge-outline-info">Processing</span>
+
+// Admin metrics and stats
+<div className="nk-iv-wg5">
+  <div className="nk-iv-wg5-head">
+    <h6 className="title">Total Users</h6>
+  </div>
+  <div className="nk-iv-wg5-body">
+    <div className="nk-iv-wg5-info">
+      <div className="amount">1,945</div>
+      <div className="change up">
+        <span className="sign">+</span>
+        <span className="number">12.5%</span>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+## Admin Color Schemes
+
+### Status Colors
+```scss
+// Admin-specific status colors
+.admin-status {
+  &.active { 
+    color: $success; 
+    background-color: rgba($success, 0.1);
+  }
+  &.pending { 
+    color: $warning; 
+    background-color: rgba($warning, 0.1);
+  }
+  &.inactive { 
+    color: $gray-500; 
+    background-color: rgba($gray-500, 0.1);
+  }
+  &.error { 
+    color: $danger; 
+    background-color: rgba($danger, 0.1);
+  }
+}
+
+// Priority levels for admin
+.priority {
+  &.high { color: $danger; }
+  &.medium { color: $warning; }
+  &.low { color: $success; }
+}
+```
+
+### Admin Theme Colors
+```scss
+// Admin dashboard specific colors
+.admin-primary { color: $primary; }
+.admin-secondary { color: $secondary; }
+.admin-accent { color: $info; }
+
+// Admin background variations
+.admin-bg-light { background-color: $light; }
+.admin-bg-primary { background-color: rgba($primary, 0.1); }
+.admin-bg-success { background-color: rgba($success, 0.1); }
+```
+
+## Responsive Admin Patterns
+
+### DashLite Grid System
+```jsx
+// Use DashLite's responsive grid
+<div className="row g-gs">
+  <div className="col-xxl-3 col-sm-6">
+    {/* Admin widget */}
+  </div>
+  <div className="col-xxl-3 col-sm-6">
+    {/* Admin widget */}
+  </div>
+  <div className="col-xxl-6">
+    {/* Admin chart or table */}
+  </div>
+</div>
+
+// Responsive admin tables
+<div className="nk-tb-list nk-tb-ulist is-compact">
+  {/* Compact table for mobile */}
+</div>
+```
+
+### Mobile Admin Patterns
+```scss
+// Mobile-specific admin styles
+@media (max-width: 767.98px) {
+  .admin-mobile-hide { display: none; }
+  
+  .admin-table {
+    .nk-tb-col {
+      &.tb-col-md,
+      &.tb-col-lg {
+        display: none;
+      }
+    }
+  }
+  
+  .admin-card {
+    margin-bottom: 1rem;
+    .card-tools {
+      margin-top: 0.5rem;
+    }
+  }
+}
+```
+
+## Dark Mode Support
+
+### DashLite Dark Mode Classes
+```jsx
+// Components that support dark mode
+<div className="nk-app-root" data-theme="dark">
+  {/* DashLite automatically handles dark mode */}
+</div>
+
+// Dark mode specific admin styles
+<div className="card card-bordered h-100">
+  <div className="card-inner">
+    {/* Content automatically adapts to dark mode */}
+  </div>
+</div>
+```
+
+### Custom Dark Mode Styles
+```scss
+// Admin-specific dark mode overrides
+[data-theme="dark"] {
+  .admin-widget {
+    background-color: var(--nk-body-bg-color);
+    border-color: var(--nk-border-color);
+  }
+  
+  .admin-table {
+    .nk-tb-item {
+      border-color: var(--nk-border-color);
+    }
+  }
+}
+```
+
+## Admin Animation & Transitions
+
+### DashLite Animation Classes
+```jsx
+// Use DashLite's built-in animations
+<div className="fade-in">
+  {/* Content with fade in animation */}
+</div>
+
+<div className="slide-up">
+  {/* Content with slide up animation */}
+</div>
+
+// Loading states
+<div className="spinner-border text-primary" role="status">
+  <span className="sr-only">Loading...</span>
+</div>
+```
+
+### Custom Admin Animations
+```scss
+// Admin-specific transitions
+.admin-transition {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Admin loading animations
+.admin-loading {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid $primary;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+}
+```
+
+## Custom Admin SCSS Patterns
+
+### Admin Widget Styles
+```scss
+// Reusable admin widget pattern
+.admin-widget {
+  @extend .card;
+  @extend .card-bordered;
+  
+  .widget-header {
+    @extend .card-inner;
+    border-bottom: 1px solid $border-color;
+    
+    .widget-title {
+      @extend .card-title;
+      margin-bottom: 0;
+    }
+  }
+  
+  .widget-body {
+    @extend .card-inner;
+    
+    .widget-metric {
+      font-size: 2rem;
+      font-weight: $font-weight-bold;
+      color: $primary;
+    }
+  }
+}
+```
+
+### Admin Form Layouts
+```scss
+// Admin form containers
+.admin-form {
+  .form-section {
+    @extend .card;
+    @extend .card-bordered;
+    margin-bottom: 1.5rem;
+    
+    .section-header {
+      @extend .card-inner;
+      border-bottom: 1px solid $border-color;
+      
+      .section-title {
+        font-weight: $font-weight-medium;
+        margin-bottom: 0;
+      }
+    }
+    
+    .section-body {
+      @extend .card-inner;
+    }
+  }
+}
+```
+
+## Performance Considerations
+
+### SCSS Optimization
+- Import only needed DashLite components
+- Use DashLite's variables instead of hardcoded values
+- Leverage DashLite's utility classes
+- Minimize custom CSS when DashLite equivalents exist
+
+### CSS Best Practices
+- Follow BEM naming for custom admin components
+- Use DashLite's existing class patterns
+- Maintain consistent spacing using DashLite variables
+- Optimize for admin-specific use cases (data tables, forms, dashboards)
+
+## DashLite Component Extensions
+
+### Extending Existing Components
+```scss
+// Extend DashLite components for admin needs
+.nk-tb-list {
+  &.admin-enhanced {
+    .nk-tb-item {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: rgba($primary, 0.02);
+      }
+      
+      &.selected {
+        background-color: rgba($primary, 0.05);
+        border-left: 3px solid $primary;
+      }
+    }
+  }
+}
+
+// Custom admin card variants
+.card {
+  &.admin-stat-card {
+    border-left: 4px solid $primary;
+    
+    .card-inner {
+      padding: 1.5rem;
+    }
+    
+    .stat-value {
+      font-size: 2.25rem;
+      font-weight: $font-weight-bold;
+      color: $primary;
+    }
+  }
+}
+```
+
+## Accessibility in Admin UI
+
+### DashLite Accessibility Classes
+```jsx
+// Use DashLite's accessibility features
+<button className="btn btn-icon btn-trigger" 
+        aria-label="Edit user" 
+        data-toggle="tooltip" 
+        title="Edit this user">
+  <em className="icon ni ni-edit"></em>
+</button>
+
+// Focus states for admin navigation
+<div className="nk-nav-wrap">
+  <ul className="nk-nav">
+    <li className="nk-nav-item">
+      <a className="nk-nav-link" href="#" role="button" aria-expanded="false">
+        <em className="icon ni ni-dashboard"></em>
+        <span className="nk-nav-text">Dashboard</span>
+      </a>
+    </li>
+  </ul>
+</div>
+```
+
+### Admin Color Contrast
+- Ensure all admin text meets WCAG AA standards
+- Use DashLite's tested color combinations
+- Provide sufficient contrast for status indicators
+- Test admin interface in both light and dark modes

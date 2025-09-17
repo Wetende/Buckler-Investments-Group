@@ -1,0 +1,537 @@
+---
+description: Admin API service patterns and backend integration for DashLite admin
+globs: admin/src/api/**,admin/src/hooks/**,admin/src/services/**
+alwaysApply: true
+---
+
+# Admin API Service Patterns
+
+Purpose: Ensure consistent admin API patterns for data management, CRUD operations, and backend integration in the DashLite admin interface.
+
+References:
+- Backend API contracts (GET/POST only, integer IDs)
+- Admin-specific data management requirements
+- DashLite component integration patterns
+
+## Service Structure for Admin
+
+### File Organization
+```
+admin/src/
+├── api/
+│   ├── auth.js              # Authentication services
+│   ├── users.js             # User management
+│   ├── properties.js        # Property management  
+│   ├── bookings.js          # Booking management
+│   ├── analytics.js         # Dashboard analytics
+│   └── uploads.js           # File upload services
+├── hooks/
+│   ├── useAuth.js           # Authentication hooks
+│   ├── useUsers.js          # User management hooks
+│   ├── useProperties.js     # Property hooks
+│   └── useAnalytics.js      # Analytics hooks
+└── services/
+    ├── axios.js             # Axios configuration
+    └── queryClient.js       # React Query setup
+```
+
+### Admin Service Patterns
+```js
+// admin/src/api/users.js
+import { axiosPrivate } from '../services/axios';
+
+// Admin CRUD operations
+export const getUsers = async (params = {}) => {
+    const { data } = await axiosPrivate.get('/admin/users', { params });
+    return data;
+};
+
+export const createUser = async (userData) => {
+    const { data } = await axiosPrivate.post('/admin/users', {
+        id: 0, // Admin creates with id=0
+        ...userData
+    });
+    return data;
+};
+
+export const updateUser = async (userId, userData) => {
+    const { data } = await axiosPrivate.post('/admin/users', {
+        id: userId, // Admin updates with actual id
+        ...userData
+    });
+    return data;
+};
+
+export const deleteUser = async (userId) => {
+    const { data } = await axiosPrivate.get(`/admin/users/${userId}/delete`);
+    return data;
+};
+
+// Admin-specific batch operations
+export const bulkUpdateUsers = async (userIds, updates) => {
+    const { data } = await axiosPrivate.post('/admin/users/bulk-update', {
+        user_ids: userIds,
+        updates
+    });
+    return data;
+};
+
+// Export admin service pattern
+export default {
+    getUsers,
+    createUser,
+    updateUser,
+    deleteUser,
+    bulkUpdateUsers
+};
+```
+
+## Admin React Query Hooks
+
+### CRUD Hook Patterns
+```js
+// admin/src/hooks/useUsers.js
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getUsers, createUser, updateUser, deleteUser } from '../api/users';
+
+export const useUsers = (filters = {}) => {
+    return useQuery({
+        queryKey: ['admin', 'users', filters],
+        queryFn: () => getUsers(filters),
+        staleTime: 2 * 60 * 1000, // Admin data more fresh
+        gcTime: 5 * 60 * 1000,
+    });
+};
+
+export const useCreateUser = () => {
+    const queryClient = useQueryClient();
+    
+    return useMutation({
+        mutationFn: createUser,
+        onSuccess: () => {
+            // Invalidate user lists
+            queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+            // Show success notification
+            toast.success('User created successfully!');
+        },
+        onError: (error) => {
+            toast.error(`Failed to create user: ${error.response?.data?.detail || error.message}`);
+        }
+    });
+};
+
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+    
+    return useMutation({
+        mutationFn: ({ id, data }) => updateUser(id, data),
+        onSuccess: (data, variables) => {
+            // Update specific user in cache
+            queryClient.setQueryData(['admin', 'user', variables.id], data);
+            // Invalidate user lists
+            queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+            toast.success('User updated successfully!');
+        },
+        onError: (error) => {
+            toast.error(`Failed to update user: ${error.response?.data?.detail || error.message}`);
+        }
+    });
+};
+
+export const useDeleteUser = () => {
+    const queryClient = useQueryClient();
+    
+    return useMutation({
+        mutationFn: deleteUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+            toast.success('User deleted successfully!');
+        },
+        onError: (error) => {
+            toast.error(`Failed to delete user: ${error.response?.data?.detail || error.message}`);
+        }
+    });
+};
+```
+
+### Admin Dashboard Hooks
+```js
+// admin/src/hooks/useAnalytics.js
+import { useQuery } from '@tanstack/react-query';
+import { getDashboardStats, getRevenueAnalytics } from '../api/analytics';
+
+export const useDashboardStats = () => {
+    return useQuery({
+        queryKey: ['admin', 'dashboard', 'stats'],
+        queryFn: getDashboardStats,
+        staleTime: 1 * 60 * 1000, // Refresh every minute
+        refetchInterval: 5 * 60 * 1000, // Auto-refresh every 5 minutes
+    });
+};
+
+export const useRevenueAnalytics = (period = '7d') => {
+    return useQuery({
+        queryKey: ['admin', 'analytics', 'revenue', period],
+        queryFn: () => getRevenueAnalytics({ period }),
+        staleTime: 5 * 60 * 1000,
+    });
+};
+```
+
+## Admin Component Integration
+
+### DataTable with API Integration
+```jsx
+// admin/src/components/UserManagement.jsx
+import React, { useState } from 'react';
+import { 
+    Block, BlockHead, BlockContent, BlockTitle, DataTable, 
+    DataTableBody, DataTableHead, DataTableRow, DataTableItem,
+    Button, UserAvatar
+} from '@/components/Component';
+import { useUsers, useDeleteUser } from '../hooks/useUsers';
+
+const UserManagement = () => {
+    const [filters, setFilters] = useState({});
+    const { data: users, isLoading, error } = useUsers(filters);
+    const deleteUser = useDeleteUser();
+
+    const handleDelete = (userId) => {
+        if (window.confirm('Are you sure you want to delete this user?')) {
+            deleteUser.mutate(userId);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div className="d-flex justify-content-center p-4">
+                <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="alert alert-danger">
+                Error loading users: {error.message}
+            </div>
+        );
+    }
+
+    return (
+        <Block>
+            <BlockHead>
+                <BlockTitle>User Management</BlockTitle>
+            </BlockHead>
+            <BlockContent>
+                <DataTable>
+                    <DataTableBody>
+                        <DataTableHead>
+                            <DataTableRow>User</DataTableRow>
+                            <DataTableRow>Email</DataTableRow>
+                            <DataTableRow>Status</DataTableRow>
+                            <DataTableRow className="nk-tb-col-tools">Actions</DataTableRow>
+                        </DataTableHead>
+                        {users?.map(user => (
+                            <DataTableItem key={user.id}>
+                                <DataTableRow>
+                                    <UserAvatar text={user.name} />
+                                </DataTableRow>
+                                <DataTableRow>{user.email}</DataTableRow>
+                                <DataTableRow>
+                                    <span className={`badge badge-${user.is_active ? 'success' : 'warning'}`}>
+                                        {user.is_active ? 'Active' : 'Inactive'}
+                                    </span>
+                                </DataTableRow>
+                                <DataTableRow className="nk-tb-col-tools">
+                                    <Button size="sm" color="primary" outline>
+                                        Edit
+                                    </Button>
+                                    <Button 
+                                        size="sm" 
+                                        color="danger" 
+                                        outline
+                                        onClick={() => handleDelete(user.id)}
+                                        disabled={deleteUser.isLoading}
+                                    >
+                                        Delete
+                                    </Button>
+                                </DataTableRow>
+                            </DataTableItem>
+                        ))}
+                    </DataTableBody>
+                </DataTable>
+            </BlockContent>
+        </Block>
+    );
+};
+```
+
+### Form Management with Mutations
+```jsx
+// admin/src/components/UserForm.jsx
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { 
+    Row, Col, Button, InputSwitch 
+} from '@/components/Component';
+import { useCreateUser, useUpdateUser } from '../hooks/useUsers';
+
+const UserForm = ({ user = null, onSuccess }) => {
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: user || { name: '', email: '', is_active: true }
+    });
+
+    const createUser = useCreateUser();
+    const updateUser = useUpdateUser();
+
+    const onSubmit = async (data) => {
+        try {
+            if (user?.id) {
+                await updateUser.mutateAsync({ id: user.id, data });
+            } else {
+                await createUser.mutateAsync(data);
+            }
+            onSuccess?.();
+        } catch (error) {
+            // Error handled by mutation hooks
+        }
+    };
+
+    const isLoading = createUser.isLoading || updateUser.isLoading;
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <Row className="g-4">
+                <Col sm="6">
+                    <div className="form-group">
+                        <label className="form-label">Full Name</label>
+                        <div className="form-control-wrap">
+                            <input 
+                                type="text" 
+                                className={`form-control ${errors.name ? 'error' : ''}`}
+                                {...register('name', { required: 'Name is required' })}
+                            />
+                            {errors.name && (
+                                <span className="form-note-error">{errors.name.message}</span>
+                            )}
+                        </div>
+                    </div>
+                </Col>
+                <Col sm="6">
+                    <div className="form-group">
+                        <label className="form-label">Email Address</label>
+                        <div className="form-control-wrap">
+                            <input 
+                                type="email" 
+                                className={`form-control ${errors.email ? 'error' : ''}`}
+                                {...register('email', { 
+                                    required: 'Email is required',
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: 'Invalid email address'
+                                    }
+                                })}
+                            />
+                            {errors.email && (
+                                <span className="form-note-error">{errors.email.message}</span>
+                            )}
+                        </div>
+                    </div>
+                </Col>
+                <Col sm="12">
+                    <div className="form-group">
+                        <div className="custom-control custom-switch">
+                            <InputSwitch 
+                                id="is_active"
+                                label="Active User"
+                                {...register('is_active')}
+                            />
+                        </div>
+                    </div>
+                </Col>
+            </Row>
+            <div className="form-group mt-4">
+                <Button 
+                    type="submit" 
+                    color="primary"
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Saving...' : (user ? 'Update' : 'Create')} User
+                </Button>
+                <Button type="button" className="link link-light ml-2">
+                    Cancel
+                </Button>
+            </div>
+        </form>
+    );
+};
+```
+
+## Admin-Specific API Patterns
+
+### Bulk Operations
+```js
+// admin/src/api/admin.js
+export const bulkOperations = {
+    bulkDelete: async (resource, ids) => {
+        const { data } = await axiosPrivate.post(`/admin/${resource}/bulk-delete`, {
+            ids: ids
+        });
+        return data;
+    },
+    
+    bulkUpdate: async (resource, ids, updates) => {
+        const { data } = await axiosPrivate.post(`/admin/${resource}/bulk-update`, {
+            ids: ids,
+            updates: updates
+        });
+        return data;
+    },
+    
+    exportData: async (resource, filters = {}) => {
+        const { data } = await axiosPrivate.get(`/admin/${resource}/export`, {
+            params: filters,
+            responseType: 'blob'
+        });
+        return data;
+    }
+};
+```
+
+### File Upload Patterns
+```js
+// admin/src/api/uploads.js
+export const uploadFile = async (file, type = 'general') => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', type);
+    
+    const { data } = await axiosPrivate.post('/admin/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+            );
+            console.log('Upload progress:', percentCompleted);
+        }
+    });
+    
+    return data;
+};
+
+export const deleteFile = async (fileId) => {
+    const { data } = await axiosPrivate.get(`/admin/upload/${fileId}/delete`);
+    return data;
+};
+```
+
+## Error Handling & Notifications
+
+### Global Error Handler
+```js
+// admin/src/services/axios.js
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+export const axiosPrivate = axios.create({
+    baseURL: process.env.REACT_APP_API_URL || '/api/v1',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+// Request interceptor for auth
+axiosPrivate.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('adminToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+// Response interceptor for error handling
+axiosPrivate.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Handle admin logout
+            localStorage.removeItem('adminToken');
+            window.location.href = '/admin/login';
+        } else if (error.response?.status >= 500) {
+            toast.error('Server error. Please try again later.');
+        }
+        return Promise.reject(error);
+    }
+);
+```
+
+### Admin Query Client Setup
+```js
+// admin/src/services/queryClient.js
+import { QueryClient } from '@tanstack/react-query';
+
+export const adminQueryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 2 * 60 * 1000, // 2 minutes
+            gcTime: 5 * 60 * 1000, // 5 minutes
+            retry: (failureCount, error) => {
+                if (error?.response?.status >= 400 && error?.response?.status < 500) {
+                    return false; // Don't retry 4xx errors
+                }
+                return failureCount < 2;
+            },
+        },
+        mutations: {
+            retry: false,
+        },
+    },
+});
+```
+
+## Performance & Optimization
+
+### Admin-Specific Caching
+- Shorter stale times for admin data (2-5 minutes)
+- More aggressive cache invalidation on mutations
+- Background refetching for dashboard data
+- Optimistic updates for admin operations
+
+### Pagination for Admin Lists
+```js
+export const useUsersPaginated = (pageSize = 20) => {
+    return useInfiniteQuery({
+        queryKey: ['admin', 'users', 'paginated'],
+        queryFn: ({ pageParam = 0 }) => getUsers({
+            limit: pageSize,
+            offset: pageParam * pageSize
+        }),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length === pageSize ? allPages.length : undefined;
+        },
+        staleTime: 2 * 60 * 1000,
+    });
+};
+```
+
+## Security Considerations
+
+### Admin Authentication
+- Always verify admin tokens on requests
+- Implement proper session management
+- Use secure storage for admin credentials
+- Log admin actions for audit trails
+
+### Data Validation
+- Validate all admin inputs server-side
+- Sanitize data before sending to API
+- Implement proper error boundaries
+- Handle sensitive data appropriately

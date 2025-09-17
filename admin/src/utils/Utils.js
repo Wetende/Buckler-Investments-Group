@@ -150,6 +150,23 @@ export const monthNames = [
   "December",
 ];
 
+// Auth token helpers (align with public app): store refresh token only
+export const getRefreshToken = () => {
+  try {
+    return localStorage.getItem('refresh_token');
+  } catch (e) {
+    return null;
+  }
+};
+
+export const clearAuthTokens = () => {
+  try {
+    localStorage.removeItem('refresh_token');
+  } catch (e) {
+    // ignore
+  }
+};
+
 /* eslint-disable no-unused-expressions */
 export const slideUp = (target, duration=500) => {
   target.style.transitionProperty = 'height, margin, padding';

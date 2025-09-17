@@ -13,3 +13,4 @@ class TourAvailability(DomainEntity):
     price_override: Optional[Decimal] = None
 
 
+

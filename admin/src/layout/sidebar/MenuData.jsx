@@ -1,8 +1,39 @@
 const menu = [
   {
     icon: "dashlite",
-    text: "Default Dashboard",
+    text: "Main Dashboard",
     link: "/",
+  },
+  {
+    heading: "Business Domains",
+  },
+  {
+    icon: "home",
+    text: "BnB Dashboard",
+    link: "/bnb-dashboard",
+  },
+  {
+    icon: "map",
+    text: "Tours Dashboard", 
+    link: "/tours-dashboard",
+  },
+  {
+    icon: "building",
+    text: "Properties Dashboard",
+    link: "/properties-dashboard",
+  },
+  {
+    icon: "truck",
+    text: "Cars Dashboard",
+    link: "/cars-dashboard",
+  },
+  {
+    icon: "coins",
+    text: "Investments Dashboard",
+    link: "/investments-dashboard",
+  },
+  {
+    heading: "System Analytics",
   },
   {
     icon: "bitcoin-cash",

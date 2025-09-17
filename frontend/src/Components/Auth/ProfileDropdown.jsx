@@ -25,6 +25,16 @@ const ProfileDropdown = ({ className = '', style = {} }) => {
         )}
       </button>
       <ul id="profileDropdown" className="dropdown-menu block profile-menu !left-auto !right-0 !transform !translate-x-0 min-w-[240px]">
+        <li className="profile-item border-b border-[#ededed]">
+          <Link
+            aria-label="dashboard-link"
+            className="profile-link flex items-center p-[15px] text-[13px] text-[#333] hover:text-basecolor"
+            to="/dashboard/"
+          >
+            <i className="feather-grid text-[14px] mr-[8px]"></i>
+            Dashboard
+          </Link>
+        </li>
         <li className="profile-item border-b border-[#ededed] p-[15px]">
           <div className="flex items-center">
             <div className="profile-avatar w-[40px] h-[40px] bg-[#f8f8f8] rounded-full flex items-center justify-center mr-[10px]">

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { axiosInstance, setAuthTokens } from "@/api/axios";
 import Logo from "@/images/logo.png";
 import LogoDark from "@/images/logo-dark.png";
 import Head from "@/layout/head/Head";
@@ -23,21 +24,30 @@ const Login = () => {
   const [passState, setPassState] = useState(false);
   const [errorVal, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const returnTo = params.get("return_to") || "/";
 
-  const onFormSubmit = (formData) => {
-    setLoading(true);
-    const loginName = "info@softnio.com";
-    const pass = "123456";
-    if (formData.name === loginName && formData.passcode === pass) {
-      localStorage.setItem("accessToken", "token");
-      setTimeout(() => {
-        navigate('/');
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        setError("Cannot login with credentials");
-        setLoading(false);
-      }, 1000);
+  const onFormSubmit = async (formData) => {
+    try {
+      setLoading(true);
+      const form = new URLSearchParams();
+      form.append('username', formData.name);
+      form.append('password', formData.passcode);
+      const { data } = await axiosInstance.post('/auth/token', form, {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      });
+      setAuthTokens({ accessToken: data.access_token, refreshToken: data.refresh_token });
+      // redirect to return_to if provided, else dashboard home
+      navigate('/', { replace: true });
+      // Also bounce back to public site if return_to specified (SSO-like hop):
+      if (returnTo && returnTo !== '/') {
+        window.location.href = returnTo;
+      }
+    } catch (e) {
+      setError(e?.response?.data?.detail || e.message);
+    } finally {
+      setLoading(false);
     }
   };
 

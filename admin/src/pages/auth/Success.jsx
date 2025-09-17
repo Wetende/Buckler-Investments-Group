@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import Logo from "@/images/logo.png";
 import LogoDark from "@/images/logo-dark.png";
 import Head from "@/layout/head/Head";
@@ -8,6 +9,14 @@ import { Link } from "react-router-dom";
 import {Button} from "@/components/Component";
 
 const Success = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const returnTo = params.get("return_to");
+  React.useEffect(() => {
+    if (returnTo) {
+      window.location.href = returnTo;
+    }
+  }, [returnTo]);
   return (
     <>
       <Head title="Success" />

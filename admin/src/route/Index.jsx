@@ -3,7 +3,12 @@ import { Routes,Route, useLocation, BrowserRouter } from "react-router-dom";
 import { ProductContextProvider } from "@/pages/pre-built/products/ProductContext";
 import { UserContextProvider } from "@/pages/pre-built/user-manage/UserContext";
 
-import Homepage from "@/pages/Homepage";
+import MainDashboard from "@/pages/MainDashboard";
+import BnbDashboard from "@/pages/BnbDashboard";
+import ToursDashboard from "@/pages/ToursDashboard";
+import PropertiesDashboard from "@/pages/PropertiesDashboard";
+import CarsDashboard from "@/pages/CarsDashboard";
+import InvestmentsDashboard from "@/pages/InvestmentsDashboard";
 import Crypto from "@/pages/Crypto";
 import Analytics from "@/pages/Analytics";
 import Invest from "@/pages/Invest";
@@ -135,7 +140,7 @@ const ScrollToTop = (props) => {
 
 const Router = () => {
   return (
-    <BrowserRouter basename="/demo1/" future={{
+    <BrowserRouter basename="/dashboard/" future={{
       v7_startTransition: true,
       v7_relativeSplatPath: true,
     }}>
@@ -143,7 +148,12 @@ const Router = () => {
         <Routes>
           <Route element={<ThemeProvider />}>
             <Route element={<Layout />}>
-              <Route index element={<Homepage />}></Route>
+              <Route index element={<MainDashboard />}></Route>
+              <Route path="bnb-dashboard" element={<BnbDashboard />}></Route>
+              <Route path="tours-dashboard" element={<ToursDashboard />}></Route>
+              <Route path="properties-dashboard" element={<PropertiesDashboard />}></Route>
+              <Route path="cars-dashboard" element={<CarsDashboard />}></Route>
+              <Route path="investments-dashboard" element={<InvestmentsDashboard />}></Route>
               <Route path="crypto" element={<Crypto />}></Route>
               <Route path="analytics" element={<Analytics />}></Route>
               <Route path="invest" element={<Invest />}></Route>

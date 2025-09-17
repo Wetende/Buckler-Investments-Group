@@ -30,6 +30,27 @@ const User = () => {
         </div>
       </DropdownToggle>
       <DropdownMenu end className="dropdown-menu-md dropdown-menu-s1">
+        <div className="dropdown-inner py-2">
+          <LinkList>
+            {
+              (() => {
+                const publicAppUrl = (import.meta.env.VITE_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "/"));
+                const params = (typeof window !== "undefined") ? new URLSearchParams(window.location.search) : null;
+                let backToSiteHref = publicAppUrl;
+                if (params && params.get("return_to")) {
+                  const rt = decodeURIComponent(params.get("return_to"));
+                  backToSiteHref = (/^https?:\/\//i.test(rt)) ? rt : `${publicAppUrl.replace(/\/$/, "")}${rt.startsWith("/") ? "" : "/"}${rt}`;
+                }
+                return (
+                  <a href={backToSiteHref} className="link-item">
+                    <em className="icon ni ni-arrow-left"></em>
+                    <span>Back to site</span>
+                  </a>
+                );
+              })()
+            }
+          </LinkList>
+        </div>
         <div className="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
           <div className="user-card sm">
             <div className="user-avatar">
