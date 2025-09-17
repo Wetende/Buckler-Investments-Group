@@ -18,7 +18,7 @@ const InteractiveBanners13 = (props) => {
                         return (
                             <m.div key={i} className="text-center will-change-transform" {...{ ...props.animation, transition: { delay: i * props.animationDelay, ease: props.animationTransition, duration: props.animationDuration } }}>
                                 <div className="interactive-banners-style-13">
-                                    <Link aria-label="link" to="/shop/shop-wide" className="text-dark-golden-yellow-hover">
+                                    <Link aria-label="link" to={item.link || "/"} className="text-dark-golden-yellow-hover">
                                         <img width="" height="" className="block pb-[30px]" src={item.img} alt="" data-no-retina="" />
                                         <span className="interactive-banners-text font-serif font-medium inline-block">{item.title}</span>
                                         <i className={` ${item.icon} text-[40px] interactive-banners-icon align-middle ml-[10px]`}></i>

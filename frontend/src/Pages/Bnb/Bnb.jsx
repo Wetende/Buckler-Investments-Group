@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 
 // Libraries
 import { Col, Container, Navbar, Row } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, EffectFade, Keyboard, Navigation } from "swiper/modules";
 import { m } from 'framer-motion'
@@ -32,6 +32,17 @@ import { getRefreshToken } from '../../api/axios'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { Input } from '../../Components/Form/Form'
+import BnbBookingModal from '../../Components/BookingModal/BnbBookingModal'
+
+// Skeletons and States
+import {
+  FeaturedListingsSkeleton,
+  LatestListingsSkeleton,
+  NearbyListingsSkeleton,
+  SearchResultsSkeleton,
+  EmptyListingsState,
+  ErrorState
+} from '../../Components/Skeletons/BnbSkeletons'
 
 const SwiperData = [
   {
@@ -83,7 +94,21 @@ const transformListingToInteractiveBanner = (listing) => ({
   title: listing.title,
   content: `${formatKes(listing.price_per_night)}/night • Max ${listing.max_guests} guests`,
   btnTitle: "View Details",
-  btnLink: `/bnb/${listing.id}`
+  btnLink: `/bnb/${listing.id}`,
+  // Add booking modal
+  customButton: (
+    <BnbBookingModal
+      listing={listing}
+      triggerButton={
+        <Buttons
+          className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase ml-2"
+          themeColor="#232323"
+          color="#fff"
+          title="Book Now"
+        />
+      }
+    />
+  ),
 });
 
 const transformListingToPortfolio = (listing) => ({
@@ -95,14 +120,57 @@ const transformListingToPortfolio = (listing) => ({
 
 const ArchitecturePage = (props) => {
   const [activeSlide, setActiveSlide] = useState(0)
+  const [searchParams, setSearchParams] = useSearchParams()
   
+  // Initialize search criteria from URL params
+  const getSearchCriteriaFromURL = () => {
+    const params = {}
+    if (searchParams.get('location')) params.location = searchParams.get('location')
+    if (searchParams.get('check_in')) params.check_in = searchParams.get('check_in')
+    if (searchParams.get('check_out')) params.check_out = searchParams.get('check_out')
+    if (searchParams.get('guests')) params.guests = parseInt(searchParams.get('guests'))
+    if (searchParams.get('min_price')) params.min_price = parseInt(searchParams.get('min_price'))
+    if (searchParams.get('max_price')) params.max_price = parseInt(searchParams.get('max_price'))
+    return Object.keys(params).length > 0 ? params : null
+  }
+
+  // Hero search state and hook
+  const [searchCriteria, setSearchCriteriaState] = useState(getSearchCriteriaFromURL())
+  
+  // Update URL when search criteria changes
+  const setSearchCriteria = (criteria) => {
+    setSearchCriteriaState(criteria)
+    
+    if (criteria && Object.keys(criteria).length > 0) {
+      const newParams = new URLSearchParams()
+      Object.entries(criteria).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+          newParams.set(key, value.toString())
+        }
+      })
+      setSearchParams(newParams)
+    } else {
+      setSearchParams({})
+    }
+  }
+
   // Fetch API data
   const { data: featuredListings, isLoading: featuredLoading, isError: featuredError } = useFeaturedListings(8);
   const { data: latestListings, isLoading: latestLoading, isError: latestError } = useListings({}, 6);
-
-  // Hero search state and hook
-  const [searchCriteria, setSearchCriteria] = useState(null)
   const { data: searchResults, isLoading: searchLoading, isError: searchError } = useSearchListings(searchCriteria || {}, !!searchCriteria)
+
+  // Clear search function
+  const clearSearch = () => {
+    setSearchCriteria(null)
+  }
+
+  // Load search criteria from URL on component mount
+  useEffect(() => {
+    const urlCriteria = getSearchCriteriaFromURL()
+    if (urlCriteria) {
+      setSearchCriteriaState(urlCriteria)
+    }
+  }, []) // Only run on mount
 
   // Nearby listings via geolocation
   const [coords, setCoords] = useState(null)
@@ -126,17 +194,19 @@ const ArchitecturePage = (props) => {
   const { data: myBookings } = useMyBookings(hasAuth)
   
   // Transform data for existing components
-  const interactiveBannersData = featuredLoading
-    ? InteractiveBannersData15.slice(0, 1)
-    : (featuredListings?.length > 0
-        ? featuredListings.map(transformListingToInteractiveBanner)
-        : InteractiveBannersData15.slice(0, 1));
+  const interactiveBannersData = useMemo(() => {
+    if (featuredListings?.length > 0) {
+      return featuredListings.map(transformListingToInteractiveBanner)
+    }
+    return [] // Return empty array for proper empty state handling
+  }, [featuredListings])
   
-  const portfolioData = latestLoading
-    ? selecteworkData.slice(0, 1)
-    : (latestListings?.pages?.[0]?.length > 0
-        ? latestListings.pages[0].map(transformListingToPortfolio)
-        : selecteworkData.slice(0, 1));
+  const portfolioData = useMemo(() => {
+    if (latestListings?.pages?.[0]?.length > 0) {
+      return latestListings.pages[0].map(transformListingToPortfolio)
+    }
+    return [] // Return empty array for proper empty state handling
+  }, [latestListings])
 
   return (
     <div style={props.style}>
@@ -244,10 +314,10 @@ const ArchitecturePage = (props) => {
           {/* Enhanced BnB Search Section End */}
 
           {/* BnB Categories Section Start */}
-          <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] bg-lightgray">
+          <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] xs:py-[40px] bg-lightgray">
             <Container>
               <Row className="justify-center">
-                <Col lg={7} className="text-center mb-16 md:mb-12 sm:mb-8">
+                <Col lg={7} className="text-center mb-16 md:mb-12 sm:mb-8 xs:mb-6">
                   <h2 className="heading-4 font-serif font-semibold text-darkgray">
                     Find your perfect stay that suits your needs
                   </h2>
@@ -317,23 +387,33 @@ const ArchitecturePage = (props) => {
         {/* Nearby Listings Section */}
         {coords && (
           <m.section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]" {...fadeIn}>
-            <Container>
-              <Row className="justify-center">
-                <Col className="text-center divider-full mb-[3rem] p-0">
-                  <div className="divider-border divider-light flex items-center w-full">
-                    <span className="font-serif font-medium text-basecolor uppercase tracking-[1px] block px-[30px]">Nearby Stays</span>
-                  </div>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  {nearbyLoading && <div className="text-white">Finding nearby stays...</div>}
-                  {!nearbyLoading && (
-                    <InteractiveBanners15 data={(nearbyListings || []).map(transformListingToInteractiveBanner)} grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" animation={fadeIn} />
-                  )}
-                </Col>
-              </Row>
-            </Container>
+            {nearbyLoading ? (
+              <NearbyListingsSkeleton />
+            ) : nearbyListings?.length > 0 ? (
+              <Container>
+                <Row className="justify-center">
+                  <Col className="text-center divider-full mb-[3rem] p-0">
+                    <div className="divider-border divider-light flex items-center w-full">
+                      <span className="font-serif font-medium text-basecolor uppercase tracking-[1px] block px-[30px]">Nearby Stays</span>
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <InteractiveBanners15 
+                      data={nearbyListings.map(transformListingToInteractiveBanner)} 
+                      grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" 
+                      animation={fadeIn} 
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            ) : (
+              <EmptyListingsState 
+                title="No nearby stays found" 
+                message="We couldn't find any stays in your area. Try browsing our featured listings below." 
+              />
+            )}
           </m.section>
         )}
 
@@ -363,36 +443,97 @@ const ArchitecturePage = (props) => {
         {/* Search Results Section (optional, when searching from hero) */}
         {searchCriteria && (
           <section className="py-[80px] lg:py-[60px] md:py-[50px] sm:py-[40px]">
-            <Container>
-              <Row className="justify-center">
-                <Col className="text-center divider-full mb-[3rem] p-0">
-                  <div className="divider-border divider-light flex items-center w-full">
-                    <span className="font-serif font-medium text-basecolor uppercase tracking-[1px] block px-[30px]">Search Results</span>
-                  </div>
-                </Col>
-              </Row>
-              {searchLoading && <div className="text-white">Searching...</div>}
-              {searchError && <div className="text-red-400">Search failed. Please adjust your filters.</div>}
-              {!searchLoading && !searchError && (
-                <Row>
-                  <InteractiveBanners15 data={(searchResults || []).map(transformListingToInteractiveBanner)} grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" animation={fadeIn} />
+            {searchLoading ? (
+              <SearchResultsSkeleton />
+            ) : searchError ? (
+              <ErrorState 
+                title="Search failed" 
+                message="Please adjust your search criteria and try again."
+                onRetry={() => setSearchCriteria({...searchCriteria})}
+              />
+            ) : searchResults?.length > 0 ? (
+              <Container>
+                <Row className="justify-center">
+                  <Col className="text-center divider-full mb-[3rem] p-0">
+                    <div className="divider-border divider-light flex items-center w-full">
+                      <span className="font-serif font-medium text-basecolor uppercase tracking-[1px] block px-[30px]">Search Results</span>
+                    </div>
+                  </Col>
                 </Row>
-              )}
-            </Container>
+                <Row className="mb-4">
+                  <Col className="text-center">
+                    <Buttons 
+                      ariaLabel="clear search" 
+                      onClick={clearSearch}
+                      className="font-medium font-serif uppercase btn-link after:h-[2px] after:bg-red-500" 
+                      color="#ef4444" 
+                      size="lg" 
+                      title="Clear Search" 
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <InteractiveBanners15 
+                    data={searchResults.map(transformListingToInteractiveBanner)} 
+                    grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" 
+                    animation={fadeIn} 
+                  />
+                </Row>
+              </Container>
+            ) : (
+              <Container>
+                <Row className="justify-center">
+                  <Col md={6} className="text-center py-16">
+                    <div className="text-6xl mb-4 opacity-20">🔍</div>
+                    <h3 className="heading-6 font-serif text-darkgray mb-4">No search results found</h3>
+                    <p className="text-lg text-gray-600 mb-6">Try different dates, location, or number of guests to find the perfect stay.</p>
+                    <Buttons 
+                      ariaLabel="clear search" 
+                      onClick={clearSearch}
+                      className="font-medium font-serif uppercase btn-link after:h-[2px] after:bg-red-500" 
+                      color="#ef4444" 
+                      size="lg" 
+                      title="Clear Search" 
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            )}
           </section>
         )}
-        {/* Section Start */}
+        {/* Featured Listings Section */}
         <m.section {...{ ...fadeIn, transition: { delay: 0.5, duration: 1.2 } }}>
-          <Container fluid className="lg:px-[30px]">
-            <div className="mb-6">
-              {featuredLoading && <div className="text-white">Loading featured...</div>}
-              {featuredError && <div className="text-red-400">Failed to load featured.</div>}
-            </div>
-            <InteractiveBanners15 data={interactiveBannersData} grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" animation={fadeIn} />
-            <div className="mt-6 text-center">
-              <Buttons ariaLabel="view all stays" to="/bnb" className="font-medium font-serif uppercase btn-link after:h-[2px] after:bg-spanishgray" color="#939393" size="xlg" title="View all stays" />
-            </div>
-          </Container>
+          {featuredLoading ? (
+            <FeaturedListingsSkeleton />
+          ) : featuredError ? (
+            <ErrorState 
+              title="Failed to load featured stays" 
+              message="We're having trouble loading our featured properties. Please try again."
+            />
+          ) : interactiveBannersData.length > 0 ? (
+            <Container fluid className="lg:px-[30px]">
+              <InteractiveBanners15 
+                data={interactiveBannersData} 
+                grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" 
+                animation={fadeIn} 
+              />
+              <div className="mt-6 text-center">
+                <Buttons 
+                  ariaLabel="view all stays" 
+                  to="/bnb" 
+                  className="font-medium font-serif uppercase btn-link after:h-[2px] after:bg-spanishgray" 
+                  color="#939393" 
+                  size="xlg" 
+                  title="View all stays" 
+                />
+              </div>
+            </Container>
+          ) : (
+            <EmptyListingsState 
+              title="No featured stays available" 
+              message="Our featured listings are currently being updated. Please check back soon."
+            />
+          )}
         </m.section>
         {/* Section End */}
 
@@ -475,44 +616,52 @@ const ArchitecturePage = (props) => {
             </Row>
             <Row>
               <Col>
-                <Swiper className="work-architecture-slider"
-                  spaceBetween={26}
-                  slidesPerView="auto"
-                  autoplay={{ delay: 3000, disableOnInteraction: false }}
-                  loop={false}
-                  modules={[Autoplay, Keyboard]}
-                  keyboard={{ enabled: true, onlyInViewport: true }}
-                  breakpoints={{
-                    1200: { slidesPerView: 4 }, 992: { slidesPerView: 3 }, 768: { slidesPerView: 2 }
-                  }} >
-                  {
-                    portfolioData.map((item, i) => {
-                      return (
-                        <SwiperSlide key={i} className="architecture-portfolio-slider">
-                          <div className="portfolio-box">
-                            <div className="portfolio-image flex relative">
-                              <Link aria-label="link for img" to={item.link}>
-                                <img width={405} height={518} src={item.img} alt="slider" />
-                              </Link>
-                              <div className="portfolio-hover absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                                <Link aria-label="link for button" className="bg-white w-[40px] h-[40px] inline-block align-middle leading-[40px] text-center mx-[3px] z-[3] relative border-white border-[2px] rounded-full" to={item.link}><i className="ti-arrow-right inline-block text-darkgray text-center"></i></Link>
+                {latestLoading ? (
+                  <LatestListingsSkeleton />
+                ) : latestError ? (
+                  <ErrorState 
+                    title="Failed to load latest stays" 
+                    message="We're having trouble loading our latest properties. Please try again."
+                  />
+                ) : portfolioData.length > 0 ? (
+                  <Swiper className="work-architecture-slider"
+                    spaceBetween={26}
+                    slidesPerView="auto"
+                    autoplay={{ delay: 3000, disableOnInteraction: false }}
+                    loop={false}
+                    modules={[Autoplay, Keyboard]}
+                    keyboard={{ enabled: true, onlyInViewport: true }}
+                    breakpoints={{
+                      1200: { slidesPerView: 4 }, 992: { slidesPerView: 3 }, 768: { slidesPerView: 2 }
+                    }} >
+                    {
+                      portfolioData.map((item, i) => {
+                        return (
+                          <SwiperSlide key={i} className="architecture-portfolio-slider">
+                            <div className="portfolio-box">
+                              <div className="portfolio-image flex relative">
+                                <Link aria-label="link for img" to={item.link}>
+                                  <img width={405} height={518} src={item.img} alt="slider" />
+                                </Link>
+                                <div className="portfolio-hover absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                                  <Link aria-label="link for button" className="bg-white w-[40px] h-[40px] inline-block align-middle leading-[40px] text-center mx-[3px] z-[3] relative border-white border-[2px] rounded-full" to={item.link}><i className="ti-arrow-right inline-block text-darkgray text-center"></i></Link>
+                                </div>
+                              </div>
+                              <div className="portfolio-caption justify-center text-center py-[30px]">
+                                <Link aria-label="link for title" className="text-white font-serif uppercase font-medium" to={item.link}>{item.title}</Link>
+                                <span className="block uppercase text-sm">{item.subtitle}</span>
                               </div>
                             </div>
-                            <div className="portfolio-caption justify-center text-center py-[30px]">
-                              <Link aria-label="link for title" className="text-white font-serif uppercase font-medium" to={item.link}>{item.title}</Link>
-                              <span className="block uppercase text-sm">{item.subtitle}</span>
-                            </div>
-                          </div>
-                        </SwiperSlide>
-                      )
-                    })
-                  }
-                </Swiper>
-                {(latestLoading || latestError) && (
-                  <div className="mt-4">
-                    {latestLoading && <div className="text-white">Loading latest...</div>}
-                    {latestError && <div className="text-red-400">Failed to load latest listings.</div>}
-                  </div>
+                          </SwiperSlide>
+                        )
+                      })
+                    }
+                  </Swiper>
+                ) : (
+                  <EmptyListingsState 
+                    title="No latest stays available" 
+                    message="Our latest listings are currently being updated. Please check back soon."
+                  />
                 )}
               </Col>
             </Row>

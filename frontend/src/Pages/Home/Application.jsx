@@ -17,7 +17,7 @@ import { TiltBox } from '../../Components/FancyText/FancyText'
 import IconWithText from '../../Components/IconWithText/IconWithText'
 import PricingTable04 from '../../Components/PricingTable/PricingTable04';
 import CustomModal from '../../Components/CustomModal'
-import FooterStyle08 from '../../Components/Footers/FooterStyle08';
+import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import TestimonialsCarousel04 from '../../Components/TestimonialCarousel/TestimonialsCarousel04';
 import MessageBox from '../../Components/MessageBox/MessageBox';
 import { Input } from '../../Components/Form/Form'
@@ -426,7 +426,7 @@ const ApplicationPage = (props) => {
                 {/* Section End */}
 
                 {/* Footer Start */}
-                <FooterStyle08 className="bg-[#3a285e] text-[#ffffff80]" theme="dark" />
+                <FooterStyle01 className="bg-[#3a285e] text-[#ffffff80]" theme="dark" />
                 {/* Footer End */}
             </InViewPort>
         </div>

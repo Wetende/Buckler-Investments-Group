@@ -163,6 +163,38 @@ const AboutUsPage = (props) => {
       </div>
       {/* Parallax Scrolling End */}
 
+      {/* About Section Start */}
+      <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]" style={{ backgroundImage: 'url(/assets/img/webp/home-decor-bg-img-02.webp)' }}>
+        <Container>
+          <Row className="justify-center items-center">
+            <Col lg={6} md={10} className="relative mb-[20px] md:mb-32 sm:mb-40 xs:mb-0">
+              <div className="relative">
+                <Parallax className="lg-no-parallax w-[70%] mb-16" speed={0}> <img alt="" src="https://via.placeholder.com/700x1027" className="w-full" width="385.34" height="565.34" /> </Parallax>
+                <Parallax className="lg-no-parallax flex justify-center items-center w-[55%] bg-no-repeat absolute bottom-0 right-[15px] lg:!ml-auto lg:!top-[145px]" speed={20}>
+                  <img alt="" src="https://via.placeholder.com/317x477" width="317" height="477" />
+                </Parallax>
+              </div>
+            </Col>
+            <Col lg={{ span: 5, offset: 1 }} md={10}>
+              <div className="font-serif text-md font-medium mb-[30px] flex">
+                <span className="w-[40px] h-[1px] bg-red-600 opacity-70 self-center mr-[20px] shrink-0"></span>
+                <div className="grow-[1]"> <span className="text-red-600 uppercase">About Buckler Investments Group</span> </div>
+              </div>
+              <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">A unified platform for investments, Properties, BnB, Tours and Car-Hire</h1>
+              <p className="mb-[25px] w-[80%] lg:w-full">We connect investors and travellers with verified opportunities across East Africa — curated properties, flexible investment products, authentic tours, short-stay BnB stays and reliable vehicles.</p>
+              <div className="flex flex-wrap gap-3 mt-[20px]">
+                <Buttons to="/bnb" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="BnB" />
+                <Buttons to="/tours" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Tours" />
+                <Buttons to="/properties" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Properties" />
+                <Buttons to="/invest" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Invest" />
+                <Buttons to="/cars" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Car-Hire" />
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      {/* About Section End */}
+
       {/* Section Start */}
       <section id="about" className="bg-lightgray py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
         <Container>

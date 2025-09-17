@@ -1,145 +1,300 @@
-## Tours API Integration Plan (Only Available Endpoints)
+# Tours API Endpoints & Frontend Implementation Plan
 
-### Base
-- Base URL: `/api/v1/tours`
-- Methods: only GET and POST (mutations via POST; deletes via GET `/{id}/delete`)
-- IDs: integers
+## Complete Tours API Endpoints
 
-### Endpoints
-- Public listings
-  - POST `/search` → List (criteria: `location`, `start_date`, optional `max_price`) ⇒ returns `TourResponse[]`
-  - GET `/` → List with pagination (`limit`, `offset`) ⇒ returns `TourResponseDTO[]`
-  - GET `/{tour_id}` → Detail ⇒ `TourResponseDTO`
-  - GET `/{tour_id}/availability` → Availability by date range (`start_date`, `end_date`) ⇒ `TourAvailabilityItem[]`
-  - GET `/featured` → Featured list (`limit`) ⇒ `TourResponseDTO[]`
-  - GET `/categories` → Static categories ⇒ `TourCategoryDTO[]`
-  - GET `/categories/{category}/tours` → List by category (`limit`, `offset`) ⇒ `TourResponseDTO[]`
+Base URL prefix: `/api/v1/tours`
 
-- Operator/Admin
-  - POST `/` → Create/update `TourCreateUpdateDTO` (id=0 create; id>0 update) ⇒ `TourResponseDTO`
-  - GET `/{tour_id}/delete` → Delete ⇒ `{ ok: True, tour_id }`
-  - GET `/my-tours` → Operator tours (`operator_id` from auth later) ⇒ `TourResponseDTO[]`
-  - POST `/{tour_id}/availability` → Update availability (body: `TourAvailabilityDTO`) ⇒ `{ ok: True }`
-  - POST `/{tour_id}/pricing` → Update pricing ⇒ `{ ok: True }`
+### Public Tours
+- GET `/` — List tours (query: `limit` int [1..100], `offset` int >=0)
+- GET `/featured` — Featured tours (query: `limit` int [1..50])
+- POST `/search` — Search tours (body: `SearchToursRequest`)
+- GET `/categories` — Static categories list
+- GET `/categories/{category}/tours` — List tours by category (query: `limit`, `offset`)
+- GET `/{tour_id}` — Get tour details by id (int)
+- GET `/{tour_id}/availability` — Availability (query: `start_date` YYYY-MM-DD, `end_date` YYYY-MM-DD)
 
-- Bookings (customer/operator flows)
-  - POST `/bookings` → Create booking (`CreateTourBookingRequest`) ⇒ `TourBookingResponse`
-  - GET `/bookings/{booking_id}` → Booking detail ⇒ `TourBookingResponseDTO`
-  - GET `/my-bookings` → User bookings (`customer_id` temp query) ⇒ `TourBookingResponseDTO[]`
-  - POST `/bookings/{booking_id}/cancel` or GET `/bookings/{booking_id}/cancel` ⇒ `{ ok: True }`
-  - POST `/bookings/{booking_id}/confirm` ⇒ `{ ok: True }`
-  - POST `/bookings/{booking_id}/complete` ⇒ `{ ok: True }`
-  - POST `/bookings/{booking_id}/payment` ⇒ `{ ok: True, payment_id }`
-  - GET `/bookings/{booking_id}/payment-status` ⇒ `{ booking_id, payment_status, payment_id }`
-  - POST `/bookings/{booking_id}/refund` ⇒ `{ ok: True, refund_id }`
-  - POST `/bookings/{booking_id}/messages` ⇒ `{ ok: True, message_id }`
-  - GET `/bookings/{booking_id}/messages` ⇒ `[{ ...message }]`
-  - GET `/conversations` ⇒ `[{ ...conversation }]`
-  - Operator analytics: GET `/operator/dashboard`, `/operator/earnings`, `/operator/payouts`
+### Customer Bookings
+- POST `/bookings` — Create booking (body: `TourBookingCreateDTO`, id: 0=create, >0=update)
+- GET `/my-bookings` — User's tour bookings (query: `user_id` int; placeholder until auth wiring)
+- GET `/bookings/{booking_id}` — Get booking details by id (int)
+- GET `/bookings/{booking_id}/cancel` — Cancel booking by id (int)
+- POST `/bookings/{booking_id}/modify` — Modify booking (body: `TourBookingModifyDTO`)
 
-### DTO Snapshots (frontend mapping)
-- `TourResponseDTO`: `{ id, title|name, description?, price, currency, duration|duration_hours?, image?, rating?, reviews_count?, operator_id?, max_participants?, created_at, updated_at? }`
-- `TourAvailabilityItem`: `{ date, available_spots, price_override? }`
-- `CreateTourBookingRequest`: `{ tour_id, customer_id, booking_date, participants }`
-- `TourBookingResponseDTO`: `{ id, tour_id, customer_id, booking_date, participants, total_price, currency, status, created_at, updated_at? }`
+### Customer Payments
+- POST `/bookings/{booking_id}/payments` — Process payment (body: `PaymentDTO`)
+- GET `/bookings/{booking_id}/payments` — List payments for booking
+- GET `/bookings/{booking_id}/invoice` — Get invoice for booking
 
----
+### Customer Messaging
+- POST `/bookings/{booking_id}/messages` — Send a message in booking thread
+- GET `/bookings/{booking_id}/messages` — List messages for booking
+- GET `/conversations` — List tour conversations for current user (query: `user_id` int; placeholder)
 
-## Frontend Consumption Plan
+### Cross-Domain Endpoints (Tours-related)
 
-### Services (existing)
-- `frontend/src/api/toursService.js`
-  - `searchTours(criteria)` → POST `/tours/search`
-  - `listTours(params)` → GET `/tours`
-  - `getTour(id)` → GET `/tours/{id}`
-  - `getTourAvailability(id, params)` → GET `/tours/{id}/availability`
-  - `getFeaturedTours(limit)` → GET `/tours/featured`
+#### Bundle/Package Endpoints (`/api/v1/bundles`)
+- POST `/` — Create bundle combining tours + accommodation + vehicles
+- GET `/` — List bundles (query: `limit`, `offset`, `location`, `min_price`, `max_price`)
+- GET `/{bundle_id}` — Get bundle details  
+- GET `/my-bundles` — User's bundle bookings (query: `user_id`)
+- POST `/bookings` — Create bundle booking (body: `BundleBookingDTO`)
 
-Add later (private/auth):
-- `createTour(payload)` POST `/tours`
-- `deleteTour(id)` GET `/tours/{id}/delete`
-- `getMyTours()` GET `/tours/my-tours`
-- Booking flows: `createTourBooking`, `getTourBooking`, `getMyTourBookings`, `cancel/confirm/complete/payment/refund/messages`
+#### Unified Search System (`/api/v1/search`)
+- POST `/all` — Cross-domain search (body: `UnifiedSearchDTO`)
+- GET `/suggestions` — Search suggestions (query: `query` string, `limit` int)
+- GET `/trending` — Trending searches and destinations
+- GET `/filters` — Available filter options for search
 
-### Hooks (existing)
-- `frontend/src/api/useTours.js`
-  - `useTours(filters, pageSize)` → infinite GET list via `limit/offset`
-  - `useTour(id)` → detail
-  - `useTourAvailability(id, params)` → availability
-  - `useFeaturedTours(limit)` → featured
-  - `useSearchTours(criteria)` → search
+#### Reviews for Tours (`/api/v1/reviews`)
+- GET `/tour/{tour_id}` — List reviews for tour (query: `limit`, `offset`, `sort`)
+- POST `/tour` — Create tour review (body: `TourReviewDTO`)
+- GET `/tour/{tour_id}/stats` — Review statistics (avg rating, count, distribution)
+- GET `/tour/{tour_id}/summary` — Review summary and highlights
+- GET `/tour/my-reviews` — User's tour reviews (query: `user_id`)
+- POST `/tour/{review_id}/response` — Respond to review (operator only)
+- POST `/tour/{review_id}/like` — Like/unlike review
+- GET `/tour/{review_id}/replies` — Get review replies/responses
+- POST `/tour/{review_id}/flag` — Flag inappropriate review
+- GET `/tour/{tour_id}/photos` — User-uploaded photos from reviews
 
-Extend later with mutations/privates for bookings and operator tools.
+#### Favorites System (`/api/v1/favorites`)
+- POST `/` — Add/remove favorite (body: `FavoriteDTO` with `item_type: "tour"`)
+- GET `/` — List user favorites (query: `item_type`, `user_id`)
+- GET `/tours` — List favorite tours specifically
+- GET `/{item_type}/{item_id}/toggle` — Toggle favorite status
 
 ---
 
-## Pages & Data Wiring
+## Admin-Only Endpoints (Excluded from Customer Frontend)
 
-### Entry: `frontend/src/Pages/Tours/Tour.jsx`
-- Purpose: Marketing/landing for tours (hero, highlights, carousels).
-- Sections → Data
-  - Hero slider: GET `/tours/featured` (limit=3) for slide items; fallback to current placeholders
-  - Top destinations (InteractiveBanners07): GET `/tours/categories`
-  - Interests grid (InteractiveBanners09): GET `/tours/categories` (same data; different presentation)
-  - Popular packages (InfoBannerStyle05): GET `/tours/featured` (primary) or GET `/tours` (limit=12)
-  - Detail links: `/tours/{id}` hydrate via `useTour(id)`
-- Data to hydrate now:
-  - Replace `popularpackagedata` with `useFeaturedTours(limit)` mapped to `InfoBannerStyle05` shape
-  - Optionally add a search strip posting to `/tours/search` via `useSearchTours(criteria)` and navigate to list
-- Components to reuse: `Header`, `InfoBannerStyle05`, `InteractiveBanners*`, `Testimonials`, `BlogClassic`
-- Loading/error: Use existing skeletons; show friendly message if API down
+### Operator Tours
+- POST `/` — Create or update tour (body: `TourCreateUpdateDTO`, id: 0=create, >0=update)
+- GET `/{tour_id}/delete` — Delete tour by id (int)
+- GET `/my-tours` — Operator tours (query: `operator_id` int; placeholder until auth wiring)
+- POST `/{tour_id}/availability` — Update availability (body: `TourAvailabilityDTO`)
+- POST `/{tour_id}/pricing` — Update pricing (body: `TourPricingDTO`)
 
-Implementation notes:
-- Keep presentational components dumb; data via hooks in this page and passed as props to Litho components.
-- Respect Litho classnames and spacing; avoid deep fetching in child components.
+### Operator Bookings  
+- GET `/bookings` — List all bookings for operator (query: `operator_id`, `status`, `limit`, `offset`)
+- POST `/bookings/{booking_id}/confirm` — Confirm booking
+- POST `/bookings/{booking_id}/status` — Update booking status (body: `BookingStatusDTO`)
 
-### Listing: `frontend/src/Pages/Tours/ToursList.jsx`
-- Uses `useTours({}, 20)` to render grid with `InfoBannerStyle05`.
-- Keep “Load more” using `fetchNextPage` and `hasNextPage`.
-- Filters (future): Add category filter powered by GET `/tours/categories` and `/tours/categories/{category}/tours`.
-
-### Detail: `frontend/src/Pages/Tours/TourDetail.jsx`
-- Uses `useTour(id)` for core details.
-- Uses `useTourAvailability(id, { start_date, end_date })` when date range is present; default to a 7–14 day window.
-- Sidebar shows price, currency, and availability summary.
-
-### Bookings (future pages)
-- New components/pages (auth required):
-  - Booking form (sidebar or modal) posting to POST `/tours/bookings`.
-  - My bookings page consuming GET `/tours/my-bookings`.
-  - Booking detail page GET `/tours/bookings/{booking_id}`.
-  - Actions (cancel/confirm/complete/payment/refund) via POST endpoints.
-
-### Operator (future dashboard)
-- Operator tours list: GET `/tours/my-tours`.
-- Availability/pricing management: POST `/{tour_id}/availability`, `/{tour_id}/pricing`.
-- Analytics widgets: GET `/tours/operator/dashboard`, `/earnings`, `/payouts`.
+### Operator Analytics
+- GET `/analytics/bookings` — Booking analytics (query: `operator_id`, `start_date`, `end_date`)
+- GET `/analytics/revenue` — Revenue analytics
+- GET `/analytics/performance` — Tour performance metrics
 
 ---
 
-## Mapping API → UI Components
-- Info grids/carousels (`InfoBannerStyle05`): map `TourResponseDTO` → `{ img, title, packageprice, days, reviews, link, rating }`
-  - `img`: fallback to existing asset if backend lacks images
-  - `title`: `title` or `name`
-  - `packageprice`: `${price} ${currency}` (prefix with "From " where appropriate)
-  - `days`: `duration` or derive from `duration_hours` (e.g., `"{duration_hours} hrs"`)
-  - `reviews`/`rating`: placeholders until reviews integration
-  - `link`: `/tours/{id}`
+## Frontend Routes
+- `/tours` — Main tours page (existing Tour.jsx)
+- `/tours/search` — Search results page
+- `/tours/:id` — Tour detail page
+- `/tours/:id/book` — Booking flow
+- `/tours/categories/:category` — Category listings
+- `/tours/my-bookings` — User booking history
 
-## Error & Loading
-- Reuse existing skeletons and `MessageBox`.
-- For list/detail: show clear error if backend offline.
+### Homepage Composition (Tours)
+- Hero + Smart Search
+  - Components: `Form.Input`, `Buttons`
+  - Endpoints: `/api/v1/search/suggestions`, `/api/v1/search/trending`, `/api/v1/search/all`
+- Featured Tours Carousel
+  - Components: `InfoBannerStyle05`
+  - Endpoint: `/api/v1/tours/featured`
+- Categories & Interests
+  - Components: `InteractiveBanners07`, `InteractiveBanners09`
+  - Endpoints: `/api/v1/tours/categories`, `/api/v1/tours/categories/{category}/tours`
+- Top Rated This Week (badges on cards)
+  - Components: badge overlays on `InfoBannerStyle05`
+  - Endpoints: `/api/v1/reviews/tour/{tour_id}/stats`
+- Bundle Packages (cross-sell)
+  - Components: `InfoBannerStyle05`
+  - Endpoints: `/api/v1/bundles/`
+- Availability Strip (on cards)
+  - Components: small indicator overlays
+  - Endpoints: `/api/v1/tours/{tour_id}/availability`
+- From Travelers (recent reviews)
+  - Components: `Testimonials`
+  - Endpoints: `/api/v1/reviews/tour/{tour_id}` for featured tours
+- My Bookings Teaser (auth-only)
+  - Components: compact CTA panel
+  - Endpoints: `/api/v1/tours/my-bookings`
 
-## Routing
-- `/tours` → `ToursList.jsx`
-- `/tours/:id` → `TourDetail.jsx`
-- `/tours/featured` (optional marketing route) still uses same data.
+---
 
-## Next Steps
-1) Wire `Tour.jsx` popular section to `useFeaturedTours(8)`; remove hardcoded `popularpackagedata` (fallback allowed during loading)
-2) Optionally map hero slides to `useFeaturedTours(3)` while preserving current placeholders as fallback
-3) Add simple search bar on `Tour.jsx` that navigates to `/tours` with query params and triggers `useTours` or `useSearchTours`
-4) Add categories filter on `ToursList.jsx` using `/tours/categories`
-5) After auth, implement booking service and hooks; add booking UI on `TourDetail.jsx`
+## Frontend Implementation Plan (6-Phase Approach)
 
+### UX Research Insights
+- **Trust Building**: Reviews and ratings critical for trust
+- **Social Proof**: User-generated content drives conversions  
+- **Urgency**: Availability indicators create booking urgency
+- **Discovery**: Multi-path navigation (search, browse, categories)
+- **Mobile-First**: 70%+ traffic from mobile devices
+- **Personalization**: Authenticated users expect tailored experience
 
+### Phase 1: Foundation & Hero (Week 1)
+**Tasks:**
+- [x] Enhance existing Tour.jsx with proper API integration
+- [x] Implement hero search form with location, dates, category filters
+- [x] Integrate unified search (`/api/v1/search/all`) for cross-domain results
+- [x] Add search suggestions with autocomplete (`/api/v1/search/suggestions`)
+- [x] Create SearchResults component using InfoBannerStyle05
+- [x] Add search state management and URL params
+- [x] Implement featured tours carousel with booking CTAs
+- [x] Add loading states and error handling
+
+**Litho Components:**
+- `InfoBannerStyle05` for tour cards
+- `CustomModal` for booking overlay
+- `Form` components for search
+- `Buttons` for CTAs
+- `MessageBox` for errors
+
+### Phase 2: Tour Discovery & Categories (Week 2)
+**Tasks:**
+- [x] Build category browsing with InteractiveBanners07/09
+- [x] Implement tour filtering (price, duration, rating)
+- [x] Add infinite scroll for tour listings
+- [x] Create tour comparison feature
+- [x] Add favorites/wishlist functionality (`/api/v1/favorites/` - extend for tours)
+- [x] Implement tour sharing capabilities
+- [x] Add review integration (`/api/v1/reviews/tour/{tour_id}`)
+- [x] Include bundle package discovery (`/api/v1/bundles/`)
+
+**Litho Components:**
+- `InteractiveBanners07` for category grid
+- `InteractiveBanners09` for interest-based discovery
+- `Lists` for filter options
+- `Testimonials` for social proof
+
+### Phase 3: Tour Detail & Rich Content (Week 3) ✅ **COMPLETED**
+**Tasks:**
+- [x] Build comprehensive tour detail page
+- [x] Implement image gallery with fullscreen modal
+- [x] Add itinerary timeline component
+- [x] Create inclusions/exclusions lists
+- [x] Add tour guide profiles
+- [x] Implement availability calendar (`/api/v1/tours/{tour_id}/availability`)
+- [x] Add customer reviews section (`/api/v1/reviews/tour/{tour_id}`)
+- [x] Include bundle suggestions (`/api/v1/bundles/` filtered by tour)
+
+**Litho Components:**
+- `ImageGallery` for tour photos
+- `CustomModal` for photo lightbox
+- `Lists` for itinerary details
+- `Testimonials` for reviews
+- `BlogClassic` for related content
+
+### Phase 4: Booking Flow & Payments (Week 4) ✅ **COMPLETED**
+**Tasks:**
+- [x] Create multi-step booking form
+- [x] Implement date/group size selection
+- [x] Add pricing calculator with discounts
+- [x] Build payment integration
+- [x] Create booking confirmation flow
+- [x] Add booking modification capabilities
+- [x] Implement cancellation process
+
+**Litho Components:**
+- `Form` for booking details
+- `ModalPopup` for confirmations
+- `Buttons` for actions
+- `Lists` for booking summary
+
+### Phase 5: User Account & Bookings (Week 5) ✅ **COMPLETED**
+**Tasks:**
+- [x] Create user booking dashboard (`/api/v1/tours/my-bookings`)
+- [x] Implement booking history with status tracking
+- [x] Add booking detail view (`/api/v1/tours/bookings/{booking_id}`)
+- [x] Create cancellation flow (`/api/v1/tours/bookings/{booking_id}/cancel`)
+- [x] Add rebooking capabilities
+- [x] Implement booking reminders
+- [x] Add messaging system for tour inquiries (`/api/v1/tours/bookings/{booking_id}/messages`)
+- [x] Show user's bundle bookings (`/api/v1/bundles/my-bundles`)
+
+**Litho Components:**
+- `Table` for booking history
+- `ModalPopup` for booking details
+- `Form` for modifications
+- `Lists` for booking timeline
+
+### Phase 6: Advanced Features (Week 6) ✅ **COMPLETED**
+**Tasks:**
+- [x] Add tour recommendations engine (using unified search trends)
+- [x] Implement group booking features
+- [x] Create bundle package builder (`/api/v1/bundles/`)
+- [x] Add weather integration for tours
+- [x] Implement live chat for inquiries
+- [x] Add tour tracking for active bookings
+- [x] Build review moderation tools (flag inappropriate reviews)
+- [x] Add advanced search filters (`/api/v1/search/filters`)
+- [x] Implement cross-domain search results (`/api/v1/search/all`)
+
+**Litho Components:**
+- `InfoBanner` for recommendations
+- `CustomModal` for group booking
+- `TextSlider` for testimonials
+- `Charts` for weather data
+
+---
+
+## Key User Flows
+
+### 1. Discovery Flow
+Home → Unified Search → Filter Results → Tour Detail → Book
+- **Alternative**: Home → Categories → Browse Tours → Filter → Detail → Book
+- **Bundle Flow**: Home → Search → Bundle Packages → Custom Bundle → Book
+
+### 2. Booking Flow  
+Tour Detail → Select Date → Add Participants → Review → Payment → Confirmation
+- **Bundle Booking**: Bundle Detail → Customize → Select Dates → Review → Payment → Confirmation
+
+### 3. Account Flow
+Login → My Bookings → Booking Detail → Modify/Cancel
+- **Extended**: My Account → Tours + Bundles + Favorites → Manage
+
+### 4. Support Flow
+Tour Detail → Questions → Live Chat → Book with Confidence
+- **Review Flow**: Post-Tour → Leave Review → Share Photos → Build Community
+
+### 5. Cross-selling Flow
+Tours → Bundle Suggestion → Add Accommodation → Add Vehicle → Complete Package
+
+---
+
+## Technical Implementation Notes
+
+### API Integration Priority
+1. **Core Tours**: `/tours/`, `/tours/featured`, `/tours/categories` 
+2. **Search**: `/search/all`, `/search/suggestions`, `/search/trending`
+3. **Reviews**: `/reviews/tour/{id}`, `/reviews/tour/{id}/stats`
+4. **Bundles**: `/bundles/`, `/bundles/{id}`
+5. **User Features**: `/tours/my-bookings`, `/favorites/`
+
+### Component Reuse Strategy
+- Leverage existing Litho components from TravelAgency theme
+- Create minimal custom wrappers for API data integration
+- Maintain consistent styling and motion patterns
+- Extend InfoBannerStyle05 for various tour card layouts
+
+### Performance Considerations
+- Implement React Query for caching and background updates
+- Use infinite scroll for tour listings (limit/offset pagination)
+- Add skeleton loading states
+- Optimize images and lazy-load content
+- Cache search suggestions and trending data
+
+### Cross-Domain Integration
+- Unified search combines tours, accommodation, and vehicles
+- Bundle packages create complete travel experiences
+- Shared favorites and review systems
+- Consistent user authentication across domains
+
+---
+
+## Success Metrics
+- **Conversion Rate**: Tour detail → Booking completion
+- **Cross-sell Rate**: Single tour → Bundle package adoption  
+- **User Engagement**: Time on tour pages, review completion
+- **Search Effectiveness**: Search → Booking conversion
+- **Customer Satisfaction**: Review ratings and repeat bookings

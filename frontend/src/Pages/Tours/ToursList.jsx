@@ -6,7 +6,7 @@ import { m } from "framer-motion";
 
 // Components
 import Header, { HeaderNav, Menu } from "../../Components/Header/Header";
-import FooterStyle10 from "../../Components/Footers/FooterStyle10";
+import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import InfoBannerStyle05 from "../../Components/InfoBanner/InfoBannerStyle05";
 import Buttons from "../../Components/Button/Buttons";
 import { fadeIn } from "../../Functions/GlobalAnimations";
@@ -127,9 +127,9 @@ const ToursList = (props) => {
       </div>
 
       {/* Footer Start */}
-      <FooterStyle10
+      <FooterStyle01
         className="text-slateblue"
-        logo="/assets/img/webp/logo-neon-orange-white.webp"
+        theme="dark"
       />
       {/* Footer End */}
     </div>

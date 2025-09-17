@@ -10,7 +10,7 @@ import { m } from "framer-motion";
 import { Link as ScrollTo } from "react-scroll"
 
 // Components
-import Header, { HeaderNav, Menu, SearchBar, Topbar } from '../../Components/Header/Header';
+import Header, { HeaderNav, Menu, Topbar } from '../../Components/Header/Header';
 import HomeMenuData from '../../Components/Header/HomeMenuData';
 import AuthButtons from '../../Components/Header/AuthButtons';
 import SocialIcons from '../../Components/SocialIcon/SocialIcons';
@@ -19,67 +19,83 @@ import { fadeIn, fadeInRight, zoomIn } from "../../Functions/GlobalAnimations";
 import Clients from '../../Components/Clients/Clients';
 import InteractiveBanners12 from '../../Components/InteractiveBanners/InteractiveBanners12'
 import InteractiveBanners13 from '../../Components/InteractiveBanners/InteractiveBanners13';
+import InteractiveBanners04 from '../../Components/InteractiveBanners/InteractiveBanners04';
+import InteractiveBanners02 from '../../Components/InteractiveBanners/InteractiveBanners02';
+import InteractiveBanners06 from '../../Components/InteractiveBanners/InteractiveBanners06';
+import InfoBannerStyle05 from '../../Components/InfoBanner/InfoBannerStyle05';
+import PortfolioSlider from '../../Components/Portfolio/PortfolioSlider';
 import PortfolioBordered from '../../Components/Portfolio/PortfolioBordered';
 import InteractiveBanners01 from '../../Components/InteractiveBanners/InteractiveBanners01';
 import BlogMasonry from '../../Components/Blogs/BlogMasonry';
 import Instagram from '../../Components/Instagram/Instagram';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 import MouseMove from "../../Components/MouseMove";
+import UnifiedSearch from '../../Components/UnifiedSearch/UnifiedSearch';
+import Testimonials from '../../Components/Testimonials/Testimonials';
 
 // Data
 import { blogData } from '../../Components/Blogs/BlogData';
 import Brand from '../../Components/Header/Brand';
-const ClientData = [
-  { img: '/assets/img/webp/logo-white.webp', target: "_blank", link: '#' },
-  { img: '/assets/img/webp/logo-green-black.webp', target: "_blank", link: '#' },
-  { img: '/assets/img/webp/logo-yellow-ochre.webp', target: "_blank", link: '#' },
-  { img: '/assets/img/webp/logo-neon-orange-white.webp', target: "_blank", link: '#' }
-]
 
-const portfolioBorderedMasonryData = [
+// API Hooks
+import { useFeaturedTours } from '../../api/useTours';
+import { useFeaturedListings } from '../../api/useBnb';
+import { useProperties } from '../../api/useProperties';
+
+// Partner logos data for strategic partnerships section
+const partnerData = [
   {
-    title: "2BR Apartment, Kilimani",
-    img: "https://via.placeholder.com/800x1200",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/201"
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Kenya+Wildlife+Service",
+    target: "_blank",
+    link: "https://kws.go.ke"
   },
   {
-    title: "Townhouse, Runda",
-    img: "https://via.placeholder.com/800x798",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/202"
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Tourism+Board",
+    target: "_blank", 
+    link: "https://magicalkenya.com"
   },
   {
-    title: "Beach Villa, Diani",
-    img: "https://via.placeholder.com/800x1197",
-    category: ["properties"],
-    subtitle: "Kwale",
-    link: "/properties/203"
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Safari+Partners",
+    target: "_blank",
+    link: "#"
   },
   {
-    title: "Studio, Westlands",
-    img: "https://via.placeholder.com/800x1197",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/204"
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Hotel+Alliance",
+    target: "_blank",
+    link: "#"
   },
   {
-    title: "3BR Bungalow, Mtwapa",
-    img: "https://via.placeholder.com/800x798",
-    category: ["properties"],
-    subtitle: "Mombasa",
-    link: "/properties/205"
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Car+Rental+Co",
+    target: "_blank",
+    link: "#"
   },
   {
-    title: "Condo, Kileleshwa",
-    img: "https://via.placeholder.com/800x798",
-    category: ["properties"],
-    subtitle: "Nairobi",
-    link: "/properties/206"
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Investment+Group",
+    target: "_blank",
+    link: "#"
+  },
+  {
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Tech+Partners",
+    target: "_blank",
+    link: "#"
+  },
+  {
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Financial+Services",
+    target: "_blank",
+    link: "#"
+  },
+  {
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Insurance+Provider",
+    target: "_blank",
+    link: "#"
+  },
+  {
+    img: "https://via.placeholder.com/180x90/f8f9fa/6c757d?text=Local+Government",
+    target: "_blank",
+    link: "#"
   }
 ]
+
 
 const InteractiveBannersData = [
   {
@@ -135,10 +151,348 @@ const SocialIconsData = [
   }
 ]
 
+// Mock featured services for real platform domains
+const mockFeaturedServices = [
+  {
+    title: 'Safari & Tours',
+    img: 'https://via.placeholder.com/200x193/0EA5E9/FFFFFF?text=Tours',
+    icon: 'line-icon-Compass-3',
+    link: '/tours'
+  },
+  {
+    title: 'BnB Stays',
+    img: 'https://via.placeholder.com/200x193/10B981/FFFFFF?text=BnB',
+    icon: 'line-icon-Green-House',
+    link: '/bnb'
+  },
+  {
+    title: 'Property Listings',
+    img: 'https://via.placeholder.com/200x193/8B5CF6/FFFFFF?text=Properties',
+    icon: 'line-icon-Building',
+    link: '/properties'
+  },
+  {
+    title: 'Car Rentals',
+    img: 'https://via.placeholder.com/200x193/F59E0B/FFFFFF?text=Cars',
+    icon: 'line-icon-Car',
+    link: '/cars'
+  },
+  {
+    title: 'Investments',
+    img: 'https://via.placeholder.com/200x193/EF4444/FFFFFF?text=Invest',
+    icon: 'line-icon-Coin',
+    link: '/invest'
+  }
+]
+
 const blogMasonryData = blogData.filter((item) => item.blogType === "masonry").filter(item => item.category.includes("travelagency"));
 
 const HomeDecorPage = (props) => {
   const [activeSlide, setActiveSlide] = useState(0)
+  
+  // Load featured content from all domains
+  const { data: featuredTours, isLoading: toursLoading } = useFeaturedTours(4);
+  const { data: featuredBnb, isLoading: bnbLoading } = useFeaturedListings(4);
+  const { data: featuredProperties, isLoading: propertiesLoading } = useProperties({ limit: 4 });
+
+  // Mock tour data for display
+  const mockTourData = [
+    {
+      id: 1,
+      image: "https://via.placeholder.com/263x216/8B4513/FFFFFF?text=Masai+Mara+Safari",
+      price: 599,
+      duration: "3 Days",
+      title: "Masai Mara Wildlife Safari",
+      reviews: 42,
+      description: "Experience the Great Migration and Big Five in Kenya's premier game reserve"
+    },
+    {
+      id: 2,
+      image: "https://via.placeholder.com/263x216/228B22/FFFFFF?text=Mount+Kenya+Trek",
+      price: 899,
+      duration: "5 Days",
+      title: "Mount Kenya Climbing Adventure",
+      reviews: 28,
+      description: "Conquer Africa's second highest peak with expert guides"
+    },
+    {
+      id: 3,
+      image: "https://via.placeholder.com/263x216/4682B4/FFFFFF?text=Diani+Beach+Tour",
+      price: 399,
+      duration: "2 Days",
+      title: "Diani Beach & Marine Safari",
+      reviews: 67,
+      description: "Pristine beaches, coral reefs, and dhow sailing adventures"
+    },
+    {
+      id: 4,
+      image: "https://via.placeholder.com/263x216/CD853F/FFFFFF?text=Samburu+Safari",
+      price: 749,
+      duration: "4 Days",
+      title: "Samburu Cultural Safari",
+      reviews: 35,
+      description: "Unique wildlife and authentic Samburu cultural experiences"
+    },
+    {
+      id: 5,
+      image: "https://via.placeholder.com/263x216/FF6347/FFFFFF?text=Hell's+Gate",
+      price: 199,
+      duration: "1 Day",
+      title: "Hell's Gate National Park",
+      reviews: 89,
+      description: "Cycling, rock climbing, and geothermal wonders day trip"
+    },
+    {
+      id: 6,
+      image: "https://via.placeholder.com/263x216/9370DB/FFFFFF?text=Amboseli+Safari",
+      price: 649,
+      duration: "3 Days",
+      title: "Amboseli Elephant Safari",
+      reviews: 54,
+      description: "Majestic elephants with Mount Kilimanjaro backdrop"
+    }
+  ];
+
+  // Mock BnB data for display
+  const mockBnbData = [
+    {
+      id: 1,
+      image: "https://via.placeholder.com/440x577/FF69B4/FFFFFF?text=Luxury+Villa+Westlands",
+      price: 89,
+      duration: "night",
+      title: "Luxury Villa in Westlands",
+      reviews: 156,
+      description: "Modern 3BR villa with pool and garden in prime location"
+    },
+    {
+      id: 2,
+      image: "https://via.placeholder.com/440x577/20B2AA/FFFFFF?text=Beachfront+House+Diani",
+      price: 129,
+      duration: "night", 
+      title: "Beachfront House Diani",
+      reviews: 89,
+      description: "Stunning ocean views with direct beach access"
+    },
+    {
+      id: 3,
+      image: "https://via.placeholder.com/440x577/32CD32/FFFFFF?text=Cozy+Cottage+Karen",
+      price: 65,
+      duration: "night",
+      title: "Cozy Cottage in Karen",
+      reviews: 203,
+      description: "Peaceful retreat near Giraffe Centre and Elephant Orphanage"
+    },
+    {
+      id: 4,
+      image: "https://via.placeholder.com/440x577/FF4500/FFFFFF?text=Modern+Apartment+Nyali",
+      price: 75,
+      duration: "night",
+      title: "Modern Apartment Nyali",
+      reviews: 124,
+      description: "Contemporary 2BR with ocean breeze and city access"
+    },
+    {
+      id: 5,
+      image: "https://via.placeholder.com/440x577/9932CC/FFFFFF?text=Safari+Lodge+Nakuru",
+      price: 95,
+      duration: "night",
+      title: "Safari Lodge Near Lake Nakuru",
+      reviews: 67,
+      description: "Authentic safari experience with wildlife viewing"
+    },
+    {
+      id: 6,
+      image: "https://via.placeholder.com/440x577/FFD700/FFFFFF?text=Coastal+Villa+Kilifi",
+      price: 110,
+      duration: "night",
+      title: "Coastal Villa in Kilifi",
+      reviews: 98,
+      description: "Tropical paradise with private beach and water sports"
+    }
+  ];
+
+  // Mock car rental data for display
+  const mockCarData = [
+    {
+      id: 1,
+      image: "https://via.placeholder.com/210x235/DC143C/FFFFFF?text=Toyota+RAV4",
+      price: 45,
+      duration: "day",
+      title: "Toyota RAV4 - City Explorer",
+      reviews: 234,
+      description: "Perfect for city drives and short trips, automatic transmission"
+    },
+    {
+      id: 2,
+      image: "https://via.placeholder.com/210x235/8B4513/FFFFFF?text=Land+Cruiser",
+      price: 89,
+      duration: "day",
+      title: "Toyota Land Cruiser - Safari Beast",
+      reviews: 187,
+      description: "Ultimate safari vehicle with 4WD and roof hatch for game viewing"
+    },
+    {
+      id: 3,
+      image: "https://via.placeholder.com/210x235/4169E1/FFFFFF?text=Nissan+X-Trail",
+      price: 55,
+      duration: "day", 
+      title: "Nissan X-Trail - Adventure Ready",
+      reviews: 156,
+      description: "Comfortable SUV for family adventures and rough terrain"
+    },
+    {
+      id: 4,
+      image: "https://via.placeholder.com/210x235/228B22/FFFFFF?text=Subaru+Forester",
+      price: 65,
+      duration: "day",
+      title: "Subaru Forester - All Terrain",
+      reviews: 143,
+      description: "Reliable AWD for mountain roads and national parks"
+    },
+    {
+      id: 5,
+      image: "https://via.placeholder.com/210x235/FF6347/FFFFFF?text=Mitsubishi+Pajero",
+      price: 75,
+      duration: "day",
+      title: "Mitsubishi Pajero - Expedition",
+      reviews: 98,
+      description: "Heavy-duty 4WD for serious off-road adventures"
+    },
+    {
+      id: 6,
+      image: "https://via.placeholder.com/210x235/9370DB/FFFFFF?text=Honda+CR-V",
+      price: 50,
+      duration: "day",
+      title: "Honda CR-V - Comfort Cruiser",
+      reviews: 201,
+      description: "Smooth ride for long distances with excellent fuel economy"
+    }
+  ];
+
+  // Mock property data for display
+  const mockPropertyData = [
+    {
+      id: 1,
+      image: "https://via.placeholder.com/600x400/8B4513/FFFFFF?text=Luxury+Apartment+Westlands",
+      price: 25000000,
+      title: "Luxury Apartment in Westlands",
+      subtitle: "3BR • 2BA • 150 sqm",
+      description: "Modern apartment with city views and premium finishes",
+      link: "/properties/1"
+    },
+    {
+      id: 2,
+      image: "https://via.placeholder.com/600x400/228B22/FFFFFF?text=Villa+Karen+Estate",
+      price: 45000000,
+      title: "Executive Villa in Karen",
+      subtitle: "5BR • 4BA • 300 sqm",
+      description: "Spacious family home with garden and swimming pool",
+      link: "/properties/2"
+    },
+    {
+      id: 3,
+      image: "https://via.placeholder.com/600x400/4682B4/FFFFFF?text=Beachfront+Villa+Diani",
+      price: 35000000,
+      title: "Beachfront Villa in Diani",
+      subtitle: "4BR • 3BA • 250 sqm",
+      description: "Stunning ocean views with private beach access",
+      link: "/properties/3"
+    },
+    {
+      id: 4,
+      image: "https://via.placeholder.com/600x400/DC143C/FFFFFF?text=Penthouse+Kilimani",
+      price: 55000000,
+      title: "Penthouse in Kilimani",
+      subtitle: "4BR • 3BA • 200 sqm",
+      description: "Top floor luxury with panoramic city views",
+      link: "/properties/4"
+    }
+  ];
+
+
+  // Transform tour data for InfoBannerStyle05
+  const toursToDisplay = featuredTours && featuredTours.length > 0 ? featuredTours : mockTourData;
+  const transformedTours = toursToDisplay?.map(tour => ({
+    img: tour.image || "https://via.placeholder.com/263x216",
+    packageprice: tour.price ? `$${tour.price}` : "From $299",
+    days: tour.duration || "3 Days",
+    title: tour.title || tour.name || "Safari Adventure",
+    reviews: tour.reviews ? `${tour.reviews} Reviews` : "25 Reviews",
+    link: `/tours/${tour.id}`
+  })) || [];
+
+  // Transform BnB data for InteractiveBanners04
+  const bnbToDisplay = featuredBnb && featuredBnb.length > 0 ? featuredBnb : mockBnbData;
+  const transformedBnb = bnbToDisplay?.slice(0, 4).map(bnb => ({
+    img: bnb.image || bnb.images?.[0] || "https://via.placeholder.com/440x577",
+    title: bnb.title || bnb.name || "Cozy Accommodation",
+    content: `${bnb.description || "Premium accommodation with modern amenities"} • $${bnb.price || 65}/${bnb.duration || "night"} • ${bnb.reviews || 50} Reviews`,
+    btnTitle: "Book Now",
+    btnLink: `/bnb/${bnb.id}`
+  })) || [];
+
+  // Transform car data for InteractiveBanners02
+  const transformedCars = mockCarData?.slice(0, 6).map(car => ({
+    img: car.image || "https://via.placeholder.com/210x235",
+    subtitle: `$${car.price || 45}/${car.duration || "day"}`,
+    title: car.title || car.name || "Reliable Vehicle",
+    btnTitle: "Rent Now",
+    btnLink: `/cars/${car.id}`
+  })) || [];
+
+  // Transform property data for PortfolioSlider
+  const transformedProperties = mockPropertyData?.map(property => ({
+    img: property.image || "https://via.placeholder.com/600x400",
+    title: property.title || "Premium Property",
+    subtitle: property.subtitle || "Luxury Living",
+    link: property.link || `/properties/${property.id}`
+  })) || [];
+
+
+  // Transform API data for InteractiveBanners - Unified Platform Experience
+  const transformedBanners = [
+    {
+      subtitle: "DISCOVER",
+      title: "Epic safaris and cultural adventures that create memories for a lifetime",
+      btnLink: "/tours",
+      img: featuredTours?.[0]?.image || "/assets/img/webp/safari-adventure.webp",
+      icon: "line-icon-Compass-3",
+      serviceIcon: "line-icon-Compass-3"
+    },
+    {
+      subtitle: "DRIVE",
+      title: "Premium vehicles that take you anywhere, from city streets to safari trails",
+      btnLink: "/cars",
+      img: "/assets/img/webp/luxury-vehicle.webp",
+      icon: "line-icon-Car",
+      serviceIcon: "line-icon-Car"
+    },
+    {
+      subtitle: "INVEST", 
+      title: "Smart wealth-building opportunities that grow your money while you travel",
+      btnLink: "/invest",
+      img: "/assets/img/webp/investment-growth.webp",
+      icon: "line-icon-Coin",
+      serviceIcon: "line-icon-Coin"
+    },
+    {
+      subtitle: "SLEEP",
+      title: "Stunning accommodations where luxury meets comfort in every destination",
+      btnLink: "/rentals",
+      img: featuredBnb?.[0]?.images?.[0] || "/assets/img/webp/luxury-accommodation.webp",
+      icon: "line-icon-Green-House",
+      serviceIcon: "line-icon-Green-House"
+    },
+    {
+      subtitle: "OWN",
+      title: "Premium properties and developments in prime locations for investment and living",
+      btnLink: "/properties",
+      img: "/assets/img/webp/premium-properties.webp",
+      icon: "line-icon-Building",
+      serviceIcon: "line-icon-Building"
+    }
+  ];
+
   return (
     <div style={props.style}>
       {/* Header start */}
@@ -155,34 +509,6 @@ const HomeDecorPage = (props) => {
                     <i className="far fa-envelope mr-[10px] text-md relative text-red-600"></i>
                     <a aria-label="gmail for link" href="mailto:info@yourdomain.com" className="hover:text-darkgray">info@yourdomain.com</a>
                   </span>
-                  <span className="border-l border-[#0000001a] py-[13px] px-[18px] md:pr-0 text-sm flex items-center sm:hidden">
-                    <i className="far fa-clock mr-[10px] text-md relative text-red-600"></i>
-                    Mon - Fri: 10:00 - 22:00
-                  </span>
-                </div>
-                <div className="header-language pl-0 text-[17px] align-middle inline-block md:hidden">
-                  <Dropdown className="border-l border-r border-solid border-[#0000001a] h-full text-[#828282]">
-                    <Dropdown.Toggle className="rounded-none uppercase w-auto h-full font-normal text-xs leading-[11px] border-[0px] m-0 dropdown-toggle after:none sm-w-100 items-center flex px-[18px] py-[12px] bg-transparent" id="dropdown-basic">
-                      <span className="icon-country w-[16px] h-[16px] inline-block my-0 mr-[10px] ml-0"><img width="16px" height="16px" src="/assets/img/webp/usa.webp" alt="" /></span>EN <i className="fas fa-angle-down ml-[5px] align-middle relative after:content-[' ']"></i>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item className="dropdown-items bg-transparent hover:bg-transparent p-0 border-0 m-0 flex items-center justify-start" href="#/action-1">
-                        <span className="icon-country w-[16px] h-[16px] inline-block my-0 mr-[10px] ml-[5px]"><img width="16px" height="16px" src="/assets/img/webp/usa.webp" alt="" /></span>English
-                      </Dropdown.Item>
-                      <Dropdown.Item className="dropdown-items bg-transparent hover:bg-transparent p-0 border-0 m-0 flex items-center justify-start" href="#/action-2">
-                        <span className="icon-country w-[16px] h-[16px] inline-block my-0 mr-[10px] ml-[5px]"><img width="16px" height="16px" src="/assets/img/webp/england.webp" alt="" /></span>England
-                      </Dropdown.Item>
-                      <Dropdown.Item className="dropdown-items bg-transparent hover:bg-transparent p-0 border-0 m-0 flex items-center justify-start" href="#/action-3">
-                        <span className="icon-country w-[16px] h-[16px] inline-block my-0 mr-[10px] ml-[5px]"><img width="16px" height="16px" src="/assets/img/webp/france.webp" alt="" /></span>France
-                      </Dropdown.Item>
-                      <Dropdown.Item className="dropdown-items bg-transparent hover:bg-transparent p-0 border-0 m-0 flex items-center justify-start" href="#/action-4">
-                        <span className="icon-country w-[16px] h-[16px] inline-block my-0 mr-[10px] ml-[5px]"><img width="16px" height="16px" src="/assets/img/webp/russian.webp" alt="" /></span>Russian
-                      </Dropdown.Item>
-                      <Dropdown.Item className="dropdown-items bg-transparent hover:bg-transparent p-0 border-0 m-0 flex items-center justify-start" href="#/action-5">
-                        <span className="icon-country w-[16px] h-[16px] inline-block my-0 mr-[10px] ml-[5px]"><img width="16px" height="16px" src="/assets/img/webp/spain.webp" alt="" /></span>Spain
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
                 </div>
               </Col>
             </Row>
@@ -205,7 +531,6 @@ const HomeDecorPage = (props) => {
             <Menu {...props} data={HomeMenuData} />
           </Navbar.Collapse>
           <Col className="col-auto text-right !pr-0">
-            <SearchBar />
             <AuthButtons />
           </Col>
         </HeaderNav>
@@ -458,31 +783,35 @@ const HomeDecorPage = (props) => {
       </section>
       {/* Section End */}
 
+      {/* Unified Search Section Start */}
+      <UnifiedSearch />
+      {/* Unified Search Section End */}
+
       {/* Section Start */}
       <section className="py-[90px] md:py-[75px] sm:py-[50px] border-b border-mediumgray">
         <Container>
           <Row className="row row-cols-1 row-cols-lg-4 row-cols-sm-2 justify-center gap-y-10">
             <Col>
-              <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.2, duration: 1.2 } }}>
+              <m.div className="flex items-center" {...fadeIn} transition={{ delay: 0.2, duration: 1.2 }}>
                 <i className="line-icon-Headset text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div> <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Expert support</div> <span>Contact support team</span>
                 </div>
               </m.div>
             </Col>
             <Col>
-              <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.4, duration: 1.2 } }}>
+              <m.div className="flex items-center" {...fadeIn} transition={{ delay: 0.4, duration: 1.2 }}>
                 <i className="line-icon-Like-2 text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div> <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Perfect quality</div> <span>Perfect design quality</span> </div>
               </m.div>
             </Col>
             <Col>
-              <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.6, duration: 1.2 } }}>
+              <m.div className="flex items-center" {...fadeIn} transition={{ delay: 0.6, duration: 1.2 }}>
                 <i className="line-icon-Shield text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div> <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Security checkout</div> <span>Safe and trustworthy</span> </div>
               </m.div>
             </Col>
             <Col>
-              <m.div className="flex items-center" {...{ ...fadeIn, transition: { delay: 0.8, duration: 1.2 } }}>
+              <m.div className="flex items-center" {...fadeIn} transition={{ delay: 0.8, duration: 1.2 }}>
                 <i className="line-icon-Coin text-[35px] text-red-600 mr-[30px] lg:mr-[25px] inline-block"></i>
                 <div>
                   <div className="text-darkgray leading-none font-medium text-xmd mb-[5px]">Instant discounts</div> <span>Use your coupon now</span> </div>
@@ -493,161 +822,243 @@ const HomeDecorPage = (props) => {
       </section>
       {/* Section End */}
 
-      {/* Parallax Start */}
-      <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]" style={{ backgroundImage: 'url(/assets/img/webp/home-decor-bg-img-02.webp)' }}>
-        <Container>
-          <Row className="justify-center items-center">
-            <Col lg={6} md={10} className="relative mb-[20px] md:mb-32 sm:mb-40 xs:mb-0">
-              <div className="relative">
-                <Parallax className="lg-no-parallax w-[70%] mb-16" speed={0}> <img alt="" src="https://via.placeholder.com/700x1027" className="w-full" width="385.34" height="565.34" /> </Parallax>
-                <Parallax className="lg-no-parallax flex justify-center items-center w-[55%] bg-no-repeat absolute bottom-0 right-[15px] lg:!ml-auto lg:!top-[145px]" speed={20}>
-                  <img alt="" src="https://via.placeholder.com/317x477" width="317" height="477" />
-                </Parallax>
-              </div>
-            </Col>
-            <Col lg={{ span: 5, offset: 1 }} md={10}>
-              <div className="font-serif text-md font-medium mb-[30px] flex">
-                <span className="w-[40px] h-[1px] bg-red-600 opacity-70 self-center mr-[20px] shrink-0"></span>
-                <div className="grow-[1]"> <span className="text-red-600 uppercase">About Buckler Investments Group</span> </div>
-              </div>
-              <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">A unified platform for investments, Properties, BnB, Tours and Car-Hire</h1>
-              <p className="mb-[25px] w-[80%] lg:w-full">We connect investors and travellers with verified opportunities across East Africa — curated properties, flexible investment products, authentic tours, short-stay BnB stays and reliable vehicles.</p>
-              <div className="flex flex-wrap gap-3 mt-[20px]">
-                <Buttons to="/bnb" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="BnB" />
-                <Buttons to="/tours" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Tours" />
-                {/* Replaced real properties link with coming soon page */}
-                {/* <Buttons to="/properties/list" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Properties" /> */}
-                <Buttons to="/properties" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Properties" />
-                {/* Replaced real invest link with coming soon page */}
-                {/* <Buttons to="/invest/home" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Invest" /> */}
-                <Buttons to="/invest" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Invest" />
-                {/* Replaced real cars link with coming soon page */}
-                {/* <Buttons to="/cars/list" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Car-Hire" /> */}
-                <Buttons to="/cars" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Car-Hire" />
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-      {/* Parallax End */}
 
-      {/* Section Start */}
-      <section id="specialization" className="bg-[#f9f6f3] py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
-        <Container>
-          <Row className="justify-center">
-            <Col md={6} className="text-center mb-[4.5rem] md:mb-12">
-              <div className="flex flex-row items-center justify-center text-center mb-[10px]">
-                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
-                <div className="font-serif text-xmd text-red-600 px-[10px]">our domains</div>
-                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
-              </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">Invest • Property • BnB • Tours • Car Hire</h2>
-            </Col>
-          </Row>
-        </Container>
-        <Container>
-          <InteractiveBanners12 grid="gap-y-10 justify-center" animation={fadeIn} animationDelay={0.2} />
-        </Container>
-      </section>
-      {/* Section End */}
-
-      {/* Section Start */}
+      {/* Featured Services Section Start */}
       <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
         <Container>
           <Row className="justify-center">
             <Col md={6} className="text-center mb-[77px] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
                 <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
-                <div className="font-serif text-xmd text-red-600 px-[10px]">featured categories</div>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">featured services</div>
                 <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">FEATURED CATEGORIES</h2>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">FEATURED SERVICES</h2>
             </Col>
           </Row>
-          <InteractiveBanners13 grid="row row-cols-1 row-cols-lg-4 row-cols-sm-2 gap-y-10 items-center" animation={zoomIn} animationTransition="circOut" animationDuration={1} />
+          <InteractiveBanners13 
+            data={mockFeaturedServices}
+            grid="row row-cols-1 row-cols-lg-4 row-cols-sm-2 gap-y-10 items-center" 
+            animation={zoomIn} 
+            animationTransition="circOut" 
+            animationDuration={1} 
+          />
         </Container>
       </section>
-      {/* Section End */}
+      {/* Featured Services Section End */}
 
-      {/* Section Start */}
-      <section className="bg-lightgray">
-        <Container fluid>
-          <Row>
-            <m.div
-              className="bg-cover bg-center md:h-[450px] xs:h-[300px] col-xl-6 col-lg-4"
-              style={{ backgroundImage: `url("https://via.placeholder.com/1024x903")` }} {...fadeInRight} ></m.div>
-            <Col xl={6} lg={8}>
-              <Row>
-                <m.div
-                  className="bg-cover bg-center xs:h-[300px] order-1 col-sm-6 order-sm-1"
-                  style={{ backgroundImage: `url("https://via.placeholder.com/700x617")` }} {...{ ...fadeIn, transition: { delay: 0.4 } }}></m.div>
-                <m.div
-                  className="px-28 py-32 xl:px-12 xl:py-16 md:py-24 bg-[#f9f6f3] bg-no-repeat bg-[right_5px_bottom_-25px] order-2 col-sm-6 order-sm-2"
-                  style={{ backgroundImage: `url("https://via.placeholder.com/140x153")` }} {...{ ...fadeIn, transition: { delay: 0.5 } }} >
-                  <span className="font-serif font-semibold text-darkgray text-lg mb-[20px] block"> Featured BnB stays </span>
-                  <p className="mb-[30px]"> Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore. </p>
-                  <Buttons className="btn-fill font-medium font-serif uppercase rounded-none" themeColor="#bf8c4c" color="#fff" size="sm" title="Explore BnB" to="/rentals" />
-                </m.div>
-                <m.div
-                  className="px-28 py-32 xl:px-12 xl:py-16 md:py-24 bg-[#f9f6f3] bg-no-repeat bg-[right_25px_bottom_-35px] order-4 col-sm-6 order-sm-3"
-                  style={{ backgroundImage: `url("https://via.placeholder.com/168x172")`, }} {...{ ...fadeIn, transition: { delay: 0.8 } }} >
-                  <span className="font-serif font-semibold text-darkgray text-lg mb-[20px] block"> Investment products </span>
-                  <p className="mb-[30px]"> Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore. </p>
-                  <Buttons className="btn-fill font-medium font-serif uppercase rounded-none" themeColor="#bf8c4c" color="#fff" size="sm" title="View plans" to="/invest" />
-                </m.div>
-                <m.div
-                  className="bg-cover bg-center xs:h-[300px] order-3 col-sm-6 order-sm-4"
-                  style={{ backgroundImage: `url("https://via.placeholder.com/700x617")` }} {...{ ...fadeIn, transition: { delay: 0.7 } }} ></m.div>
-              </Row>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-      {/* Section End */}
-
-      {/* Section Start */}
-      <section className="border-b border-mediumgray py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+      {/* Tours Section Start */}
+      <section id="tours" className="bg-[#f9f6f3] py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
         <Container>
-          <Clients grid="row-cols-1 row-cols-md-4 row-cols-sm-2 row-cols-lg-4 gap-y-[40px]" theme="client-logo-style-02" data={ClientData} animation={fadeIn} animationDelay={0.1} />
-        </Container>
-      </section>
-      {/* Section End */}
-
-      {/* Section Start */}
-      <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
-        <Container fluid>
           <Row className="justify-center">
-            <Col md={6} className="col-12 text-center mb-[4.5rem] md:mb-12">
+            <Col md={6} className="text-center mb-[4.5rem] md:mb-12">
               <div className="flex flex-row items-center justify-center text-center mb-[10px]">
                 <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
-                <div className="font-serif text-xmd text-red-600 px-[10px]">latest updates</div>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">featured tours</div>
                 <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
               </div>
-              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">LATEST LISTINGS</h2>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">SAFARI & ADVENTURE TOURS</h2>
             </Col>
           </Row>
-          <Row className="justify-center">
-            <Col xl={9} lg={11}>
-              <PortfolioBordered
-                overlay={[" #828282", "#fff", "#f9f6f3", "#fff", "#828282"]}
-                grid="grid grid-3col xl-grid-3col lg-grid-3col md-grid-2col sm-grid-2col xs-grid-1col gutter-large text-center"
-                data={portfolioBorderedMasonryData} />
-            </Col>
-            <Col className="col-12 text-center mt-20">
-              <Buttons ariaLabel="view all products" to="/properties" className="mx-3 font-medium font-serif uppercase tracking-[1px] hover:text-white rounded-none md:mb-[15px] bg-[#fff]" color="#BF8C4C" size="lg" themeColor="#BF8C4C" title="view all products" />
+        </Container>
+        <Container>
+          <InfoBannerStyle05
+            data={transformedTours}
+            animation={fadeIn}
+            animationDelay={0.2}
+            carouselOption={{
+              slidesPerView: 1,
+              spaceBetween: 30,
+              loop: true,
+              autoplay: { delay: 3000, disableOnInteraction: false },
+              breakpoints: {
+                768: { slidesPerView: 2 },
+                992: { slidesPerView: 3 },
+                1200: { slidesPerView: 4 }
+              }
+            }}
+          />
+          <Row className="justify-center mt-12">
+            <Col className="text-center">
+              <Buttons 
+                to="/tours" 
+                className="btn-fancy btn-fill font-medium font-serif uppercase rounded-none" 
+                themeColor="#232323" 
+                color="#fff" 
+                size="lg" 
+                title="View All Tours" 
+              />
             </Col>
           </Row>
         </Container>
       </section>
-      {/* Section End */}
+      {/* Tours Section End */}
 
-      {/* Section Start */}
-      <section className="overflow-hidden">
-        <Container fluid className="px-0">
-          <InteractiveBanners01 grid="row-cols-1" data={InteractiveBannersData} animation={fadeIn} />
+      {/* BnB Section Start */}
+      <section id="bnb" className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+        <Container>
+          <Row className="justify-center">
+            <Col md={6} className="text-center mb-[4.5rem] md:mb-12">
+              <div className="flex flex-row items-center justify-center text-center mb-[10px]">
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">featured accommodations</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+              </div>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">PREMIUM BNB STAYS</h2>
+            </Col>
+          </Row>
+        </Container>
+        <Container>
+          <InteractiveBanners04
+            data={transformedBnb}
+            overlay={["#0039e3d9", "#4132e0d9", "#5e28ddd9", "#741bd9d9"]}
+            animation={fadeIn}
+            animationDelay={0.3}
+            grid="row-cols-1 row-cols-lg-4 row-cols-md-2 gap-y-10"
+          />
+          <Row className="justify-center mt-12">
+            <Col className="text-center">
+              <Buttons 
+                to="/bnb" 
+                className="btn-fancy btn-fill font-medium font-serif uppercase rounded-none" 
+                themeColor="#232323" 
+                color="#fff" 
+                size="lg" 
+                title="View All Accommodations" 
+              />
+            </Col>
+          </Row>
         </Container>
       </section>
-      {/* Section End */}
+      {/* BnB Section End */}
+
+      {/* Premium Vehicle Rentals Section Start */}
+      <section id="cars" className="bg-[#f9f6f3] py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+        <Container>
+          <Row className="justify-center">
+            <Col md={6} className="text-center mb-[4.5rem] md:mb-12">
+              <div className="flex flex-row items-center justify-center text-center mb-[10px]">
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">premium fleet</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+              </div>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">PREMIUM VEHICLE RENTALS</h2>
+            </Col>
+          </Row>
+        </Container>
+        <Container>
+          <InteractiveBanners02
+            data={transformedCars}
+            animation={fadeIn}
+            animationDelay={0.3}
+            carousalOption={{
+              slidesPerView: 1,
+              spaceBetween: 30,
+              loop: true,
+              autoplay: { delay: 4000, disableOnInteraction: false },
+              breakpoints: {
+                768: { slidesPerView: 2 },
+                992: { slidesPerView: 3 },
+                1200: { slidesPerView: 4 }
+              }
+            }}
+          />
+          <Row className="justify-center mt-12">
+            <Col className="text-center">
+              <Buttons 
+                to="/cars" 
+                className="btn-fancy btn-fill font-medium font-serif uppercase rounded-none" 
+                themeColor="#232323" 
+                color="#fff" 
+                size="lg" 
+                title="View All Vehicles" 
+              />
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      {/* Premium Vehicle Rentals Section End */}
+
+      {/* Property Listings Section Start */}
+      <section id="properties" className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+        <Container>
+          <Row className="justify-center">
+            <Col md={6} className="text-center mb-[4.5rem] md:mb-12">
+              <div className="flex flex-row items-center justify-center text-center mb-[10px]">
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">premium properties</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+              </div>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">LUXURY PROPERTY LISTINGS</h2>
+            </Col>
+          </Row>
+        </Container>
+        <Container>
+          <PortfolioSlider
+            data={transformedProperties}
+            overlay={["#0039e3d9", "#4132e0d9", "#5e28ddd9", "#741bd9d9"]}
+            animation={fadeIn}
+            carousalOption={{
+              slidesPerView: 1,
+              spaceBetween: 30,
+              loop: true,
+              autoplay: { delay: 4500, disableOnInteraction: false },
+              breakpoints: {
+                768: { slidesPerView: 2 },
+                992: { slidesPerView: 3 },
+                1200: { slidesPerView: 4 }
+              }
+            }}
+          />
+          <Row className="justify-center mt-12">
+            <Col className="text-center">
+              <Buttons 
+                to="/properties" 
+                className="btn-fancy btn-fill font-medium font-serif uppercase rounded-none" 
+                themeColor="#232323" 
+                color="#fff" 
+                size="lg" 
+                title="View All Properties" 
+              />
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      {/* Property Listings Section End */}
+
+
+
+
+
+      {/* Unified Platform Section Start */}
+      <section className="overflow-hidden bg-gradient-to-b from-[#fff] to-[#f8f9fa] py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+        <Container>
+          <Row className="justify-center">
+            <Col md={10} className="text-center mb-[4.5rem] md:mb-12">
+              <div className="flex flex-row items-center justify-center text-center mb-[15px]">
+                <span className="w-[30px] h-[1px] bg-gradient-to-r from-transparent to-red-600"></span>
+                <div className="font-serif text-lg text-red-600 px-[15px] font-medium">ONE PLATFORM, ENDLESS POSSIBILITIES</div>
+                <span className="w-[30px] h-[1px] bg-gradient-to-l from-transparent to-red-600"></span>
+              </div>
+              <h2 className="heading-4 font-serif font-bold text-darkgray uppercase tracking-[-1px] mb-[25px]">
+                YOUR COMPLETE JOURNEY STARTS HERE
+              </h2>
+              <p className="text-xl leading-[32px] lg:text-lg lg:leading-[28px] text-slate-600 max-w-4xl mx-auto">
+                <span className="text-red-600 font-semibold">Discover</span> breathtaking destinations, 
+                <span className="text-red-600 font-semibold">drive</span> in comfort with premium vehicles, 
+                <span className="text-red-600 font-semibold">invest</span> in your future with smart opportunities, 
+                <span className="text-red-600 font-semibold">sleep</span> peacefully in luxury accommodations, 
+                and <span className="text-red-600 font-semibold">own</span> premium properties in prime locations — 
+                all seamlessly integrated in one intelligent platform.
+              </p>
+            </Col>
+          </Row>
+        </Container>
+        <Container fluid className="px-0">
+          <InteractiveBanners01 grid="row-cols-1 row-cols-lg-5 row-cols-md-3 row-cols-sm-2" data={transformedBanners} animation={fadeIn} />
+        </Container>
+      </section>
+      {/* Unified Platform Section End */}
 
       {/* Section Start */}
       <section className="bg-[#f9f6f3] py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
@@ -692,11 +1103,157 @@ const HomeDecorPage = (props) => {
       </m.section>
       {/* Section Start */}
 
+      {/* Partners Section Start */}
+      <m.section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] bg-lightgray" {...fadeIn}>
+        <Container>
+          <Row className="justify-center">
+            <Col md={8} className="col-12 text-center mb-[4.5rem] md:mb-12">
+              <div className="flex flex-row items-center justify-center text-center mb-[10px]">
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+                <div className="font-serif text-xmd text-red-600 px-[10px]">trusted partnerships</div>
+                <span className="w-[25px] h-[1px] bg-red-600 opacity-40"></span>
+              </div>
+              <h2 className="heading-5 font-serif font-bold text-darkgray uppercase tracking-[-1px]">OUR STRATEGIC PARTNERS</h2>
+              <p className="text-lg leading-[28px] lg:text-xmd lg:leading-[22px] text-slate-500">
+                Collaborating with industry leaders to provide exceptional travel and investment experiences
+              </p>
+            </Col>
+          </Row>
+          <Row className="justify-center">
+            <Col>
+              <Clients 
+                carousel={true}
+                carouselOption={{
+                  slidesPerView: 5,
+                  spaceBetween: 30,
+                  loop: true,
+                  autoplay: { 
+                    delay: 3000, 
+                    disableOnInteraction: false,
+                    reverseDirection: true 
+                  },
+                  speed: 5000,
+                  breakpoints: { 
+                    1200: { slidesPerView: 5 }, 
+                    992: { slidesPerView: 4 }, 
+                    768: { slidesPerView: 3 },
+                    576: { slidesPerView: 2 }
+                  }
+                }}
+                theme="client-logo-style-02" 
+                data={partnerData} 
+                animation={fadeIn} 
+                animationDelay={0.1} 
+              />
+            </Col>
+          </Row>
+        </Container>
+      </m.section>
+      {/* Partners Section End */}
+
+      {/* Review Section Start */}
+      <m.section
+        className="py-[130px] overflow-hidden border-t border-mediumgray bg-gradient-to-b from-[#fff] via-[#fdfdfd] to-[#f7f7f7] lg:py-[90px] md:py-[75px] sm:py-[50px]"
+        {...fadeIn}
+      >
+        <Container>
+          <m.div
+            className="row mb-20 md:mb-16 items-center"
+            {...{ ...fadeIn, transition: { delay: 0.2 } }}
+          >
+            <Col
+              lg={6}
+              md={7}
+              className="text-left sm:text-center sm:mb-[10px]"
+            >
+              <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase mb-[5px] -tracking-[1px]">
+                CUSTOMER REVIEWS
+              </h2>
+              <p className="m-0 block">
+                Read testimonials from our happy customers
+              </p>
+            </Col>
+            <Col lg={6} md={5} className="text-right sm:text-center">
+              <Buttons
+                ariaLabel=" link for reviews"
+                href="#"
+                className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-darkgray hover:text-darkgray"
+                color="#232323"
+                title="See all reviews"
+                size="xl"
+              />
+            </Col>
+          </m.div>
+          <m.div
+            className="row"
+            {...{ ...fadeIn, transition: { delay: 0.4 } }}
+          >
+            <Testimonials
+              grid="row-cols-1 row-cols-md-2 row-cols-lg-3 justify-center gap-y-10"
+              theme="testimonials-style-05"
+              className="swiper-navigation-01 swiper-navigation-dark black-move p-[15px] mb-24 xs:mb-10"
+              data={[
+                {
+                  name: "Jeremy Dupont",
+                  content: "Simply the great designs and best theme for WooCommerce, loading fast, customisable and easy to use.",
+                  img: "https://via.placeholder.com/125x125",
+                  company: "Google Marketing",
+                  rating: 5,
+                },
+                {
+                  name: "Herman Miller",
+                  content: "There are design companies and then there are user experience, design, consulting, interface design.",
+                  img: "https://via.placeholder.com/125x125",
+                  company: "ThemeZaa Design",
+                  rating: 5,
+                },
+                {
+                  name: "Alexander Harvard",
+                  content: "I wanted to hire the best and after looking at several other companies, I knew Jacob was the perfect guy.",
+                  img: "https://via.placeholder.com/125x125",
+                  company: "Microsoft Corporation",
+                  rating: 5,
+                },
+              ]}
+              carousel={true}
+              carouselOption={{
+                slidesPerView: 1,
+                loop: true,
+                spaceBetween: 30,
+                autoplay: { delay: 3000, disableOnInteraction: false },
+                keyboard: { enabled: true, onlyInViewport: true },
+                navigation: false,
+                breakpoints: {
+                  992: { slidesPerView: 3 },
+                  768: { slidesPerView: 2 },
+                },
+              }}
+            />
+          </m.div>
+          <m.div
+            className="row justify-center"
+            {...{ ...fadeIn, transition: { delay: 0.6 } }}
+          >
+            <Col lg={6} md={8} className="text-center">
+              <m.img
+                width={555}
+                height={43}
+                src="/assets/img/webp/home-travel-agency-trustpilot.webp"
+                alt="trustpilot"
+                {...{ ...zoomIn, transition: { duration: 0.7 } }}
+              />
+            </Col>
+          </m.div>
+        </Container>
+      </m.section>
+      {/* Review Section End */}
+
       {/* Footer Start */}
       <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" language="en" />
       {/* Footer End */}
 
-    </div>)
+    </div>
+  )
 }
 
 export default HomeDecorPage
