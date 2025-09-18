@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header'
-import SideButtons from "../../Components/SideButtons";
 
 const SeparateBreadcrumbsPage = (props) => {
   return (
@@ -40,7 +39,7 @@ const SeparateBreadcrumbsPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="py-[130px] cover-background lg:py-[90px] md:py-[75px] sm:py-[50px]" style={{ backgroundImage: `url(https://via.placeholder.com/1920x800)` }}>
         <div className="absolute top-0 left-0 w-full h-full bg-darkgray opacity-75"></div>

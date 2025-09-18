@@ -22,7 +22,6 @@ import ShopWide from '../../Components/Products/ShopWide';
 import CustomModal from '../../Components/CustomModal';
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import { resetForm } from "../../Functions/Utilities";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { shopWideData } from '../../Components/Products/ProductData';
@@ -136,7 +135,7 @@ const SingleProduct = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="py-[160px] lg:py-[120px] md:py-[95px] sm:py-[80px] xs:py-[50px] overflow-hidden">
         <Container>

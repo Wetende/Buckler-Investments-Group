@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import Header, { HeaderCart, HeaderNav, Menu, MobileMenu, SearchBar } from "../../Components/Header/Header";
 import SocialIcons from "../../Components/SocialIcon/SocialIcons";
 import BlogMetro from '../../Components/Blogs/BlogMetro';
-import SideButtons from "../../Components/SideButtons";
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 
 // Data
@@ -43,7 +42,7 @@ const blogMetroData = blogData.filter((item) => item.blogType === "metro");
 const HomeBlogMetroPage = (props) => {
   return (
     <div style={props.style}>
-      <SideButtons />
+      
       {/* Header Start */}
       <Header topSpace={{ desktop: true }} className="toplogo-header absolute top-0 left-0 w-full z-10">
         <HeaderNav

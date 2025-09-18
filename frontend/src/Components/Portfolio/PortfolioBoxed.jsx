@@ -18,12 +18,18 @@ const PortfolioBoxed = (props) => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        if (!portfolioWrapper.current) return;
+
         let allImages = portfolioWrapper.current.querySelectorAll("img");
 
         Promise.all(Array.prototype.slice.call(allImages).filter(img => !img.complete).map(img => new Promise(resolve => { img.onload = img.onerror = resolve; }))).then(() => {
             import("../../Functions/Utilities").then(module => {
                 const grid = module.initializeIsotop(portfolioWrapper.current)
-                grid.on('arrangeComplete', () => setLoading(false));
+                if (grid) {
+                    grid.on('arrangeComplete', () => setLoading(false));
+                } else {
+                    setLoading(false);
+                }
             })
         });
     }, [])

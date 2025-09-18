@@ -226,7 +226,9 @@ export const Menu = memo((props) => {
                   <span className="nav-link">{item.title}</span>
                 )
               }
-              <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+              {(item.dropdown || item.megamenu) && (
+                <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+              )}
               {(item.dropdown) && (
                 <ul className="simple-dropdown-menu">
                   {item.dropdown.map((item, i) => {
@@ -427,7 +429,9 @@ export const MobileMenu = (props) => {
                         <span className="nav-link">{item.title}</span>
                       )
                     }
-                    <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+                    {(item.dropdown || item.megamenu) && (
+                      <i className="fa fa-angle-down" onClick={(e) => handleMenuClick(e, i)} />
+                    )}
                     {item.dropdown && (
                       <ul className="simple-dropdown-menu">
                         {item.dropdown.map((item, i) => {
@@ -787,7 +791,7 @@ export const HeaderCart = (props) => {
     <div className={`header-cart-icon dropdown mr-[10px] inline-block align-middle pl-[17px] text-[17px]${props.className ? ` ${props.className}` : ""}`} style={props.style}>
       <Link aria-label="link" to="#" className="relative inline-block">
         <i className={`feather-shopping-bag px-0 py-[30px] inline-block ${props.className}`} ></i>
-        <span className="cart-count font-serif bg-basecolor text-white absolute top-[20px] right-[-10px] w-[16px] h-[16px] text-center text-[9px] leading-[16px] rounded-full">
+        <span className="cart-count font-serif bg-red-600 text-white absolute top-[20px] right-[-10px] w-[16px] h-[16px] text-center text-[9px] leading-[16px] rounded-full">
           2
         </span>
       </Link>

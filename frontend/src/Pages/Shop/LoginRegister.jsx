@@ -6,14 +6,15 @@ import { Formik, Form } from 'formik';
 import { Link } from 'react-router-dom'
 import { m } from 'framer-motion';
 import * as Yup from 'yup';
+import { login, register as registerUser } from '../../api/authService'
 
 // Components
-import { Header, HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from "../../Components/Header/Header";
+import { Header, HeaderLanguage, HeaderNav, Menu, SearchBar } from "../../Components/Header/Header";
+import AuthButtons from '../../Components/Header/AuthButtons';
 import { Checkbox, Input } from '../../Components/Form/Form'
 import Buttons from '../../Components/Button/Buttons'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { fadeIn } from "../../Functions/GlobalAnimations";
-import SideButtons from "../../Components/SideButtons";
 import { resetForm } from '../../Functions/Utilities';
 
 const LoginRegister = (props) => {
@@ -25,9 +26,9 @@ const LoginRegister = (props) => {
           <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
             <Link aria-label="header logo" className="flex items-center" to="/">
               <Navbar.Brand className="inline-block p-0 m-0">
-                <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
-                <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
-                <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
+                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
+                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
+                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
               </Navbar.Brand>
             </Link>
           </Col>
@@ -45,12 +46,12 @@ const LoginRegister = (props) => {
           <Col className="col-auto text-right pe-0 !pl-[12px]">
             <SearchBar className="pr-0 xs:p-0" />
             <HeaderLanguage />
-            <HeaderCart style={{ "--base-color": "#0038e3" }} />
+            <AuthButtons />
           </Col>
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[25px]">
         <Container>
@@ -83,8 +84,13 @@ const LoginRegister = (props) => {
                     password: Yup.string().required("Field is required.")
                   })}
                   onSubmit={async (values, actions) => {
-                    await new Promise((r) => setTimeout(r, 500));
-                    resetForm(actions)
+                    try {
+                      await login({ username: values.email, password: values.password })
+                      resetForm(actions)
+                      window.location.href = '/account'
+                    } catch (e) {
+                      actions.setStatus('Login failed')
+                    }
                   }}
                 >
                   {({ isSubmitting, status }) => (
@@ -96,7 +102,7 @@ const LoginRegister = (props) => {
                       </Checkbox>
                       <Buttons ariaLabel="login" type="submit" className="btn-fill btn-fancy w-full font-medium font-serif rounded-none uppercase" themeColor="#232323" color="#fff" size="md" title="Login" />
                       <div className="text-right mt-[20px]">
-                        <Buttons ariaLabel="reset-password" href="#" className="text-right text-[12px] btn-link after:bg-[#000] hover:text-[#000] font-medium font-serif uppercase btn after:h-[2px] md:text-md" size="md" color="#000" title="Lost your password?" />
+                        <Buttons ariaLabel="reset-password" to="/password-reset" className="text-right text-[12px] btn-link after:bg-[#000] hover:text-[#000] font-medium font-serif uppercase btn after:h-[2px] md:text-md" size="md" color="#000" title="Lost your password?" />
                       </div>
                     </Form>
                   )}
@@ -114,8 +120,13 @@ const LoginRegister = (props) => {
                     password: Yup.string().required("Field is required.")
                   })}
                   onSubmit={async (values, actions) => {
-                    await new Promise((r) => setTimeout(r, 500));
-                    resetForm(actions)
+                    try {
+                      await registerUser({ username: values.username, email: values.email, password: values.password })
+                      resetForm(actions)
+                      window.location.href = '/login'
+                    } catch (e) {
+                      actions.setStatus('Registration failed')
+                    }
                   }}
                 >
                   {({ isSubmitting, status }) => (

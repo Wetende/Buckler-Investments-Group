@@ -18,7 +18,6 @@ import Testimonials from '../../Components/Testimonials/Testimonials';
 import Clients from '../../Components/Clients/Clients';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import Videos from "../../Components/Videos/Videos";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { TextBoxData02 } from '../../Components/TextBox/TextBoxData';
@@ -141,7 +140,7 @@ const WhoWeArePage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Background video section start */}
       <section className="pb-0 h-[700px] md:h-[550px] sm:h-[350px] relative overflow-hidden">
         <Videos
@@ -409,7 +408,7 @@ const WhoWeArePage = (props) => {
       {/* Section End */}
 
       {/* Footer Start */}
-      <FooterStyle01 theme="dark" className="bg-[#262b35] text-slateblue overflow-visible" />
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer End */}
     </div>
   )

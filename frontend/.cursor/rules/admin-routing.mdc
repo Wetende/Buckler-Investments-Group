@@ -1,0 +1,88 @@
+Admin-first Rule for Dashboards and Data-driven Activities
+
+Purpose
+- Ensure all dashboards, back-office workflows, and operator/host/admin data operations run in the Dashlite admin app.
+- Keep Litho for public/consumer UX: marketing pages, discovery/search, detail pages, and checkout/booking flows.
+
+Scope
+- Applies to BnB, Tours, Cars, Properties, Investment domains.
+- “Data-driven” in this rule means: management tables, analytics, CRUD consoles, approvals, payouts, KYCs, content moderation, inventory/pricing/availability, operations tools.
+
+Routing & Navigation
+- Litho → Admin handoff:
+  - Show a top-level “Dashboard” item (no auth gating in dev) that links to the admin app base URL.
+  - Always pass an optional return_to param when deep-linking from Litho to Admin if you need to navigate back to the current page.
+  - Source: frontend/src/Components/Header/BnbMenuData.js.
+```js
+// Use env override in Litho; default to local admin port
+const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173';
+
+// Example menu item
+{
+  title: "Dashboard",
+  link: ADMIN_BASE_URL,
+  megamenu: false
+}
+```
+- Admin → Litho handoff:
+  - Show a “Back to site” button in the Dashlite header.
+  - Use import.meta.env for Vite envs; fall back to '/'.
+  - Source: admin/src/layout/header/Header.jsx.
+```jsx
+const backToSiteHref = useMemo(() => {
+  const params = new URLSearchParams(window.location.search);
+  const returnTo = params.get('return_to');
+  const fallback = import.meta.env.VITE_PUBLIC_APP_BASE_URL || '/';
+  return returnTo ? returnTo : fallback;
+}, []);
+```
+- Admin router basename:
+  - Use VITE_ADMIN_BASENAME. Default to '/'.
+  - Admin serves at root in dev; behind reverse proxy you can set '/dashboard'.
+```jsx
+// admin/src/route/Index.jsx
+const BASENAME = import.meta.env.VITE_ADMIN_BASENAME || "/";
+<BrowserRouter basename={BASENAME}>
+```
+
+Auth & Transport
+- GET/POST only (backend standard). IDs are integers.
+- Prefer cookie-based auth (withCredentials=true); fallback to Bearer tokens.
+- Litho axios clients must include withCredentials by default.
+```js
+// frontend/src/api/axios.js
+const axiosInstance = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
+const axiosPrivate  = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
+```
+- Admin auth endpoint (example): POST /api/v1/auth/token (x-www-form-urlencoded), credentials: 'include'.
+```js
+// admin/pages/auth/Login.jsx (excerpt)
+await fetch(`${baseUrl}/auth/token`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body, credentials: 'include' });
+```
+
+Environment Variables
+- Litho (create .env in frontend/):
+  - REACT_APP_API_BASE_URL=https://your-api/api/v1
+  - REACT_APP_ADMIN_BASE_URL=https://admin.yourdomain.com  (dev: http://localhost:5173)
+- Admin (create .env in admin/):
+  - VITE_API_BASE_URL=https://your-api/api/v1
+  - VITE_ADMIN_BASENAME=/dashboard              (dev: /)
+  - VITE_PUBLIC_APP_BASE_URL=https://www.yourdomain.com  (dev: http://localhost:3000)
+
+CORS & Cookies (backend)
+- Allow origins: Litho URL and Admin URL.
+- Allow credentials; expose Set-Cookie; set secure/samesite appropriately.
+- Example:
+  - development: SameSite=Lax, Secure=false
+  - production: SameSite=None, Secure=true
+
+Ownership
+- Litho owns: discovery, marketing, public listings, details, cart/booking, end-user account basics.
+- Admin owns: dashboards, tables, approvals, payouts, KYCs, reporting, inventory/pricing/availability, content moderation.
+
+Troubleshooting
+- White screen on admin: remove React Router future flags; ensure import.meta.env is used; hard refresh (Ctrl+Shift+R).
+- 401 loops: ensure withCredentials is true and CORS allows credentials; verify cookie attributes.
+
+Enforcement
+- New “dashboard-like” features must be implemented in the admin app. Litho may link to them, not implement them.

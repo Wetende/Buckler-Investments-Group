@@ -22,7 +22,6 @@ import { TextAnime } from '../../Components/FancyText/FancyText'
 import { ContactFormStyle02Schema } from "../../Components/Form/FormSchema";
 import MessageBox from "../../Components/MessageBox/MessageBox";
 import { resetForm, sendEmail } from "../../Functions/Utilities";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { fancyTextBox02 } from "../../Components/FancyTextBox/FancyTextBoxData";
@@ -204,7 +203,7 @@ const OnePageNavigationPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }} id="home" className="relative h-[100vh] landscape:md:h-[650px] landscape:sm:h-[450px] md:h-[650px] sm:h-[450px] bg-cover">
         <div className="top-0 left-0 absolute w-full h-full bg-darkgray opacity-[0.75]"></div>

@@ -8,7 +8,6 @@ import { Link as ScrollTo } from "react-scroll"
 
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header';
-import SideButtons from "../../Components/SideButtons";
 
 const BigTypographyPage = (props) => {
   return (
@@ -44,7 +43,7 @@ const BigTypographyPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax section End */}
       <div className="md:flex md:items-center overflow-hidden relative py-[80px] h-[650px] md:h-[550px] sm:h-[350px] landscape:md:h-[100vh]">
         <Parallax className="lg-no-parallax bg-cover cover-background md:bg-start absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] xxs:h-[50vh] xxs:-top-[80px] landscape:md:top-0" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1100)` }}></Parallax>

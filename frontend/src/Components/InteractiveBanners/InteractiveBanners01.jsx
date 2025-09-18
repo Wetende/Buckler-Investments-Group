@@ -16,9 +16,14 @@ const InteractiveBanners01 = (props) => {
                 props.data.map((item, i) => {
                     return (
                         <Col key={i} className="interactivebanners-style-01 border-y border-r border-mediumgray relative z-0 overflow-hidden">
-                            <m.div className="py-24 px-[5.5rem] xl:px-14 xl:py-12 lg:px-[6.5rem] lg:py-24" {...{ ...props.animation, transition: { delay: i * props.animationDelay } }}>
-                                {item.subtitle && <span className="block font-serif text-md text-basecolor tracking-[2px] mb-[25px] font-medium uppercase">{item.subtitle}</span>}
-                                {item.title && <h3 className="heading-6 font-serif font-semibold w-[70%] mb-[20px] xl:w-full"> {item.title}</h3>}
+                            <m.div className="py-12 px-[2.5rem] xl:px-8 xl:py-8 lg:px-[3rem] lg:py-12" {...{ ...props.animation, transition: { delay: i * props.animationDelay } }}>
+                                {item.subtitle && (
+                                    <div className="flex items-center mb-[25px]">
+                                        {item.serviceIcon && <i className={`${item.serviceIcon} text-[22px] text-red-600 mr-3`}></i>}
+                                        <span className="block font-serif text-md text-basecolor tracking-[2px] mb-0 font-medium uppercase">{item.subtitle}</span>
+                                    </div>
+                                )}
+                                {item.title && <h3 className="heading-6 font-serif font-semibold w-full max-w-[320px] mb-[20px]"> {item.title}</h3>}
                                 {(item.icon || item.btnLink) && <Link aria-label="link" className="no-underline text-[#b7b7b7] text-[40px]" to={item.btnLink ? item.btnLink : "#"}><i className={item.icon}></i></Link>}
                                 {item.img && <div className="interactive-banners-image bg-no-repeat bg-cover overflow-hidden bg-center absolute" style={{ backgroundImage: `url(${item.img})` }}></div>}
                             </m.div>

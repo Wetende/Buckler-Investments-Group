@@ -23,7 +23,7 @@ def upgrade() -> None:
     # Create UserRole enum if it doesn't exist
     op.execute("""
         DO $$ BEGIN
-            CREATE TYPE userrole AS ENUM ('BUYER', 'AGENT', 'ADMIN');
+            CREATE TYPE userrole AS ENUM ('GUEST','USER','HOST','TOUR_OPERATOR','VEHICLE_OWNER','AGENT','ADMIN','SUPER_ADMIN');
         EXCEPTION
             WHEN duplicate_object THEN null;
         END $$;
@@ -37,7 +37,7 @@ def upgrade() -> None:
         sa.Column('name', sa.String(255), nullable=False),
         sa.Column('phone', sa.String(20), nullable=True),
         sa.Column('hashed_password', sa.String(255), nullable=False),
-        sa.Column('role', sa.Enum('BUYER', 'AGENT', 'ADMIN', name='userrole'), nullable=False, default='BUYER'),
+        sa.Column('role', sa.Enum('GUEST','USER','HOST','TOUR_OPERATOR','VEHICLE_OWNER','AGENT','ADMIN','SUPER_ADMIN', name='userrole'), nullable=False, server_default='USER'),
         sa.Column('is_active', sa.Boolean(), nullable=False, default=True),
         sa.Column('agent_license_id', sa.String(100), nullable=True),
         sa.Column('agency_name', sa.String(255), nullable=True),

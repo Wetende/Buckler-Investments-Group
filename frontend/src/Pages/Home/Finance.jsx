@@ -23,8 +23,7 @@ import TestimonialsCarousel04 from "../../Components/TestimonialCarousel/Testimo
 import { Input } from '../../Components/Form/Form'
 import { resetForm, sendEmail } from "../../Functions/Utilities";
 import { ContactFormStyle02Schema } from "../../Components/Form/FormSchema";
-import FooterStyle04 from "../../Components/Footers/FooterStyle04";
-import SideButtons from "../../Components/SideButtons";
+import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 
 // Data
 import { fancyTextBox01 } from "../../Components/FancyTextBox/FancyTextBoxData";
@@ -74,7 +73,7 @@ const blogClassicData = blogData.filter((item) => item.blogType === "classic").f
 const FinancePages = (props) => {
   return (
     <div className="financepage" style={props.style}>
-      <SideButtons />
+      
       {/* Header Start */}
       <Header topSpace={{ md: true }} type="reverse-scroll">
         <HeaderNav
@@ -509,7 +508,7 @@ const FinancePages = (props) => {
         {/* Section End */}
 
         {/* Footer Start */}
-        <FooterStyle04 className="finance-footer" theme="light" logo="/assets/img/webp/logo-green-black.webp" />
+        <FooterStyle01 className="finance-footer" theme="light" />
         {/* Footer End */}
       </InViewPort>
     </div>

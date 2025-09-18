@@ -18,6 +18,11 @@ from application.dto.tours import (
     TourAvailabilityDTO,
 )
 from shared.exceptions.tours import TourNotFoundError
+from domain.entities.tours.availability import TourAvailability
+from domain.repositories.tours import TourAvailabilityRepository
+from shared.mappers.tours import TourMapper
+from infrastructure.database.models.tour_availability import TourAvailability as TourAvailabilityModel
+from ...containers import AppContainer
 
 router = APIRouter()
 
@@ -37,57 +42,14 @@ async def search_tours(
 async def list_tours(
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0),
+    operator_id: int | None = Query(None),
+    max_price: float | None = Query(None),
     use_case: ListToursUseCase = Depends(Provide[AppContainer.list_tours_use_case]),
 ):
-    """List all public tours with pagination"""
-    return await use_case.execute(limit=limit, offset=offset)
+    """List all public tours with pagination and optional filters"""
+    return await use_case.execute(limit=limit, offset=offset, operator_id=operator_id, max_price=max_price)
 
-@router.get("/{tour_id}", response_model=TourResponseDTO)
-@inject
-async def get_tour_details(
-    tour_id: int,
-    use_case: GetTourUseCase = Depends(Provide[AppContainer.get_tour_use_case]),
-):
-    """Get detailed information about a specific tour"""
-    try:
-        return await use_case.execute(tour_id)
-    except TourNotFoundError:
-        raise HTTPException(status_code=404, detail="Tour not found")
-
-@router.get("/{tour_id}/availability", response_model=List[TourAvailabilityItem])
-@inject
-async def get_tour_availability(
-    tour_id: int,
-    start_date: str = Query(..., description="Start date (YYYY-MM-DD)"),
-    end_date: str = Query(..., description="End date (YYYY-MM-DD)"),
-    use_case: GetTourUseCase = Depends(Provide[AppContainer.get_tour_use_case]),
-):
-    """Get tour availability for date range"""
-    # TODO: Implement availability logic
-    try:
-        tour = await use_case.execute(tour_id)
-        # Return mock availability for now
-        from datetime import date, timedelta
-        
-        start = date.fromisoformat(start_date)
-        end = date.fromisoformat(end_date)
-        availability = []
-        
-        current_date = start
-        while current_date <= end:
-            availability.append(TourAvailabilityItem(
-                date=current_date,
-                available_spots=tour.max_participants,
-                price_override=None
-            ))
-            current_date += timedelta(days=1)
-        
-        return availability
-    except TourNotFoundError:
-        raise HTTPException(status_code=404, detail="Tour not found")
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid date format")
-
+# Static routes must be defined BEFORE dynamic parameterized routes
 @router.get("/featured", response_model=List[TourResponseDTO])
 @inject
 async def get_featured_tours(
@@ -119,8 +81,51 @@ async def get_tours_by_category(
     use_case: ListToursUseCase = Depends(Provide[AppContainer.list_tours_use_case]),
 ):
     """Get tours by category"""
-    # TODO: Implement category filtering in use case
-    return await use_case.execute(limit=limit, offset=offset)
+    return await use_case.execute(limit=limit, offset=offset, category=category)
+
+@router.get("/{tour_id}", response_model=TourResponseDTO)
+@inject
+async def get_tour_details(
+    tour_id: int,
+    use_case: GetTourUseCase = Depends(Provide[AppContainer.get_tour_use_case]),
+):
+    """Get detailed information about a specific tour"""
+    try:
+        return await use_case.execute(tour_id)
+    except TourNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour not found")
+
+@router.get("/{tour_id}/availability", response_model=List[TourAvailabilityItem])
+@inject
+async def get_tour_availability(
+    tour_id: int,
+    start_date: str = Query(..., description="Start date (YYYY-MM-DD)"),
+    end_date: str = Query(..., description="End date (YYYY-MM-DD)"),
+    use_case: GetTourUseCase = Depends(Provide[AppContainer.get_tour_use_case]),
+    availability_repo: TourAvailabilityRepository = Depends(Provide[AppContainer.tour_availability_repository]),
+):
+    """Get tour availability for date range"""
+    try:
+        await use_case.execute(tour_id)  # validates tour exists
+        from datetime import date
+
+        start = date.fromisoformat(start_date)
+        end = date.fromisoformat(end_date)
+        items = await availability_repo.get_range(tour_id, start, end)
+        return [
+            TourAvailabilityItem(
+                date=i.date,
+                available_spots=i.available_spots,
+                price_override=i.price_override,
+            )
+            for i in items
+        ]
+    except TourNotFoundError:
+        raise HTTPException(status_code=404, detail="Tour not found")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format")
+
+# (removed duplicate static routes; static routes are defined above the dynamic ones)
 
 # Operator/Admin tour management
 @router.post("/", response_model=TourResponseDTO)

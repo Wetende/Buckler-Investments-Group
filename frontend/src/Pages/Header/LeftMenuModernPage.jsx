@@ -11,7 +11,6 @@ import LeftMenuModern from "../../Components/Header/LeftMenuModern";
 import InteractiveBanners06 from "../../Components/InteractiveBanners/InteractiveBanners06";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import { fadeIn } from "../../Functions/GlobalAnimations";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { InteractiveBannersData06 } from "../../Components/InteractiveBanners/InteractiveBannersData";
@@ -41,7 +40,7 @@ const LeftMenuModernPage = (props) => {
     return (
         <div style={props.style}>
             <LeftMenuModern />
-            <SideButtons />
+            
             <div className="pl-[65px] md:pl-0">
                 {/* Section Start */}
                 <section className="p-0 overflow-hidden">

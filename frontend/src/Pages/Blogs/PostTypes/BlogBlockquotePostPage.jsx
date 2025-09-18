@@ -13,7 +13,6 @@ import BlogClean from '../../../Components/Blogs/BlogClean'
 import Dropcaps from '../../../Components/Dropcaps/Dropcaps'
 import AuthorBox from '../../../Components/Blogs/HelperComponents/AuthorBox'
 import Blockquote from '../../../Components/BlockQuote/Blockquote'
-import SideButtons from "../../../Components/SideButtons";
 import Sidebar from '../../../Components/Blogs/HelperComponents/Sidebar';
 
 // Data
@@ -91,7 +90,7 @@ const BlogBlockquotePostPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {data ? (
         <>
           <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">

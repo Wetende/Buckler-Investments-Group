@@ -1,129 +1,344 @@
 const menu = [
   {
     icon: "dashlite",
-    text: "Default Dashboard",
+    text: "Main Dashboard",
     link: "/",
+    roles: ["ADMIN", "SUPER_ADMIN"], // Only admins see main overview
+  },
+  {
+    heading: "Business Domains",
+    roles: ["ADMIN", "SUPER_ADMIN"], // Only admins see this heading
+  },
+  // BnB Section
+  {
+    icon: "home",
+    text: "BnB",
+    roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+    subMenu: [
+      {
+        text: "Dashboard",
+        link: "/bnb-dashboard",
+        roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "My Listings",
+        link: "/bnb/my-listings",
+        roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Create Listing",
+        link: "/bnb/create-listing",
+        roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Bookings",
+        link: "/bnb/bookings",
+        roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Earnings",
+        link: "/bnb/earnings",
+        roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Payouts",
+        link: "/bnb/payouts",
+        roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Reviews",
+        link: "/bnb/reviews",
+        roles: ["HOST", "ADMIN", "SUPER_ADMIN"],
+      },
+    ],
+  },
+  // Tours Section
+  {
+    icon: "map",
+    text: "Tours",
+    roles: ["TOUR_OPERATOR", "ADMIN", "SUPER_ADMIN"],
+    subMenu: [
+      {
+        text: "Dashboard",
+        link: "/tours-dashboard",
+        roles: ["TOUR_OPERATOR", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "My Tours",
+        link: "/tours/my-tours",
+        roles: ["TOUR_OPERATOR", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Create Tour",
+        link: "/tours/create-tour",
+        roles: ["TOUR_OPERATOR", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Bookings",
+        link: "/tours/bookings",
+        roles: ["TOUR_OPERATOR", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Earnings",
+        link: "/tours/earnings",
+        roles: ["TOUR_OPERATOR", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Reviews",
+        link: "/tours/reviews",
+        roles: ["TOUR_OPERATOR", "ADMIN", "SUPER_ADMIN"],
+      },
+    ],
+  },
+  // Properties Section
+  {
+    icon: "building",
+    text: "Properties",
+    roles: ["AGENT", "ADMIN", "SUPER_ADMIN"],
+    subMenu: [
+      {
+        text: "Dashboard",
+        link: "/properties-dashboard",
+        roles: ["AGENT", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "My Properties",
+        link: "/properties/my-properties",
+        roles: ["AGENT", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Add Property",
+        link: "/properties/add-property",
+        roles: ["AGENT", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Inquiries",
+        link: "/properties/inquiries",
+        roles: ["AGENT", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Analytics",
+        link: "/properties/analytics",
+        roles: ["AGENT", "ADMIN", "SUPER_ADMIN"],
+      },
+    ],
+  },
+  // Cars Section
+  {
+    icon: "truck",
+    text: "Cars",
+    roles: ["VEHICLE_OWNER", "ADMIN", "SUPER_ADMIN"],
+    subMenu: [
+      {
+        text: "Dashboard",
+        link: "/cars-dashboard",
+        roles: ["VEHICLE_OWNER", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "My Vehicles",
+        link: "/cars/my-vehicles",
+        roles: ["VEHICLE_OWNER", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Add Vehicle",
+        link: "/cars/add-vehicle",
+        roles: ["VEHICLE_OWNER", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Rentals",
+        link: "/cars/rentals",
+        roles: ["VEHICLE_OWNER", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Earnings",
+        link: "/cars/earnings",
+        roles: ["VEHICLE_OWNER", "ADMIN", "SUPER_ADMIN"],
+      },
+    ],
+  },
+  // Investments Section
+  {
+    icon: "coins",
+    text: "Investments",
+    roles: ["ADMIN", "SUPER_ADMIN"], // Investment platform is admin-managed
+    subMenu: [
+      {
+        text: "Dashboard",
+        link: "/investments-dashboard",
+        roles: ["ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Products",
+        link: "/investments/products",
+        roles: ["ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Orders",
+        link: "/investments/orders",
+        roles: ["ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Analytics",
+        link: "/investments/analytics",
+        roles: ["ADMIN", "SUPER_ADMIN"],
+      },
+    ],
+  },
+  {
+    heading: "System Analytics",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
     icon: "bitcoin-cash",
     text: "Crypto Dashboard",
     link: "/crypto",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
     icon: "growth",
     text: "Analytics Dashboard",
     link: "/analytics",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
     icon: "coins",
     text: "Invest Dashboard",
     link: "/invest",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
-    heading: "Pre-built Pages",
+    heading: "Account & Profile",
+    roles: ["HOST", "TOUR_OPERATOR", "VEHICLE_OWNER", "AGENT", "ADMIN", "SUPER_ADMIN"],
   },
   {
-    icon: "tile-thumb",
-    text: "Projects",
+    icon: "users",
+    text: "My Profile",
+    roles: ["HOST", "TOUR_OPERATOR", "VEHICLE_OWNER", "AGENT", "ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
-        text: "Project Cards",
-        link: "/project-card",
+        text: "Profile Settings",
+        link: "/user-profile-regular",
+        roles: ["HOST", "TOUR_OPERATOR", "VEHICLE_OWNER", "AGENT", "ADMIN", "SUPER_ADMIN"],
       },
       {
-        text: "Project List",
-        link: "/project-list",
+        text: "Notifications",
+        link: "/user-profile-notification",
+        roles: ["HOST", "TOUR_OPERATOR", "VEHICLE_OWNER", "AGENT", "ADMIN", "SUPER_ADMIN"],
+      },
+      {
+        text: "Activity Log",
+        link: "/user-profile-activity",
+        roles: ["HOST", "TOUR_OPERATOR", "VEHICLE_OWNER", "AGENT", "ADMIN", "SUPER_ADMIN"],
       },
     ],
   },
   {
+    heading: "Admin Tools",
+    roles: ["ADMIN", "SUPER_ADMIN"],
+  },
+  {
     icon: "users",
-    text: "User Manage",
+    text: "User Management",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "User List - Regular",
         link: "/user-list-regular",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
         text: "User List - Compact",
         link: "/user-list-compact",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
-        text: "User Details - Regular",
+        text: "User Details",
         link: "/user-details-regular/1",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
-        text: "User Profile - Regular",
-        link: "/user-profile-regular",
-      },
-      {
-        text: "User Contact - Card",
+        text: "User Contact Cards",
         link: "/user-contact-card",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
     ],
   },
   {
     icon: "file-docs",
     text: "AML / KYCs",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "KYC List - Regular",
         link: "/kyc-list-regular",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
         text: "KYC Details - Regular",
         link: "/kyc-details-regular/UD01544",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
     ],
   },
   {
     icon: "tranx",
-    text: "Transaction",
+    text: "Transactions",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
-        text: "Trans List - Basic",
+        text: "Transaction List - Basic",
         link: "/transaction-basic",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
-        text: "Trans List - Crypto",
+        text: "Transaction List - Crypto",
         link: "/transaction-crypto",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
     ],
   },
   {
     icon: "grid-alt",
     text: "Applications",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Messages",
         link: "/app-messages",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
         text: "Chats / Messenger",
         link: "/app-chat",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
         text: "Inbox / Mail",
         link: "/app-inbox",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
         text: "Calendar",
         link: "/app-calender",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
         text: "File Manager",
         link: "/app-file-manager",
         badge: "new",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
       {
         text: "Kanban Board",
         link: "/app-kanban",
+        roles: ["ADMIN", "SUPER_ADMIN"],
       },
     ],
   },
   {
     icon: "card-view",
     text: "Products",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Product List",
@@ -142,6 +357,7 @@ const menu = [
   {
     icon: "file-docs",
     text: "Invoice",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Invoice List",
@@ -157,18 +373,22 @@ const menu = [
     icon: "view-col",
     text: "Pricing Table",
     link: "/pricing-table",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
     icon: "img",
     text: "Image Gallery",
     link: "/image-gallery",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
     heading: "Misc Pages",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
     icon: "signin",
     text: "Auth Pages",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Login / Signin",
@@ -195,6 +415,7 @@ const menu = [
   {
     icon: "files",
     text: "Error Pages",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "404 Classic",
@@ -221,6 +442,7 @@ const menu = [
   {
     icon: "files",
     text: "Other Pages",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Blank / Startup",
@@ -246,10 +468,12 @@ const menu = [
   },
   {
     heading: "Components",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
   {
     icon: "layers",
     text: "Ui Elements",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Alerts",
@@ -373,6 +597,7 @@ const menu = [
   {
     icon: "dot-box",
     text: "Crafted Icons",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "SVG Icon-Exclusive",
@@ -387,6 +612,7 @@ const menu = [
   {
     icon: "table-view",
     text: "Tables",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Basic Tables",
@@ -405,6 +631,7 @@ const menu = [
   {
     icon: "card-view",
     text: "Forms",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Form Elements",
@@ -468,6 +695,7 @@ const menu = [
   {
     icon: "pie",
     text: "Charts",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Chart Js",
@@ -482,6 +710,7 @@ const menu = [
   {
     icon: "puzzle",
     text: "Widgets",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Card Widgets",
@@ -500,6 +729,7 @@ const menu = [
   {
     icon: "block-over",
     text: "Miscellaneous",
+    roles: ["ADMIN", "SUPER_ADMIN"],
     subMenu: [
       {
         text: "Slick Sliders",
@@ -535,6 +765,32 @@ const menu = [
     icon: "text-rich",
     text: "Email Template",
     link: "/email-template",
+    roles: ["ADMIN", "SUPER_ADMIN"],
   },
 ];
+
+// Utility function to filter menu based on user role
+export const filterMenuByRole = (menuItems, userRole) => {
+  if (!userRole) return [];
+  
+  return menuItems.filter(item => {
+    // If no roles specified, show to all authenticated users
+    if (!item.roles) return true;
+    // Check if user role is in allowed roles
+    if (!item.roles.includes(userRole)) return false;
+    
+    // Filter submenus recursively
+    if (item.subMenu) {
+      item.subMenu = item.subMenu.filter(subItem => {
+        if (!subItem.roles) return true;
+        return subItem.roles.includes(userRole);
+      });
+      // Don't show parent menu if all submenus are filtered out
+      if (item.subMenu.length === 0) return false;
+    }
+    
+    return true;
+  });
+};
+
 export default menu;

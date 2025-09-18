@@ -16,7 +16,6 @@ import Tab01 from "../../Components/Tab/Tab01";
 import Counter from '../../Components/Counters/Counter'
 import BlogClassic from "../../Components/Blogs/BlogClassic";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { TabData01 } from "../../Components/Tab/TabData";
@@ -154,7 +153,7 @@ const CenterLogoPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Section Start */}
       <div className="full-screen relative overflow-hidden landscape:md:h-[600px]">
         <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 w-full h-[100vh] md:top-[-10px] landscape:md:h-[600px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }}></Parallax>

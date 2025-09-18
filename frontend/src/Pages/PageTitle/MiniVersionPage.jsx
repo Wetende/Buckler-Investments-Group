@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header'
-import SideButtons from "../../Components/SideButtons";
 
 const MiniVersionPage = (props) => {
   return (
@@ -42,7 +41,7 @@ const MiniVersionPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[25px]">
         <Container>

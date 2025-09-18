@@ -14,7 +14,6 @@ import FooterStyle01 from '../../../Components/Footers/FooterStyle01'
 import { TextAnime } from '../../../Components/FancyText/FancyText'
 import ReactCustomScrollbar from "../../../Components/ReactCustomScrollbar";
 import SocialIcons from "../../../Components/SocialIcon/SocialIcons";
-import SideButtons from "../../../Components/SideButtons";
 import { fadeIn } from "../../../Functions/GlobalAnimations";
 
 // Data
@@ -120,7 +119,7 @@ const HamburgerMenuHalfPage = (props) => {
                 </HeaderNav>
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
             {/* Parallax Section Start */}
             <div className="full-screen relative overflow-hidden md:h-[650px] sm:h-[400px]">
                 <Parallax className="lg-no-parallax bg-cover bg-right cover-background absolute top-[1px] left-0 w-full h-[100vh] sm:h-[50vh] md:top-[-60px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }}></Parallax>

@@ -15,7 +15,6 @@ import { fadeIn, fadeInLeft, zoomIn } from "../../Functions/GlobalAnimations";
 import SocialIcons from "../../Components/SocialIcon/SocialIcons";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import Overlap from "../../Components/Overlap/Overlap";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 const SwiperImgData = [
@@ -90,7 +89,7 @@ const SingleProjectPage01 = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Scrolling Start */}
       <div className="h-[800px] md:h-[650px] sm:h-[350px] flex items-center overflow-hidden relative">
         <Parallax className="lg-no-parallax bg-cover cover-background absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] md:h-[700px] sm:h-[400px] sm:-top-[60px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1117)` }}></Parallax>

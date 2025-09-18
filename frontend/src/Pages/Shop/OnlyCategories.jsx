@@ -5,7 +5,6 @@ import { Header, HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from "
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import OnlyCategories from '../../Components/Products/OnlyCategories';
 import { fadeIn } from '../../Functions/GlobalAnimations';
-import SideButtons from "../../Components/SideButtons";
 
 // Libraries
 import { Col, Container, Row, Navbar } from 'react-bootstrap'
@@ -50,7 +49,7 @@ const OnlyCategoriesPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Section Start */}
       <m.div className="overflow-hidden pb-[80px] md:py-[40px]" {...fadeIn}>
         <Parallax className="lg-no-parallax bg-cover absolute top-0 left-0 w-full h-full" translateY={[-40, 40]} style={{ backgroundImage: `url(/assets/img/webp/portfolio-bg.webp)` }}></Parallax>

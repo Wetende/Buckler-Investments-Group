@@ -6,9 +6,9 @@ This module defines the User model with role-based access control.
 from datetime import datetime
 from typing import List, Optional
 
-from sqlalchemy import Integer, String, DateTime, Enum as SQLEnum, Boolean
+from sqlalchemy import Integer, String, DateTime, Enum as SQLEnum, Boolean, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql import func
+# Note: func not used after moving to text('CURRENT_TIMESTAMP') defaults
 
 from .favorite import Favorite
 from .property import Property
@@ -22,7 +22,8 @@ class User(Base):
     """
     User model for the Property Listing Platform.
     
-    Supports three roles: BUYER, AGENT, and ADMIN.
+    Role is stored as PostgreSQL enum `userrole` aligned to shared.constants.user_roles:
+    guest, user, host, tour_operator, vehicle_owner, agent, admin, super_admin.
     Uses integer IDs as specified in the requirements.
     """
     __tablename__ = "users"
@@ -34,10 +35,11 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     phone: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
     hashed_password: Mapped[str] = mapped_column(String(255))
+    # Persist as PostgreSQL enum name 'userrole' aligned with shared.constants.user_roles
     role: Mapped[UserRole] = mapped_column(
-        SQLEnum(UserRole), 
-        nullable=False, 
-        default=UserRole.USER
+        SQLEnum(UserRole, name="userrole"),
+        nullable=False,
+        default=UserRole.USER,
     )
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     
@@ -66,15 +68,14 @@ class User(Base):
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), 
-        server_default=func.now(),
-        nullable=False
+        DateTime(timezone=True),
+        server_default=text('CURRENT_TIMESTAMP'),
+        nullable=False,
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), 
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False
+        DateTime(timezone=True),
+        server_default=text('CURRENT_TIMESTAMP'),
+        nullable=False,
     )
 
     def __repr__(self) -> str:

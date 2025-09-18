@@ -10,7 +10,6 @@ import { TiltBox } from '../../Components/FancyText/FancyText'
 import { Input } from '../../Components/Form/Form'
 import SocialIcons from "../../Components/SocialIcon/SocialIcons"
 import MessageBox from "../../Components/MessageBox/MessageBox"
-import SideButtons from "../../Components/SideButtons";
 import ReactCustomScrollbar from "../../Components/ReactCustomScrollbar"
 import StaticInstagram from "../../Components/Instagram/StaticInstagram"
 import { resetForm, sendEmail } from "../../Functions/Utilities"
@@ -150,7 +149,7 @@ const HeaderWithPushPage = (props) => {
           </HeaderNav>
         </Header>
         {/* Header End */}
-        <SideButtons />
+        
         {/* Parallax Section Start */}
         <div className="full-screen relative overflow-hidden landscape:md:h-[600px]">
           <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 w-full h-[100vh] bg-center md:top-[-30px] landscape:md:h-[600px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }}></Parallax>

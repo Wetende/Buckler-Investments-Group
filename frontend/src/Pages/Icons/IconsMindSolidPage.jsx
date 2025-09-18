@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { IconsMindSolidData } from "./IconData"
@@ -47,7 +46,7 @@ const IconsMindSolidPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-darkgray py-[25px]">
         <Container>

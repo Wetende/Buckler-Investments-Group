@@ -7,7 +7,6 @@ import { Parallax } from 'react-scroll-parallax'
 
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header';
-import SideButtons from "../../Components/SideButtons";
 
 const ParallaxBackground = (props) => {
   return (
@@ -43,7 +42,7 @@ const ParallaxBackground = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax section End */}
       <div className="md:flex md:items-center overflow-hidden relative py-[80px] landscape:md:h-[100vh]">
         <Parallax className="lg-no-parallax bg-cover cover-background absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] xxs:h-[53vh] xxs:-top-[80px] landscape:md:top-0" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1031)` }}></Parallax>

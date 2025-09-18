@@ -18,7 +18,6 @@ import Buttons from '../../Components/Button/Buttons'
 import Clients from '../../Components/Clients/Clients';
 import TestimonialsCarousel09 from '../../Components/TestimonialCarousel/TestimonialsCarousel09';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { ClientData01 } from '../../Components/Clients/ClientsData';
@@ -135,7 +134,7 @@ const OurStoryPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Scrolling Start */}
       <div className="pt-[130px] pb-[632px] lg:pt-[95px] lg:pb-[600px] md:pt-[70px] md:pb-[400px] sm:pt-[50px] sm:py-[70px] overflow-hidden relative">
         <Parallax className="lg-no-parallax bg-cover cover-background absolute top-[100px] left-0 md:-top-[30px] w-full h-[100vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(/assets/img/webp/our-story-bg.webp)` }}></Parallax>
@@ -293,7 +292,7 @@ const OurStoryPage = (props) => {
       {/* Section End */}
 
       {/* Footer Start */}
-      <FooterStyle01 theme="dark" className="bg-[#262b35] text-slateblue" />
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer End */}
     </div>
   )

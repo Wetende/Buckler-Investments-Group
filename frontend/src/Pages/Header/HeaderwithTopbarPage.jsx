@@ -15,7 +15,6 @@ import Buttons from '../../Components/Button/Buttons'
 import IconWithText from '../../Components/IconWithText/IconWithText'
 import { fadeIn } from '../../Functions/GlobalAnimations'
 import SocialIcons from '../../Components/SocialIcon/SocialIcons';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { portfolioBoxedData } from "../../Components/Portfolio/PortfolioData"
@@ -164,7 +163,7 @@ const HeaderwithTopbarPage = (props) => {
                 {/* Header End */}
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
             {/* Section Start */}
             <section className="p-0 overflow-hidden landscape:md:h-[600px] relative">
                 <Swiper

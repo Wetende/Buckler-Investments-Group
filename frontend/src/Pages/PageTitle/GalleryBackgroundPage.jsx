@@ -9,7 +9,6 @@ import { Link as ScrollTo } from "react-scroll"
 
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header'
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 const SwiperImgData = [
@@ -58,7 +57,7 @@ const GalleryBackgroundPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       <section className="relative h-[700px] md:h-[550px] sm:h-[350px]">
         <Container className="h-full">
           <Row className="items-center justify-center h-full">

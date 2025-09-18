@@ -17,7 +17,6 @@ import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import Team from "../../Components/Team/Team";
 import Header, { HeaderCart, HeaderNav, Menu, SearchBar } from "../../Components/Header/Header";
 import CustomModal from '../../Components/CustomModal'
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { TeamData02 } from "../../Components/Team/TeamData";
@@ -101,7 +100,7 @@ const TopLogoPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <div className="full-screen relative overflow-hidden landscape:md:h-[600px]">
         <Parallax className="lg-no-parallax bg-cover cover-background absolute top-[0px] left-0 w-full h-[100vh] md:top-[-35px] landscape:md:h-[600px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }}></Parallax>

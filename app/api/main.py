@@ -20,7 +20,7 @@ from infrastructure.config.middleware import (
     limiter,
     rate_limit_middleware,
     AuditLoggingMiddleware,
-    _rate_limit_exceeded_handler,
+    rate_limit_exceeded_handler,
 )
 
 from infrastructure.config.config import settings
@@ -44,7 +44,7 @@ app = FastAPI(
 # Create and wire container
 container = AppContainer()
 container.wire()  # Wire the container
-app.container = container
+app.state.container = container
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -75,7 +75,7 @@ app.openapi = _fresh_openapi  # type: ignore[assignment]
 
 # Rate limiting setup
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(Exception, rate_limit_exceeded_handler)  # type: ignore[arg-type]
 
 # Configure CORS
 allowlist = [o.strip() for o in settings.CORS_ALLOW_ORIGINS.split(",") if o.strip()]
@@ -129,8 +129,8 @@ from .v1.public.sitemap import router as sitemap_router
 from .v1.notifications_unified import router as notifications_router
 from .v1.settings_unified import router as settings_router
 
-# Import payment and payout routers - temporarily disabled
-# from .v1.payments.routes import router as payments_router  # Temporarily disabled
+# Import payment and payout routers
+from .v1.payments.routes import router as payments_router
 from .v1.payouts.routes import router as payouts_router
 
 # Import search router
@@ -154,8 +154,8 @@ app.include_router(bundle_router, prefix="/api/v1/bundles", tags=["Bundles"])
 app.include_router(favorites_router)
 
 # Include payment and payout routers
-# app.include_router(payments_router, prefix="/api/v1/payments", tags=["Payments"])  # Temporarily disabled
-app.include_router(payouts_router, prefix="/api/v1/payouts", tags=["Payouts"])
+app.include_router(payments_router, prefix="/api/v1/payments", tags=["Payments"]) 
+app.include_router(payouts_router, prefix="/api/v1/payouts", tags=["Payouts"]) 
 
 # Include search router
 app.include_router(search_router, prefix="/api/v1/search", tags=["Search"])

@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 // Compoents
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header'
-import SideButtons from "../../Components/SideButtons";
 
 const RightAlignmentPage = (props) => {
   return (
@@ -42,7 +41,7 @@ const RightAlignmentPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[40px] sm:py-[30px]">
         <Container>

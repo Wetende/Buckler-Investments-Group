@@ -20,9 +20,15 @@ const BlogMasonry = (props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!blogWrapper.current) return;
+
     import("../../Functions/Utilities").then(module => {
       const grid = module.initializeIsotop(blogWrapper.current)
-      grid.on('arrangeComplete', () => setLoading(false));
+      if (grid) {
+        grid.on('arrangeComplete', () => setLoading(false));
+      } else {
+        setLoading(false);
+      }
     })
   }, [])
 

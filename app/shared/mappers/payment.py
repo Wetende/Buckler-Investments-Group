@@ -25,7 +25,7 @@ class PaymentMapper:
             transaction_id=entity.transaction_id,
             failure_reason=entity.failure_reason,
             completed_at=entity.completed_at,
-            metadata=entity.metadata,
+            extra=entity.metadata,
             created_at=entity.created_at,
             updated_at=entity.updated_at
         )
@@ -46,7 +46,7 @@ class PaymentMapper:
             transaction_id=model.transaction_id,
             failure_reason=model.failure_reason,
             completed_at=model.completed_at,
-            metadata=model.metadata,
+            metadata=model.extra,
             created_at=model.created_at,
             updated_at=model.updated_at
         )
@@ -64,7 +64,7 @@ class PaymentMapper:
             booking_type=entity.booking_type,
             customer_id=entity.customer_id,
             status=entity.status,
-            metadata=entity.metadata,
+            extra=entity.metadata,
             expires_at=entity.expires_at,
             created_at=entity.created_at,
             updated_at=entity.updated_at

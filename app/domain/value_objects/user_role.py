@@ -3,7 +3,7 @@ from enum import Enum
 
 
 class UserRole(str, Enum):
-    """User roles for the property listing platform."""
-    BUYER = "BUYER"
+    """Deprecated: Kept for backward compatibility. Use shared.constants.user_roles.UserRole instead."""
+    BUYER = "USER"
     AGENT = "AGENT"
     ADMIN = "ADMIN"

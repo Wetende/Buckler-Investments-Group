@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { getFeaturedTours, getTour, getTourAvailability, listTours, searchTours } from './toursService'
+import { getFeaturedTours, getTour, getTourAvailability, listTours, searchTours, getTourCategories, getCategoryTours } from './toursService'
 
 export const useTours = (filters = {}, pageSize = 20) => {
   return useInfiniteQuery({
@@ -15,6 +15,15 @@ export const useTour = (id) => {
     queryKey: ['tours', 'detail', id],
     queryFn: () => getTour(Number(id)),
     enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// Single-page listing (non-infinite) for simple sections
+export const useToursList = (params = {}) => {
+  return useQuery({
+    queryKey: ['tours', 'list', params],
+    queryFn: () => listTours(params),
     staleTime: 5 * 60 * 1000,
   })
 }
@@ -45,12 +54,32 @@ export const useSearchTours = (criteria = {}) => {
   })
 }
 
+export const useTourCategories = () => {
+  return useQuery({
+    queryKey: ['tours', 'categories'],
+    queryFn: () => getTourCategories(),
+    staleTime: 10 * 60 * 1000,
+  })
+}
+
+export const useCategoryTours = (category, params = {}) => {
+  return useQuery({
+    queryKey: ['tours', 'categories', category, params],
+    queryFn: () => getCategoryTours(category, params),
+    enabled: !!category,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
 const toursHooks = {
   useTours,
   useTour,
+  useToursList,
   useTourAvailability,
   useFeaturedTours,
   useSearchTours,
+  useTourCategories,
+  useCategoryTours,
 }
 
 export default toursHooks

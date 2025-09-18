@@ -1,7 +1,142 @@
-import { useAuth as useAuthFromProvider } from "../Components/auth/AuthProvider";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { axiosInstance, axiosPrivate } from './axios'
 
-const useAuth = () => {
-    return useAuthFromProvider();
+// Auth API functions
+const login = async (credentials) => {
+    const { data } = await axiosInstance.post('/auth/login', credentials)
+    return data
 }
 
-export default useAuth; 
+const register = async (userData) => {
+    const { data } = await axiosInstance.post('/auth/register', userData)
+    return data
+}
+
+const logout = async () => {
+    const { data } = await axiosPrivate.post('/auth/logout')
+    return data
+}
+
+const getCurrentUser = async () => {
+    const { data } = await axiosPrivate.get('/auth/me')
+    return data
+}
+
+const refreshToken = async () => {
+    const { data } = await axiosPrivate.post('/auth/refresh')
+    return data
+}
+
+// React Query hooks
+export const useAuth = () => {
+    const queryClient = useQueryClient()
+
+    // Get current user query
+    const { data: user, isLoading, error } = useQuery({
+        queryKey: ['auth', 'user'],
+        queryFn: getCurrentUser,
+        enabled: !!localStorage.getItem('authToken'), // Only run if token exists
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
+        retry: false, // Don't retry auth failures
+    })
+
+    const isAuthenticated = !!user && !!localStorage.getItem('authToken')
+
+    return {
+        user,
+        isAuthenticated,
+        isLoading,
+        error,
+    }
+}
+
+export const useLogin = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: login,
+        onSuccess: (data) => {
+            // Store token
+            localStorage.setItem('authToken', data.access_token)
+            // Set user data in cache
+            queryClient.setQueryData(['auth', 'user'], data.user)
+            // Invalidate and refetch user data
+            queryClient.invalidateQueries({ queryKey: ['auth', 'user'] })
+        },
+        onError: (error) => {
+            console.error('Login failed:', error)
+        }
+    })
+}
+
+export const useRegister = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: register,
+        onSuccess: (data) => {
+            // Store token
+            localStorage.setItem('authToken', data.access_token)
+            // Set user data in cache
+            queryClient.setQueryData(['auth', 'user'], data.user)
+            // Invalidate and refetch user data
+            queryClient.invalidateQueries({ queryKey: ['auth', 'user'] })
+        },
+        onError: (error) => {
+            console.error('Registration failed:', error)
+        }
+    })
+}
+
+export const useLogout = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: logout,
+        onSuccess: () => {
+            // Remove token
+            localStorage.removeItem('authToken')
+            // Clear user data from cache
+            queryClient.setQueryData(['auth', 'user'], null)
+            // Clear all cached data
+            queryClient.clear()
+        },
+        onError: (error) => {
+            console.error('Logout failed:', error)
+            // Still clear local data even if server logout fails
+            localStorage.removeItem('authToken')
+            queryClient.setQueryData(['auth', 'user'], null)
+        }
+    })
+}
+
+export const useRefreshToken = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: refreshToken,
+        onSuccess: (data) => {
+            // Update token
+            localStorage.setItem('authToken', data.access_token)
+            // Invalidate user data to refetch with new token
+            queryClient.invalidateQueries({ queryKey: ['auth', 'user'] })
+        },
+        onError: (error) => {
+            console.error('Token refresh failed:', error)
+            // Clear auth data on refresh failure
+            localStorage.removeItem('authToken')
+            queryClient.setQueryData(['auth', 'user'], null)
+        }
+    })
+}
+
+const authHooks = {
+    useAuth,
+    useLogin,
+    useRegister,
+    useLogout,
+    useRefreshToken,
+}
+
+export default authHooks

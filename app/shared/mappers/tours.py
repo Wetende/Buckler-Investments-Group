@@ -1,6 +1,8 @@
 from domain.entities.tours import Tour, TourBooking
+from domain.entities.tours.availability import TourAvailability as TourAvailabilityEntity
 from infrastructure.database.models.tours import Tour as TourModel
 from infrastructure.database.models.tour_booking import TourBooking as TourBookingModel
+from infrastructure.database.models.tour_availability import TourAvailability as TourAvailabilityModel
 from domain.value_objects.money import Money
 
 class TourMapper:
@@ -56,4 +58,26 @@ class TourMapper:
             participants=entity.participants,
             total_price=entity.total_price.amount,
             status=entity.status
+        )
+
+    @staticmethod
+    def availability_model_to_entity(model: TourAvailabilityModel) -> TourAvailabilityEntity:
+        return TourAvailabilityEntity(
+            id=model.id,
+            tour_id=model.tour_id,
+            date=model.date,
+            available_spots=model.available_spots,
+            price_override=model.price_override,
+            created_at=model.created_at,
+            updated_at=model.updated_at,
+        )
+
+    @staticmethod
+    def availability_entity_to_model(entity: TourAvailabilityEntity) -> TourAvailabilityModel:
+        return TourAvailabilityModel(
+            id=entity.id if entity.id else None,
+            tour_id=entity.tour_id,
+            date=entity.date,
+            available_spots=entity.available_spots,
+            price_override=entity.price_override,
         )

@@ -16,7 +16,6 @@ import PortfolioBoxed from '../../Components/Portfolio/PortfolioBoxed'
 import Testimonials from '../../Components/Testimonials/Testimonials';
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import SocialIcons from "../../Components/SocialIcon/SocialIcons";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { TestimonialsData03 } from '../../Components/Testimonials/TestimonialsData';
@@ -122,7 +121,7 @@ const LeftMenuClassicPage = () => {
                     </HamburgerMenu>
                 </HeaderNav>
             </Header>
-            <SideButtons />
+            
             {/* Parallax Section Start */}
             <div className="full-screen relative overflow-hidden landscape:md:h-[600px]">
                 <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 w-full h-[100vh] md:top-[-10px] landscape:md:h-[600px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }}></Parallax>

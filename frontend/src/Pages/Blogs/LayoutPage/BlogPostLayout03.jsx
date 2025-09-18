@@ -17,7 +17,6 @@ import Overlap from '../../../Components/Overlap/Overlap'
 import { Header, HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from "../../../Components/Header/Header";
 import CustomModal from '../../../Components/CustomModal'
 import FooterStyle01 from '../../../Components/Footers/FooterStyle01'
-import SideButtons from "../../../Components/SideButtons";
 import CommentBox from '../../../Components/Blogs/HelperComponents/CommentBox'
 
 // Data
@@ -105,7 +104,7 @@ const BlogPostLayout03 = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="pt-[130px] lg:pt-[90px] md:pt-[75px] sm:pt-[50px] pb-0 overflow-visible relative bg-lightgray px-[11%] lg:px-[4%]" >
         <Container fluid>

@@ -23,7 +23,7 @@ class AuthTestSuite:
             "name": "Test User Journey",
             "password": "TestPassword123!",
             "phone": "+1234567890",
-            "role": "BUYER"
+            "role": "user"
         }
         self.results = []
 

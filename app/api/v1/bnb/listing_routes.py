@@ -42,6 +42,30 @@ async def list_listings(
     """List all public listings with pagination"""
     return await use_case.execute(limit=limit, offset=offset)
 
+# Place static routes BEFORE dynamic parameterized routes to avoid path conflicts
+@router.get("/listings/featured", response_model=List[StListingRead])
+@inject
+async def get_featured_listings(
+    limit: int = Query(10, ge=1, le=50),
+    use_case: ListListingsUseCase = Depends(Provide[AppContainer.list_listings_use_case]),
+):
+    """Get featured listings"""
+    # TODO: Implement featured logic in use case (e.g., high ratings, promoted)
+    return await use_case.execute(limit=limit, offset=0)
+
+@router.get("/listings/nearby", response_model=List[StListingRead])
+@inject
+async def get_nearby_listings(
+    latitude: float = Query(..., ge=-90, le=90),
+    longitude: float = Query(..., ge=-180, le=180),
+    radius_km: float = Query(10.0, ge=1, le=100),
+    limit: int = Query(20, ge=1, le=100),
+    use_case: ListListingsUseCase = Depends(Provide[AppContainer.list_listings_use_case]),
+):
+    """Get nearby listings by location"""
+    # TODO: Implement geospatial search logic in use case
+    return await use_case.execute(limit=limit, offset=0)
+
 @router.get("/listings/{listing_id}", response_model=StListingRead)
 @inject
 async def get_listing_details(
@@ -90,28 +114,7 @@ async def get_listing_availability(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format")
 
-@router.get("/listings/featured", response_model=List[StListingRead])
-@inject
-async def get_featured_listings(
-    limit: int = Query(10, ge=1, le=50),
-    use_case: ListListingsUseCase = Depends(Provide[AppContainer.list_listings_use_case]),
-):
-    """Get featured listings"""
-    # TODO: Implement featured logic in use case (e.g., high ratings, promoted)
-    return await use_case.execute(limit=limit, offset=0)
-
-@router.get("/listings/nearby", response_model=List[StListingRead])
-@inject
-async def get_nearby_listings(
-    latitude: float = Query(..., ge=-90, le=90),
-    longitude: float = Query(..., ge=-180, le=180),
-    radius_km: float = Query(10.0, ge=1, le=100),
-    limit: int = Query(20, ge=1, le=100),
-    use_case: ListListingsUseCase = Depends(Provide[AppContainer.list_listings_use_case]),
-):
-    """Get nearby listings by location"""
-    # TODO: Implement geospatial search logic in use case
-    return await use_case.execute(limit=limit, offset=0)
+# (static routes moved above dynamic routes)
 
 # Host/Admin listing management
 @router.post("/listings", response_model=StListingRead)

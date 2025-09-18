@@ -12,7 +12,6 @@ import MultiRangeSlider from "../../Components/Products/MultiRangeSlider";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import ShopWide from "../../Components/Products/ShopWide";
 import { fadeIn } from '../../Functions/GlobalAnimations';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { shopWideData } from "../../Components/Products/ProductData";
@@ -51,7 +50,7 @@ const LeftSidebar = (props) => {
                 </HeaderNav>
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
 
             {/* Parallax Section Start */}
             <m.div className="h-[380px] sm:h-[350px] overflow-hidden" {...fadeIn}>

@@ -13,7 +13,6 @@ import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { Input } from '../../Components/Form/Form'
 import { ContactFormStyle01Schema } from '../../Components/Form/FormSchema';
 import { fadeIn } from "../../Functions/GlobalAnimations";
-import SideButtons from "../../Components/SideButtons";
 import { resetForm } from '../../Functions/Utilities';
 
 const Checkout = (props) => {
@@ -65,7 +64,7 @@ const Checkout = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[25px] page-title-small p-[130px] lg:px-0 xs:px-0">
         <Container>

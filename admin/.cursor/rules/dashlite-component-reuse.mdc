@@ -1,0 +1,382 @@
+---
+description: DashLite admin component reuse and design system rules
+globs: admin/src/**/*.jsx,admin/src/**/*.tsx,admin/src/**/*.ts,admin/src/**/*.js
+alwaysApply: true
+---
+
+# DashLite Component Reuse & Admin Design System
+
+Purpose: Ensure maximum reuse of existing DashLite components, styles, and patterns in `admin/` when building admin features and dashboards.
+
+Sources of truth:
+- [admin/src/components/Component.js](mdc:admin/src/components/Component.js) - Main component exports
+- [admin/src/assets/scss/](mdc:admin/src/assets/scss/) - DashLite SCSS architecture
+
+## Principles
+- Prefer reusing existing DashLite components from `admin/src/components/**` before creating new ones
+- Keep visual language consistent with DashLite: retain admin typography, spacing, and UI patterns
+- Encapsulate any new admin UI as small, composable components following DashLite patterns
+- Use DashLite's card-based layout system and admin-specific components
+
+## Component Guidelines
+- Use functional components with React hooks; no class components
+- Follow DashLite component naming and structure patterns
+- Use existing admin layouts (Block, Card, DataTable, etc.)
+- Leverage DashLite's built-in responsive grid system
+
+## DashLite Components to Always Reuse
+
+### Layout & Structure
+```jsx
+// Always use DashLite layout components
+import { 
+  Block, BlockHead, BlockHeadContent, BlockContent, BlockTitle, BlockDes, BlockBetween 
+} from "@/components/block/Block";
+
+// Grid system
+import { Row, Col } from "@/components/grid/Grid";
+
+// Example usage:
+<Block>
+  <BlockHead size="sm">
+    <BlockBetween>
+      <BlockHeadContent>
+        <BlockTitle tag="h3" page>User Management</BlockTitle>
+        <BlockDes className="text-soft">
+          <p>Manage platform users and their permissions.</p>
+        </BlockDes>
+      </BlockHeadContent>
+    </BlockBetween>
+  </BlockHead>
+  <BlockContent>
+    {/* Main content */}
+  </BlockContent>
+</Block>
+```
+
+### Data Display Components
+```jsx
+// Data tables - use DashLite DataTable components
+import {
+  DataTable, DataTableBody, DataTableHead, DataTableRow, 
+  DataTableItem, DataTableTitle
+} from "@/components/table/DataTable";
+
+// Advanced tables
+import { SpecialTable, OrderTable, LoginLogTable } from "@/components/table/SpecialTable";
+import ReactDataTable from "@/components/table/ReactDataTable";
+
+// Example data table:
+<DataTable className="card-stretch">
+  <DataTableTitle>
+    <h6 className="title">Recent Users</h6>
+  </DataTableTitle>
+  <DataTableBody>
+    <DataTableHead className="nk-tb-item">
+      <DataTableRow>
+        <span className="sub-text">User</span>
+      </DataTableRow>
+      <DataTableRow size="mb">
+        <span className="sub-text">Email</span>
+      </DataTableRow>
+      <DataTableRow className="nk-tb-col-tools text-right">
+        <span className="sub-text">Action</span>
+      </DataTableRow>
+    </DataTableHead>
+    {users.map(user => (
+      <DataTableItem key={user.id}>
+        <DataTableRow>
+          <UserAvatar 
+            text={user.name}
+            theme={user.theme}
+          />
+        </DataTableRow>
+        <DataTableRow size="mb">
+          <span>{user.email}</span>
+        </DataTableRow>
+        <DataTableRow className="nk-tb-col-tools">
+          <Button size="sm" color="primary" outline>
+            Edit
+          </Button>
+        </DataTableRow>
+      </DataTableItem>
+    ))}
+  </DataTableBody>
+</DataTable>
+```
+
+### Form Components
+```jsx
+// Use DashLite form components
+import { InputSwitch } from "@/components/input/switch/Switch";
+import { OutlinedInput } from "@/components/input/outlined-input/OutlinedInput";
+import RSelect from "@/components/select/ReactSelect";
+import Button from "@/components/button/Button";
+
+// Example form:
+<form onSubmit={handleSubmit}>
+  <Row className="g-4">
+    <Col sm="6">
+      <div className="form-group">
+        <label className="form-label">User Name</label>
+        <div className="form-control-wrap">
+          <input 
+            type="text" 
+            className="form-control" 
+            {...register('name')}
+          />
+        </div>
+      </div>
+    </Col>
+    <Col sm="6">
+      <div className="form-group">
+        <label className="form-label">Status</label>
+        <RSelect
+          options={statusOptions}
+          onChange={handleStatusChange}
+        />
+      </div>
+    </Col>
+    <Col sm="12">
+      <div className="form-group">
+        <InputSwitch 
+          id="active"
+          label="Active User"
+          checked={isActive}
+          onChange={setIsActive}
+        />
+      </div>
+    </Col>
+  </Row>
+  <div className="form-group">
+    <Button type="submit" color="primary">
+      Save Changes
+    </Button>
+    <Button type="button" className="link link-light">
+      Cancel
+    </Button>
+  </div>
+</form>
+```
+
+### UI Elements
+```jsx
+// Buttons with DashLite styling
+import Button from "@/components/button/Button";
+
+// Icons
+import Icon from "@/components/icon/Icon";
+
+// User avatars and groups
+import { UserAvatar, UserGroup } from "@/components/user/UserAvatar";
+
+// Progress indicators
+import Progress from "@/components/progress/Progress";
+
+// Tooltips
+import TooltipComponent from "@/components/tooltip/Tooltip";
+
+// Example usage:
+<div className="nk-block-head-sub">
+  <Button color="light" outline className="btn-white btn-dim btn-sm">
+    <Icon name="download" className="icon" />
+    <span>Export</span>
+  </Button>
+  <Button color="primary" className="btn-sm">
+    <Icon name="plus" className="icon" />
+    <span>Add User</span>
+  </Button>
+</div>
+```
+
+### Charts & Analytics
+```jsx
+// Use DashLite chart components
+import {
+  LineChartExample, BarChartExample, PieChartExample, 
+  DoughnutExample, PolarExample
+} from "@/components/charts/Chart";
+
+// Analytics partials for dashboards
+import { 
+  AnalyticsAudienceOverview, 
+  AnalyticsEarning,
+  AnalyticsOrderStatistics 
+} from "@/components/partials/analytics/Analytics";
+
+// Example dashboard widget:
+<Col xxl="6">
+  <PreviewCard className="card-full">
+    <AnalyticsEarning />
+  </PreviewCard>
+</Col>
+```
+
+### Preview & Code Components
+```jsx
+// For documentation and examples
+import { PreviewCard, PreviewAltCard, PreviewTable, CodeBlock } from "@/components/preview/Preview";
+
+// Example documentation:
+<PreviewCard title="User Form" className="code-preview">
+  <CodeBlock language="jsx">
+    {`<UserForm onSubmit={handleSubmit} />`}
+  </CodeBlock>
+</PreviewCard>
+```
+
+## Admin-Specific Patterns
+
+### Dashboard Layouts
+```jsx
+// Standard admin page structure
+const AdminPage = () => {
+  return (
+    <React.Fragment>
+      <Head title="Page Title" />
+      <Content>
+        <BlockHead size="sm">
+          <BlockBetween>
+            <BlockHeadContent>
+              <BlockTitle page>Dashboard</BlockTitle>
+              <BlockDes className="text-soft">
+                <p>Welcome to DashLite Admin Dashboard.</p>
+              </BlockDes>
+            </BlockHeadContent>
+            <BlockHeadContent>
+              <div className="toggle-wrap nk-block-tools-toggle">
+                <Button color="primary">
+                  <Icon name="plus" />
+                  <span>Add New</span>
+                </Button>
+              </div>
+            </BlockHeadContent>
+          </BlockBetween>
+        </BlockHead>
+        
+        <Block>
+          <Row className="g-gs">
+            {/* Dashboard content */}
+          </Row>
+        </Block>
+      </Content>
+    </React.Fragment>
+  );
+};
+```
+
+### Modal Patterns
+```jsx
+// Use DashLite modal patterns with reactstrap
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+
+const AdminModal = ({ isOpen, toggle, title, children }) => {
+  return (
+    <Modal isOpen={isOpen} toggle={toggle} className="modal-dialog-centered" size="lg">
+      <ModalBody>
+        <a href="#close" onClick={toggle} className="close">
+          <Icon name="cross-sm" />
+        </a>
+        <div className="p-2">
+          <h5 className="title">{title}</h5>
+          <div className="mt-4">
+            {children}
+          </div>
+        </div>
+      </ModalBody>
+    </Modal>
+  );
+};
+```
+
+### Error & Loading States
+```jsx
+// Loading states with DashLite spinners
+const LoadingState = () => (
+  <div className="d-flex justify-content-center p-4">
+    <div className="spinner-border text-primary" role="status">
+      <span className="sr-only">Loading...</span>
+    </div>
+  </div>
+);
+
+// Error states
+const ErrorState = ({ message, onRetry }) => (
+  <div className="nk-block-middle text-center">
+    <div className="nk-block-head">
+      <BlockTitle className="text-muted">
+        {message || "Something went wrong"}
+      </BlockTitle>
+      {onRetry && (
+        <div className="nk-block-head-sub">
+          <Button color="primary" outline onClick={onRetry}>
+            Try Again
+          </Button>
+        </div>
+      )}
+    </div>
+  </div>
+);
+```
+
+## File Organization
+
+### Component Structure
+- Place admin-specific components in `admin/src/components/`
+- Follow DashLite naming conventions (PascalCase for components)
+- Group related components in folders
+- Always export through `Component.js` for consistency
+
+### Page Structure
+- Admin pages go in `admin/src/pages/`
+- Use consistent page layouts with Head, Content, Block structure
+- Separate business logic into custom hooks
+- Keep components focused and reusable
+
+## DashLite Integration Best Practices
+
+### CSS Classes
+- Use DashLite's utility classes: `nk-`, `is-`, `has-`
+- Leverage DashLite's responsive grid: `g-gs`, `g-4`, etc.
+- Use semantic color classes: `text-primary`, `bg-light`, etc.
+- Apply DashLite spacing: `p-2`, `m-4`, `mt-3`, etc.
+
+### Theme Integration
+- Respect DashLite's dark/light mode support
+- Use DashLite color tokens from SCSS variables
+- Follow DashLite's component sizing patterns
+- Maintain consistent spacing and typography
+
+### Responsive Design
+- Use DashLite's responsive utilities
+- Follow mobile-first approach
+- Test components across different screen sizes
+- Use DashLite's responsive grid system
+
+## Quality Standards
+
+### Code Quality
+- Functional components with hooks only
+- Proper PropTypes or TypeScript interfaces
+- Consistent naming conventions
+- Clear component structure
+
+### Performance
+- Use React.memo for expensive re-renders
+- Implement proper loading states
+- Optimize data fetching patterns
+- Minimize bundle size with proper imports
+
+### Accessibility
+- Follow DashLite's accessibility patterns
+- Proper ARIA labels and roles
+- Keyboard navigation support
+- Screen reader compatibility
+
+## Component Reuse Priority
+1. **Existing DashLite components** from `Component.js` exports
+2. **DashLite partials** for complex UI patterns  
+3. **Layout components** (Block, Card, DataTable)
+4. **Form components** (inputs, selects, switches)
+5. **UI elements** (buttons, icons, avatars)
+6. **Only create new components** when no DashLite equivalent exists

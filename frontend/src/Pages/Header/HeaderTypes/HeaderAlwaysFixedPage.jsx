@@ -9,7 +9,6 @@ import Header, { HeaderNav, Menu, SearchBar } from '../../../Components/Header/H
 import Buttons from '../../../Components/Button/Buttons'
 import PortfolioScattered from '../../../Components/Portfolio/PortfolioScattered'
 import FooterStyle01 from '../../../Components/Footers/FooterStyle01'
-import SideButtons from "../../../Components/SideButtons";
 
 // Data
 import { portfolioScatteredData } from '../../../Components/Portfolio/PortfolioData'
@@ -47,7 +46,7 @@ const HeaderAlwaysFixedPage = (props) => {
                 </HeaderNav>
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
             {/* Section start */}
             <section className="overflow-visible cover-background" style={{ backgroundImage: `url("https://via.placeholder.com/1920x1080")` }}>
                 <Container>

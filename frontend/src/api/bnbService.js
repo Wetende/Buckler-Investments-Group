@@ -26,6 +26,13 @@ export const getFeaturedListings = async (limit = 8) => {
     return data
 }
 
+export const getNearbyListings = async ({ latitude, longitude, radius_km = 10, limit = 8 }) => {
+    const { data } = await axiosInstance.get('/bnb/listings/nearby', {
+        params: { latitude, longitude, radius_km, limit }
+    })
+    return data
+}
+
 // Bookings
 export const createBooking = async (payload) => {
     // POST with id=0 for create (handled server-side)
@@ -43,15 +50,80 @@ export const listMyBookings = async () => {
     return data
 }
 
+// Host-related services
+export const getHostDashboard = async () => {
+    const { data } = await axiosPrivate.get('/bnb/host/dashboard')
+    return data
+}
+
+export const getHostListings = async () => {
+    const { data } = await axiosPrivate.get('/bnb/my-listings')
+    return data
+}
+
+export const getHostBookings = async (filters = {}) => {
+    const { data } = await axiosPrivate.get('/bnb/host/bookings', { params: filters })
+    return data
+}
+
+export const getHostEarnings = async (period = 'month') => {
+    const { data } = await axiosPrivate.get('/bnb/host/earnings', { params: { period } })
+    return data
+}
+
+// Booking management for guests
+export const cancelBooking = async (bookingId) => {
+    const { data } = await axiosPrivate.get(`/bnb/bookings/${bookingId}/cancel`)
+    return data
+}
+
+// Host booking management
+export const approveBooking = async (bookingId) => {
+    const { data } = await axiosPrivate.post(`/bnb/bookings/${bookingId}/approve`)
+    return data
+}
+
+export const rejectBooking = async (bookingId) => {
+    const { data } = await axiosPrivate.post(`/bnb/bookings/${bookingId}/reject`)
+    return data
+}
+
+// Host listing management
+export const createListing = async (payload) => {
+    const { data } = await axiosPrivate.post('/bnb/listings', payload)
+    return data
+}
+
+export const updateListing = async (payload) => {
+    const { data } = await axiosPrivate.post('/bnb/listings', payload)
+    return data
+}
+
+export const deleteListing = async (listingId) => {
+    const { data } = await axiosPrivate.get(`/bnb/listings/${listingId}/delete`)
+    return data
+}
+
 const bnbService = {
     searchListings,
     listListings,
     getListing,
     getAvailability,
     getFeaturedListings,
+    getNearbyListings,
     createBooking,
     getBooking,
     listMyBookings,
+    cancelBooking,
+    getHostDashboard,
+    getHostListings,
+    getHostBookings,
+    getHostEarnings,
+    approveBooking,
+    rejectBooking,
+    createListing,
+    updateListing,
+    deleteListing,
 }
 
 export default bnbService

@@ -36,17 +36,17 @@ class TourOperatorDashboardUseCase:
         current_date = datetime.now().date()
         
         for booking in all_bookings:
-            # Calculate revenue from completed bookings
+            # Calculate revenue from completed or confirmed bookings
             if booking.status in ['COMPLETED', 'CONFIRMED']:
                 booking_amount = (
-                    booking.total_amount.amount 
-                    if hasattr(booking.total_amount, 'amount') 
-                    else booking.total_amount
+                    booking.total_price.amount
+                    if hasattr(booking.total_price, 'amount')
+                    else booking.total_price
                 )
                 total_revenue += booking_amount
-            
+
             # Count active bookings (future tours)
-            if booking.tour_date >= current_date and booking.status in ['CONFIRMED', 'PENDING']:
+            if booking.booking_date >= current_date and booking.status in ['CONFIRMED', 'PENDING']:
                 active_bookings += 1
             
             # Count completed tours
@@ -69,10 +69,7 @@ class TourOperatorDashboardUseCase:
         
         # Recent bookings (last 30 days)
         thirty_days_ago = current_date - timedelta(days=30)
-        recent_bookings = [
-            booking for booking in all_bookings 
-            if booking.created_at.date() >= thirty_days_ago
-        ]
+        recent_bookings = [booking for booking in all_bookings if booking.created_at.date() >= thirty_days_ago]
         
         # Popular tours (by booking count)
         tour_booking_counts = {}

@@ -8,7 +8,6 @@ import { Col, Container, Navbar, Row } from "react-bootstrap";
 import BlogGrid from '../../Components/Blogs/BlogGrid';
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar, } from "../../Components/Header/Header";
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { blogData } from '../../Components/Blogs/BlogData';
@@ -48,7 +47,7 @@ const SearchResultPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-darkgray py-[25px] page-title-small">
         <Container>

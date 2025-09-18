@@ -1,7 +1,10 @@
 import React from 'react'
 
 // Components
-import { Header, HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from "../../Components/Header/Header";
+import Header, { HeaderNav, Menu, Topbar } from "../../Components/Header/Header";
+import HomeMenuData from "../../Components/Header/HomeMenuData";
+import AuthButtons from "../../Components/Header/AuthButtons";
+import Brand from "../../Components/Header/Brand";
 import { fadeIn } from '../../Functions/GlobalAnimations'
 import Buttons from '../../Components/Button/Buttons'
 import Clients from '../../Components/Clients/Clients'
@@ -13,7 +16,6 @@ import Lists from '../../Components/Lists/Lists'
 import Counter from '../../Components/Counters/Counter'
 import Overlap from '../../Components/Overlap/Overlap'
 import CustomModal from '../../Components/CustomModal'
-import SideButtons from "../../Components/SideButtons";
 
 // Libraries
 import { Link } from "react-router-dom";
@@ -32,85 +34,85 @@ import { TeamData04 } from '../../Components/Team/TeamData';
 const TestimonialsCarouselData = [
   {
     img: "https://via.placeholder.com/800x622",
-    title: "Unlimited power customization",
+    title: "Investment Excellence",
     number: "01",
-    content: "Lorem ipsum dolor sit amet consectetur do eiusmod tempor incididunt elit.",
+    content: "Strategic investment opportunities across East Africa's growing markets.",
   },
   {
     img: "https://via.placeholder.com/800x622",
-    title: "Powerful creatives designer",
+    title: "Property Innovation",
     number: "02",
-    content: "Lorem ipsum dolor sit amet consectetur do eiusmod tempor incididunt elit.",
+    content: "Premium real estate solutions connecting investors with prime properties.",
   },
   {
     img: "https://via.placeholder.com/800x622",
-    title: "Advanced customization options",
+    title: "Travel & Hospitality",
     number: "03",
-    content: "Lorem ipsum dolor sit amet consectetur do eiusmod tempor incididunt elit.",
+    content: "Comprehensive travel services from BnB stays to luxury safari experiences.",
   },
 ]
 
 const ListData = [
   {
     icon: "feather-arrow-right-circle",
-    content: "Beautiful and easy to understand animations"
+    content: "Comprehensive investment platform for East Africa"
   },
   {
     icon: "feather-arrow-right-circle",
-    content: "Theme advantages are pixel perfect design",
+    content: "Verified properties and trusted accommodation partners",
   },
   {
     icon: "feather-arrow-right-circle",
-    content: "Find more creative ideas for your projects",
+    content: "Seamless booking and investment management experience",
   },
 ]
 
 const CounterData05 = [
   {
     number: {
-      text: "1227",
-      class: "text-fastblue"
+      text: "500+",
+      class: "text-red-600"
     },
-    title: "Winning awards",
-    content: "For creative design",
+    title: "Properties Listed",
+    content: "Across East Africa",
   },
   {
     number: {
-      text: "1947",
-      class: "text-fastblue"
+      text: "2,000+",
+      class: "text-red-600"
     },
-    title: "Working hours",
-    content: "Desperate for work",
+    title: "Successful Bookings",
+    content: "Happy travelers",
   },
   {
     number: {
-      text: "1587",
-      class: "text-fastblue"
+      text: "150+",
+      class: "text-red-600"
     },
-    title: "Happy clients",
-    content: "We love clients",
+    title: "Investment Projects",
+    content: "Growing portfolio",
   },
 ]
 const IconWithTextData = [
   {
-    icon: "line-icon-Navigation-LeftWindow text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
-    title: "Powerfull theme options",
-    content: "Lorem ipsum is simply dummy text of the printing typesetting lorem ipsum been text. Adipiscing eiusmod tempor incididunt magna.",
+    icon: "line-icon-Building text-red-600",
+    title: "Investment Opportunities",
+    content: "Strategic investment opportunities across East Africa's most promising markets, from real estate to emerging businesses with verified growth potential.",
   },
   {
-    icon: "line-icon-Cursor-Click2 text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
-    title: "Unlimited layouts and styles",
-    content: "Lorem ipsum is simply dummy text of the printing typesetting lorem ipsum been text. Adipiscing eiusmod tempor incididunt magna.",
+    icon: "line-icon-House-3 text-red-600",
+    title: "Property Solutions",
+    content: "Comprehensive property listings connecting buyers, sellers, and renters with prime real estate opportunities throughout Kenya and beyond.",
   },
   {
-    icon: "line-icon-Archery-2 text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
-    title: "Developing an effective strategy",
-    content: "Lorem ipsum is simply dummy text of the printing typesetting lorem ipsum been text. Adipiscing eiusmod tempor incididunt magna.",
+    icon: "line-icon-Suitcase text-red-600",
+    title: "Travel & Hospitality",
+    content: "From luxury safari experiences to comfortable BnB accommodations, we provide complete travel solutions for every type of East African adventure.",
   },
   {
-    icon: "line-icon-Female text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
-    title: "Automated testing and support",
-    content: "Lorem ipsum is simply dummy text of the printing typesetting lorem ipsum been text. Adipiscing eiusmod tempor incididunt magna.",
+    icon: "line-icon-Car text-red-600",
+    title: "Transportation Services",
+    content: "Reliable car hire services connecting you with trusted vehicle rental partners for seamless travel across Kenya and East Africa.",
   },
 ]
 const AboutUsPage = (props) => {
@@ -118,37 +120,31 @@ const AboutUsPage = (props) => {
   return (
     <div style={props.style}>
       {/* Header Start */}
-      <Header topSpace={{ md: true }} type="reverse-scroll">
-        <HeaderNav theme="dark" expand="lg" className="py-[0px] lg:px-[15px] md:px-0" containerClass="sm:px-0">
-          <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
-            <Link aria-label="header logo" className="flex items-center" to="/">
-              <Navbar.Brand className="inline-block p-0 m-0">
-                <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-white.webp' data-rjs='/assets/img/webp/logo-white@2x.webp' alt='logo' />
-                <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
-                <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-fast-blue-black.webp' data-rjs='/assets/img/webp/logo-fast-blue-black@2x.webp' alt='logo' />
-              </Navbar.Brand>
+      <Header topSpace={{ desktop: true }} type="reverse-scroll">
+        {/* Header Start */}
+        <HeaderNav fluid="fluid" theme="light" bg="white" expand="lg" containerClass="sm:!px-0" className="py-[0px] px-[35px] md:pr-[15px] md:pl-0">
+          <Col className="col-auto mr-auto ps-lg-0">
+            <Link aria-label="header logo" className="flex items-center -mr-[35px]" to="/">
+              <Brand defaultClass="text-[#232323]" altClass="text-[#232323]" mobileClass="text-[#232323]" />
             </Link>
           </Col>
-          <div className="col-auto hidden order-last md:block">
-            <Navbar.Toggle className="md:ml-[10px] sm:ml-0">
-              <span className="navbar-toggler-line"></span>
-              <span className="navbar-toggler-line"></span>
-              <span className="navbar-toggler-line"></span>
-              <span className="navbar-toggler-line"></span>
-            </Navbar.Toggle>
-          </div>
-          <Navbar.Collapse className="col-auto px-0 justify-end">
-            <Menu {...props} />
+          <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+          </Navbar.Toggle>
+          <Navbar.Collapse className="col-auto justify-center">
+            <Menu {...props} data={HomeMenuData} />
           </Navbar.Collapse>
-          <Col className="col-auto text-right pe-0">
-            <SearchBar className="pr-0 xs:pl-[15px]" />
-            <HeaderLanguage className="xs:pl-[15px]" />
-            <HeaderCart className="xs:pl-[15px]" style={{ "--base-color": "#0038e3" }} />
+          <Col className="col-auto text-right !pr-0">
+            <AuthButtons />
           </Col>
         </HeaderNav>
+        {/* Header End */}
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Scrolling Start */}
       <div className="h-[660px] lg:h-[580px] md:h-[550px] sm:h-[500px] xs:h-[380px] flex items-center overflow-hidden relative">
         <Parallax className="lg-no-parallax bg-cover cover-background absolute top-[0px] left-0 w-full h-[100vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1100)` }}></Parallax>
@@ -156,8 +152,8 @@ const AboutUsPage = (props) => {
         <Container>
           <Row className="items-center justify-center">
             <Col md={8} xl={6} lg={7} sm={9} className="relative text-center">
-              <h1 className="inline-block text-white opacity-60 mb-[20px] text-xmd leading-[20px] -tracking-[.5px] font-serif">About our company</h1>
-              <h2 className="font-serif text-white -tracking-[1px] text-[3.9rem] font-medium mb-0 sm:-tracking-[1px]">we are a creative design studio</h2>
+              <h1 className="inline-block text-white opacity-60 mb-[20px] text-xmd leading-[20px] -tracking-[.5px] font-serif">About Buckler Investments Group</h1>
+              <h2 className="font-serif text-white -tracking-[1px] text-[3.9rem] font-medium mb-0 sm:-tracking-[1px]">East Africa's premier investment & travel platform</h2>
             </Col>
             <ScrollTo to="about" offset={0} delay={0} spy={true} smooth={true} duration={800} className="absolute bottom-[50px] left-1/2 w-auto inline-block p-0 -translate-x-1/2 sm:bottom-7 xs:bottom-[4.5rem] cursor-pointer">
               <i className="ti-arrow-down text-lg leading-[1] text-white bg-[#000000b3] p-[15px] xs:p-[10px] rounded-full flex justify-center items-center"></i>
@@ -167,6 +163,38 @@ const AboutUsPage = (props) => {
       </div>
       {/* Parallax Scrolling End */}
 
+      {/* About Section Start */}
+      <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]" style={{ backgroundImage: 'url(/assets/img/webp/home-decor-bg-img-02.webp)' }}>
+        <Container>
+          <Row className="justify-center items-center">
+            <Col lg={6} md={10} className="relative mb-[20px] md:mb-32 sm:mb-40 xs:mb-0">
+              <div className="relative">
+                <Parallax className="lg-no-parallax w-[70%] mb-16" speed={0}> <img alt="" src="https://via.placeholder.com/700x1027" className="w-full" width="385.34" height="565.34" /> </Parallax>
+                <Parallax className="lg-no-parallax flex justify-center items-center w-[55%] bg-no-repeat absolute bottom-0 right-[15px] lg:!ml-auto lg:!top-[145px]" speed={20}>
+                  <img alt="" src="https://via.placeholder.com/317x477" width="317" height="477" />
+                </Parallax>
+              </div>
+            </Col>
+            <Col lg={{ span: 5, offset: 1 }} md={10}>
+              <div className="font-serif text-md font-medium mb-[30px] flex">
+                <span className="w-[40px] h-[1px] bg-red-600 opacity-70 self-center mr-[20px] shrink-0"></span>
+                <div className="grow-[1]"> <span className="text-red-600 uppercase">About Buckler Investments Group</span> </div>
+              </div>
+              <h1 className="heading-4 font-serif text-darkgray font-semibold w-[85%] mb-[35px] lg:w-full sm:mb-[25px]">A unified platform for investments, Properties, BnB, Tours and Car-Hire</h1>
+              <p className="mb-[25px] w-[80%] lg:w-full">We connect investors and travellers with verified opportunities across East Africa — curated properties, flexible investment products, authentic tours, short-stay BnB stays and reliable vehicles.</p>
+              <div className="flex flex-wrap gap-3 mt-[20px]">
+                <Buttons to="/bnb" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="BnB" />
+                <Buttons to="/tours" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Tours" />
+                <Buttons to="/properties" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Properties" />
+                <Buttons to="/invest" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Invest" />
+                <Buttons to="/cars" className="btn-fancy btn-fill rounded-none font-medium font-serif uppercase" themeColor="#232323" size="sm" color="#fff" title="Car-Hire" />
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      {/* About Section End */}
+
       {/* Section Start */}
       <section id="about" className="bg-lightgray py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
         <Container>
@@ -175,17 +203,17 @@ const AboutUsPage = (props) => {
               <div className="w-full md:h-[700px] sm:h-[550px] xs:h-[450px] cover-background" style={{ backgroundImage: "url('https://via.placeholder.com/800x1000') " }}></div>
             </Col>
             <Col lg={4} md={6} className="ps-lg-0 flex items-center sm:mb-[30px]">
-              <div className="justify-center h-full w-full flex flex-col items-start bg-fastblue px-[5.5rem] lg:px-[3rem] md:p-16">
-                <span className="text-xlg lg:text-lg lg:leading-[26px] font-medium text-white mb-[20px] block">We started this company 10 years ago out of a desire to design and build amazing things.</span>
-                <p className="text-white font-sans opacity-70 mb-[20px] xs:mb-[15px]">Lorem ipsum is simply dummy text of the printing and typeing industry. Lorem ipsum has been the industry's standard dummy text ever since text.</p>
-                <Buttons href="/page/our-services" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-[#fff] hover:text-[#fff]" color="#fff" title="Company overview" />
+              <div className="justify-center h-full w-full flex flex-col items-start bg-red-600 px-[5.5rem] lg:px-[3rem] md:p-16">
+                <span className="text-xlg lg:text-lg lg:leading-[26px] font-medium text-white mb-[20px] block">We founded Buckler Investments Group to democratize access to East Africa's growth opportunities.</span>
+                <p className="text-white font-sans opacity-70 mb-[20px] xs:mb-[15px]">From strategic investments to premium accommodations, we connect people with the best opportunities across Kenya and East Africa.</p>
+                <Buttons href="/invest" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-[#fff] hover:text-[#fff]" color="#fff" title="Explore opportunities" />
               </div>
             </Col>
             <Col lg={4} md={6} className="flex flex-col pr-0">
               <img src="https://via.placeholder.com/800x600" alt="about us" className="sm:w-full" />
               <div className="bg-white px-[3.5rem] py-[3rem] h-full lg:p-8 sm:p-16">
-                <span className="text-darkgray font-medium mb-[10px] block">About digital agency</span>
-                <p className="font-sans">Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem ipsum has been the industry's standard dummy text.</p>
+                <span className="text-darkgray font-medium mb-[10px] block">Our Mission</span>
+                <p className="font-sans">To bridge the gap between opportunity and access, creating pathways for sustainable growth and memorable experiences across East Africa's dynamic markets.</p>
               </div>
             </Col>
           </Row>
@@ -198,7 +226,7 @@ const AboutUsPage = (props) => {
         <Container>
           <Row className="items-center justify-center">
             <Col xl={7} lg={8} md={7} sm={10} className="text-left sm:text-center sm:mb-[30px]">
-              <h5 className="font-serif text-darkgray font-medium mb-0"><strong className="text-basecolor underline underline-offset-auto font-semibold">25 years</strong> we have created websites for global brands. Our success story.</h5>
+              <h5 className="font-serif text-darkgray font-medium mb-0"><strong className="text-red-600 underline underline-offset-auto font-semibold">Since 2020</strong> we have been connecting investors and travelers with East Africa's best opportunities.</h5>
             </Col>
             <Col xl={{ span: 3, offset: 2 }} lg={4} md={5} className="sm:text-center text-right">
               {/* Modal Component Start */}
@@ -208,7 +236,7 @@ const AboutUsPage = (props) => {
                   <span className="cursor-pointer font-serif inline-block py-[19px] px-[44px] text-white rounded about-us-bg-gradient">
                     <i className="fa fa-arrow-right line-icon-Video-5 text-[50px] inline-block ml-0 mr-[15px] align-middle"></i>
                     <div className="inline-block text-start text-md align-middle uppercase font-medium">
-                      <span className="opacity-60 text-md block leading-[15px]">Story video</span>Watch</div></span>
+                      <span className="opacity-60 text-md block leading-[15px]">Platform overview</span>Watch</div></span>
                 } >
                 <div className="w-[1020px] max-w-full relative rounded mx-auto">
                   <div className="fit-video">
@@ -236,8 +264,8 @@ const AboutUsPage = (props) => {
         <Container>
           <Row className="justify-center flex">
             <m.div className="text-center mb-20 md:mb-12 col-lg-6 col-sm-8" {...fadeIn}>
-              <span className="text-xmd mb-[15px] font-serif block w-full">Browse amazing social media features</span>
-              <h5 className="font-serif text-darkgray font-medium mb-8 sm:w-full">We offer a full range of digital marketing services!</h5>
+              <span className="text-xmd mb-[15px] font-serif block w-full">Explore our comprehensive platform</span>
+              <h5 className="font-serif text-darkgray font-medium mb-8 sm:w-full">We offer a complete suite of investment and travel services!</h5>
             </m.div>
             <Col xs={12} md={9} lg={12}>
               <IconWithText
@@ -285,10 +313,10 @@ const AboutUsPage = (props) => {
               </div>
             </Col>
             <Col lg={{ span: 5, offset: 1 }} >
-              <h5 className="font-serif text-darkgray font-medium">It is teamwork that makes the dream work.</h5>
-              <p>With years of experience in the website design and development industry ThemeZaa pride ourselves on creating unique, creative &amp; quality designs that are developed upon the latest coding.</p>
+              <h5 className="font-serif text-darkgray font-medium">It is vision and execution that creates success.</h5>
+              <p>With deep understanding of East Africa's markets and years of experience in investment and hospitality, Buckler Investments Group brings together the best opportunities in one platform.</p>
               <Lists theme="list-style-02" data={ListData} className="mb-12 mt-8 text-darkgray font-serif" animation={fadeIn} />
-              <Buttons href="/page/contact-modern" className="btn-fill font-medium font-serif rounded-[4px] uppercase md:mb-[15px]" themeColor="#0038e3" color="#fff" size="md" title="Get Started Now" />
+              <Buttons href="/contact-us" className="btn-fill font-medium font-serif rounded-[4px] uppercase md:mb-[15px]" themeColor="#dc2626" color="#fff" size="md" title="Get Started Now" />
             </Col>
           </Row>
         </Container>
@@ -308,50 +336,6 @@ const AboutUsPage = (props) => {
       </section>
       {/* Section End */}
 
-      {/* Section Start */}
-      <section className="bg-[#262b35] pt-[130px] pb-[140px] lg:pt-[90px] lg:pb-[195px] md:pt-[75px] sm:py-[50px] xs:py-0">
-        <Container className="xs:px-0">
-          <Row className="gx-0">
-            <m.div
-              className="col-12 col-lg-6 bg-cover bg-center md:h-[400px]"
-              style={{ backgroundImage: `url("https://via.placeholder.com/900x900")` }}
-              {...{ ...fadeIn, transition: { delay: 0.2 } }}
-            ></m.div>
-            <m.div
-              className="col-12 p-0 col-lg-6"
-              {...{ ...fadeIn, transition: { delay: 0.36 } }}
-            >
-              <m.div className="bg-gradient-to-tr from-[#556fff] via-[#ff77dd] to-[#ff798e] px-24 py-28 lg:py-20 lg:px-16 md:p-20 text-white text-center">
-                {/* Modal Component Start */}
-                <CustomModal.Wrapper
-                  modalBtn={<Buttons type="submit" className="btn-sonar border-0 mx-auto mb-14 xs:mb-[50px]" themeColor="#fff" size="lg" title={<i className="icon-control-play text-gradient bg-gradient-to-tr from-[#b783ff] to-[#ff9393]" />} />}
-                >
-                  <div className="w-[1020px] max-w-full relative rounded mx-auto">
-                    <div className="fit-video">
-                      <iframe width="100%" height="100%" className="shadow-[0_0_8px_rgba(0,0,0,0.06)]" controls src="https://www.youtube.com/embed/g0f_BRYJLJE?autoplay=1" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen ></iframe>
-                    </div>
-                  </div>
-                </CustomModal.Wrapper>
-                {/* Modal Component End */}
-                <span className="text-xmd font-serif mb-[20px] block text-white opacity-70">
-                  Powerful theme for creatives designer
-                </span>
-                <h5 className="font-serif text-white font-medium mb-[40px] xs:mb-[20px]">
-                  We design brand, digital experience that engage the right
-                  customers{" "}
-                </h5>
-                <Buttons
-                  to="/page/contact-simple"
-                  className="mx-3 font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-[#fff] hover:text-white"
-                  color="#fff"
-                  size="xl"
-                  title="Get Started Now" />
-              </m.div>
-            </m.div>
-          </Row>
-        </Container>
-      </section>
-      {/* Section End */}
 
       {/* Section Start */}
       <section className="pb-[130px] lg:pb-[90px] md:pb-[75px] xs:pb-[50px]">
@@ -371,8 +355,8 @@ const AboutUsPage = (props) => {
         <Container>
           <Row className="justify-center">
             <m.div className="col-md-6 font-serif text-center mb-[4.5rem] sm:mb-12" {...fadeIn}>
-              <span className="text-xmd">The designer team</span>
-              <h5 className="text-darkgray font-medium">Creative people</h5>
+              <span className="text-xmd">Our expert team</span>
+              <h5 className="text-darkgray font-medium">Investment and hospitality professionals</h5>
             </m.div>
           </Row>
           <Team
@@ -389,10 +373,10 @@ const AboutUsPage = (props) => {
           <div className="bg-[#ededed] mb-24 mt-12 w-full h-[1px]"></div>
           <Row className="items-center justify-center">
             <Col xl={7} md={8} sm={10} className="text-start md:text-center sm:mb-[30px]">
-              <h6 className="font-serif text-darkgray font-medium mb-0 md:w-[90%] sm:w-full sm:text-center"><strong className="font-semibold underline underline-offset-2">Creative thinkers,</strong> clever developer and marketing superheroes apply for work with us.</h6>
+              <h6 className="font-serif text-darkgray font-medium mb-0 md:w-[90%] sm:w-full sm:text-center"><strong className="font-semibold underline underline-offset-2">Investment experts,</strong> hospitality professionals and market analysts join our growing team.</h6>
             </Col>
             <Col xl={5} md={4} className="text-center md:text-end flex justify-end sm:justify-center">
-              <Buttons to="/page/contact-classic" className="font-medium rounded-[4px] font-serif uppercase hover:text-white bg-transparent btn-slide-right" size="lg" color="#0038e3" themeColor="#0038e3" title="JOIN THE TEAM" />
+              <Buttons to="/contact-us" className="font-medium rounded-[4px] font-serif uppercase hover:text-white bg-transparent btn-slide-right" size="lg" color="#dc2626" themeColor="#dc2626" title="JOIN THE TEAM" />
             </Col>
           </Row>
         </Container>
@@ -400,7 +384,7 @@ const AboutUsPage = (props) => {
       {/* Section End */}
 
       {/* Footer start */}
-      <FooterStyle01 theme="dark" className="text-slateblue bg-[#262b35]" />
+      <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
       {/* Footer end */}
     </div>
   )

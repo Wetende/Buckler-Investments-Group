@@ -1,149 +1,148 @@
 const FooterData = [
     {
-        title: "company",
+        title: "Investments",
         submenu: [
             {
-                title: "About company",
-                link: "/page/about-us"
+                title: "Property Investment",
+                link: "/properties"
             },
             {
-                title: "Company services",
-                link: "/page/our-services"
+                title: "Investment Packages",
+                link: "/invest"
             },
             {
-                title: "Job opportunities",
-                link: "/page/our-team"
+                title: "Portfolio Management",
+                link: "/account"
             },
             {
-                title: "Contact us",
-                link: "/page/contact-classic"
+                title: "Investment Calculator",
+                link: "/invest/calculator"
             },
         ]
     },
     {
-        title: "customer",
+        title: "Travel",
         submenu: [
             {
-                title: "Client support",
-                link: "/page/faq-s"
+                title: "Tours & Safaris",
+                link: "/tours"
             },
             {
-                title: "Pricing packages",
-                link: "/page/pricing-packages"
+                title: "BnB Accommodations",
+                link: "/rentals"
             },
             {
-                title: "Company history",
-                link: "/page/our-story"
+                title: "Vehicle Hire",
+                link: "/cars"
             },
             {
-                title: "Our process",
-                link: "/page/our-process"
+                title: "Travel Insurance",
+                link: "/insurance"
             },
         ]
     },
     {
-        title: "Additional",
+        title: "Company",
         submenu: [
             {
-                title: "Our story",
-                link: "/page/our-story"
+                title: "About Buckler",
+                link: "/about"
             },
             {
-                title: "Who we are",
-                link: "/page/who-we-are"
+                title: "Our Team",
+                link: "/about/team"
             },
             {
-                title: "Our process",
-                link: "/page/our-process"
+                title: "Careers",
+                link: "/careers"
             },
             {
-                title: "Latest news",
-                link: "/page/latest-news"
+                title: "Contact Us",
+                link: "/contact"
             },
         ]
     },
     {
-        title: "Services",
+        title: "Support",
         submenu: [
             {
-
-                title: "Brand experience",
-                link: "/page/our-services"
+                title: "Help Center",
+                link: "/help"
             },
             {
-                title: "e-Commerce website",
-                link: "/page/our-services"
+                title: "FAQ",
+                link: "/faq"
             },
             {
-                title: "Content writing",
-                link: "/page/our-services"
+                title: "Investor Resources",
+                link: "/resources"
             },
             {
-                title: "Marketing strategy",
-                link: "/page/our-services"
+                title: "Travel Guides",
+                link: "/guides"
             },
         ]
     },
     {
-        title: "Resources",
+        title: "Legal",
         submenu: [
             {
-                title: "Theme guide",
-                link: "/page/faq-s"
+                title: "Privacy Policy",
+                link: "/privacy"
             },
             {
-                title: "Support desk",
-                link: "/page/faq-s"
+                title: "Terms of Service",
+                link: "/terms"
             },
             {
-                title: "What we offer",
-                link: "/page/what-we-offer"
+                title: "Investment Disclosure",
+                link: "/disclosure"
             },
             {
-                title: "Company history",
-                link: "/page/our-story"
+                title: "Compliance",
+                link: "/compliance"
             },
         ]
     },
     {
-        title: "Categories",
+        title: "Destinations",
         submenu: [
             {
-                title: "For men",
-                link: "/shop/shop-wide"
+                title: "Kenya",
+                link: "/tours?location=kenya"
             },
             {
-                title: "For woman",
-                link: "/shop/shop-wide"
+                title: "Tanzania",
+                link: "/tours?location=tanzania"
             },
             {
-                title: "Accessories",
-                link: "/shop/shop-wide"
+                title: "Uganda",
+                link: "/tours?location=uganda"
             },
             {
-                title: "Collections",
-                link: "/shop/shop-wide"
+                title: "East Africa",
+                link: "/tours?region=east-africa"
             },
         ]
     },
     {
-        title: "Adavantages",
+        title: "Partners",
         submenu: [
             {
-                title: "Free delivery",
-                link: "/page/faq-s"
+                title: "Property Developers",
+                link: "/partners/developers"
             },
             {
-                title: "100 days refund",
-                link: "/page/faq-s"
+                title: "Travel Operators",
+                link: "/partners/operators"
             },
             {
-                title: "Multiple payments",
-                link: "/page/faq-s"
+                title: "Financial Advisors",
+                link: "/partners/advisors"
             },
             {
-                title: "Sustainable",
-                link: "/page/faq-s"
+                title: "Become a Partner",
+                link: "/partners/join"
             },
         ]
     },

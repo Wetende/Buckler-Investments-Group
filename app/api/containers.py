@@ -27,6 +27,7 @@ from infrastructure.database.repositories.bnb import (
 from infrastructure.database.repositories.tours import (
     SqlAlchemyTourRepository,
     SqlAlchemyTourBookingRepository,
+    SqlAlchemyTourAvailabilityRepository,
 )
 from infrastructure.database.repositories.cars import (
     SqlAlchemyVehicleRepository,
@@ -61,6 +62,10 @@ from application.use_cases.tours.search_tours import SearchToursUseCase
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
 from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
 from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
+from application.use_cases.tours.modify_tour_booking import ModifyTourBookingUseCase
+from application.use_cases.tours.cancel_tour_booking import CancelTourBookingUseCase
+from application.use_cases.tours.confirm_tour_booking import ConfirmTourBookingUseCase
+from application.use_cases.tours.complete_tour_booking import CompleteTourBookingUseCase
 from application.use_cases.tours.create_tour import CreateTourUseCase
 from application.use_cases.tours.get_tour import GetTourUseCase
 from application.use_cases.tours.list_tours import ListToursUseCase
@@ -215,7 +220,7 @@ class AppContainer(containers.DeclarativeContainer):
             "api.v1.shared.user_routes",
             "api.v1.shared.auth_routes",
             "api.v1.reviews.routes",
-            # "api.v1.payments.routes",  # Temporarily disabled
+            "api.v1.payments.routes",
         ]
     )
 
@@ -232,18 +237,23 @@ class AppContainer(containers.DeclarativeContainer):
         BcryptPasswordService
     )
 
-    # Payment Services - temporarily disabled
-    # stripe_service = providers.Singleton(
-    #     StripePaymentService,
-    #     api_key="sk_test_mock_key"  # This should come from config
-    # )
+    # Payment Services
+    # Note: use safe mock defaults; in production pull from env/config
+    # Deliberately simple for now to enable flow
+    from infrastructure.external_services.payment.stripe_service import StripePaymentService  # type: ignore
+    from infrastructure.external_services.payment.mpesa_service import MpesaPaymentService  # type: ignore
 
-    # mpesa_service = providers.Singleton(
-    #     MpesaPaymentService,
-    #     consumer_key="mock_key",  # This should come from config
-    #     consumer_secret="mock_secret",  # This should come from config
-    #     shortcode="174379"  # This should come from config
-    # )
+    stripe_service = providers.Singleton(
+        StripePaymentService,
+        api_key="sk_test_mock_key"
+    )
+
+    mpesa_service = providers.Singleton(
+        MpesaPaymentService,
+        consumer_key="mock_key",
+        consumer_secret="mock_secret",
+        shortcode="174379"
+    )
 
     # BNB Repositories
     bnb_repository: providers.Factory[BnbRepository] = providers.Factory(
@@ -264,6 +274,13 @@ class AppContainer(containers.DeclarativeContainer):
 
     tour_booking_repository: providers.Factory[TourBookingRepository] = providers.Factory(
         SqlAlchemyTourBookingRepository,
+        session=db_session_factory,
+    )
+
+    # Tour Availability Repository
+    from domain.repositories.tours import TourAvailabilityRepository  # type: ignore
+    tour_availability_repository: providers.Factory[TourAvailabilityRepository] = providers.Factory(
+        SqlAlchemyTourAvailabilityRepository,
         session=db_session_factory,
     )
 
@@ -312,11 +329,14 @@ class AppContainer(containers.DeclarativeContainer):
         session=db_session_factory,
     )
 
-    # Payment Repository - temporarily disabled
-    # payment_repository: providers.Factory[PaymentRepository] = providers.Factory(
-    #     SqlAlchemyPaymentRepository,
-    #     session=db_session_factory,
-    # )
+    # Payment Repository
+    from domain.repositories.payment import PaymentRepository  # type: ignore
+    from infrastructure.database.repositories.payment import SqlAlchemyPaymentRepository  # type: ignore
+
+    payment_repository: providers.Factory[PaymentRepository] = providers.Factory(
+        SqlAlchemyPaymentRepository,
+        session=db_session_factory,
+    )
 
     # Review Repository
     review_repository: providers.Factory[ReviewRepository] = providers.Factory(
@@ -415,6 +435,27 @@ class AppContainer(containers.DeclarativeContainer):
         tour_booking_repository=tour_booking_repository,
     )
 
+    modify_tour_booking_use_case = providers.Factory(
+        ModifyTourBookingUseCase,
+        tour_booking_repository=tour_booking_repository,
+        tour_repository=tour_repository,
+    )
+
+    cancel_tour_booking_use_case = providers.Factory(
+        CancelTourBookingUseCase,
+        tour_booking_repository=tour_booking_repository,
+    )
+
+    confirm_tour_booking_use_case = providers.Factory(
+        ConfirmTourBookingUseCase,
+        tour_booking_repository=tour_booking_repository,
+    )
+
+    complete_tour_booking_use_case = providers.Factory(
+        CompleteTourBookingUseCase,
+        tour_booking_repository=tour_booking_repository,
+    )
+
     # Additional Tour Use Cases
     create_tour_use_case = providers.Factory(
         CreateTourUseCase,
@@ -485,13 +526,27 @@ class AppContainer(containers.DeclarativeContainer):
         bnb_repo=bnb_repository,
     )
 
-    # Payment Use Cases - temporarily disabled
-    # create_payment_intent_use_case = providers.Factory(
-    #     CreatePaymentIntentUseCase,
-    #     payment_repository=payment_repository,
-    #     stripe_service=stripe_service,
-    #     mpesa_service=mpesa_service,
-    # )
+    # Payment Use Cases
+    from application.use_cases.payment.create_payment_intent import CreatePaymentIntentUseCase  # type: ignore
+    from application.use_cases.payment.get_payment_status import GetPaymentStatusUseCase  # type: ignore
+    from application.use_cases.payment.get_booking_payments import GetBookingPaymentsUseCase  # type: ignore
+
+    create_payment_intent_use_case = providers.Factory(
+        CreatePaymentIntentUseCase,
+        payment_repository=payment_repository,
+        stripe_service=stripe_service,
+        mpesa_service=mpesa_service,
+    )
+
+    get_payment_status_use_case = providers.Factory(
+        GetPaymentStatusUseCase,
+        payment_repository=payment_repository,
+    )
+
+    get_booking_payments_use_case = providers.Factory(
+        GetBookingPaymentsUseCase,
+        payment_repository=payment_repository,
+    )
 
     # Review Use Cases
     create_review_use_case = providers.Factory(

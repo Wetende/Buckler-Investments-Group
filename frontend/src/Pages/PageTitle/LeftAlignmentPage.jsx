@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 // Components
 import Header, { HeaderCart, HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header'
-const SideButtons = lazy(() => import("../../Components/SideButtons"))
 
 const LeftAlignmentPage = (props) => {
   return (
@@ -42,7 +41,7 @@ const LeftAlignmentPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Section Start */}
       <section className="bg-lightgray py-[40px] sm:py-[30px]">
         <Container>

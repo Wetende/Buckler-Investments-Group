@@ -20,7 +20,6 @@ import Team from '../../Components/Team/Team';
 import Overlap from '../../Components/Overlap/Overlap';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import CustomModal from '../../Components/CustomModal'
-import SideButtons from "../../Components/SideButtons";
 // Data
 import { CounterData01 } from '../../Components/Counters/CounterData';
 import { ListData01 } from '../../Components/Lists/ListsData';
@@ -137,7 +136,7 @@ const WhatWeOfferPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Scrolling Start */}
       <div className="h-[660px] lg:h-[580px] md:h-[550px] sm:h-[500px] xs:h-[380px] overflow-hidden relative">
         <Parallax className="lg-no-parallax h-[100vh] w-full bg-cover bg-top cover-background absolute top-[0px] left-0 lg:h-[700px] lg:-top-[100px] md:h-[650px] sm:h-[550px] xs:h-[420px] xs:-top-[70px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1100)` }}></Parallax>

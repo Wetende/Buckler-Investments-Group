@@ -14,7 +14,6 @@ import FooterStyle01 from '../../../Components/Footers/FooterStyle01';
 import ReactCustomScrollbar from '../../../Components/ReactCustomScrollbar';
 import { TextAnime } from '../../../Components/FancyText/FancyText'
 import { fadeIn } from "../../../Functions/GlobalAnimations";
-import SideButtons from "../../../Components/SideButtons";
 
 // Data
 const sliderData = [
@@ -157,7 +156,7 @@ const HamburgerMenuModernPage = (props) => {
                 </HeaderNav>
             </Header>
             {/* Header End */}
-            <SideButtons />
+            
             {/* Section Start */}
             <section className="p-0 overflow-hidden HamburgerMenuModernPage-vertical-swiper">
                 <Swiper

@@ -14,7 +14,6 @@ import IconWithText from '../../Components/IconWithText/IconWithText'
 import PortfolioClassic from "../../Components/Portfolio/PortfolioClassic";
 import CustomModal from "../../Components/CustomModal";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
-import SideButtons from "../../Components/SideButtons";
 
 // Data
 import { portfolioClassicData } from "../../Components/Portfolio/PortfolioData";
@@ -74,7 +73,7 @@ const CenterNavigationPage = (props) => {
         </HeaderNav>
       </Header>
       {/* Header End */}
-      <SideButtons />
+      
       {/* Parallax Scrolling Start */}
       <div className="full-screen landscape:md:h-[600px] md:flex md:items-center overflow-hidden relative">
         <Parallax className="lg-no-parallax bg-cover cover-background absolute top-[1px] left-0 md:-top-[30px] w-full h-[100vh] landscape:md:h-[600px]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1080)` }}></Parallax>

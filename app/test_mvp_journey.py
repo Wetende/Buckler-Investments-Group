@@ -39,7 +39,7 @@ class MVPJourneyTester:
             'timestamp': timestamp
         })
 
-    def register_user(self, email: str, name: str, role: str = "BUYER") -> Optional[str]:
+    def register_user(self, email: str, name: str, role: str = "user") -> Optional[str]:
         """Register a new user and return access token"""
         try:
             # Add timestamp to make emails unique
@@ -97,13 +97,13 @@ class MVPJourneyTester:
         self.log_step("Starting Authentication Journey", True, "Testing user registration and login")
 
         # Register a regular user
-        buyer_token = self.register_user('john.buyer@example.com', 'John Buyer', 'BUYER')
+        buyer_token = self.register_user('john.buyer@example.com', 'John Buyer', 'user')
 
-        # Register a host (using BUYER role for now)
-        host_token = self.register_user('sarah.host@example.com', 'Sarah Host', 'BUYER')
+        # Register a host (using user role for now)
+        host_token = self.register_user('sarah.host@example.com', 'Sarah Host', 'user')
 
-        # Register a tour operator (using BUYER role for now)
-        operator_token = self.register_user('mike.operator@example.com', 'Mike Operator', 'BUYER')
+        # Register a tour operator (using user role for now)
+        operator_token = self.register_user('mike.operator@example.com', 'Mike Operator', 'user')
 
         if buyer_token and host_token and operator_token:
             self.log_step("Authentication Journey", True, "All users registered and logged in successfully")

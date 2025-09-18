@@ -20,6 +20,13 @@ const Header = ({ fixed, className, ...props }) => {
     [`is-${theme.header}`]: theme.header !== "white" && theme.header !== "light",
     [`${className}`]: className,
   });
+  const publicAppUrl = (import.meta.env.VITE_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "/"));
+  const params = (typeof window !== "undefined") ? new URLSearchParams(window.location.search) : null;
+  let backToSiteHref = publicAppUrl;
+  if (params && params.get("return_to")) {
+    const rt = decodeURIComponent(params.get("return_to"));
+    backToSiteHref = (/^https?:\/\//i.test(rt)) ? rt : `${publicAppUrl.replace(/\/$/, "")}${rt.startsWith("/") ? "" : "/"}${rt}`;
+  }
   return (
     <div className={headerClass}>
       <div className="container-fluid">
@@ -39,6 +46,11 @@ const Header = ({ fixed, className, ...props }) => {
           </div>
           <div className="nk-header-tools">
             <ul className="nk-quick-nav">
+              <li className="me-2 d-none d-md-block">
+                <a href={backToSiteHref} className="btn btn-sm btn-primary">
+                  Back to site
+                </a>
+              </li>
               <li className="user-dropdown">
                 <User/>
               </li>

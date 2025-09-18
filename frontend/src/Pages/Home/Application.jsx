@@ -17,11 +17,10 @@ import { TiltBox } from '../../Components/FancyText/FancyText'
 import IconWithText from '../../Components/IconWithText/IconWithText'
 import PricingTable04 from '../../Components/PricingTable/PricingTable04';
 import CustomModal from '../../Components/CustomModal'
-import FooterStyle08 from '../../Components/Footers/FooterStyle08';
+import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import TestimonialsCarousel04 from '../../Components/TestimonialCarousel/TestimonialsCarousel04';
 import MessageBox from '../../Components/MessageBox/MessageBox';
 import { Input } from '../../Components/Form/Form'
-import SideButtons from "../../Components/SideButtons";
 import { fadeIn, fadeInRight, fadeInLeft, zoomIn } from "../../Functions/GlobalAnimations";
 
 // Data
@@ -155,7 +154,7 @@ const ApplicationPage = (props) => {
 
     return (
         <div style={props.style}>
-            <SideButtons />
+            
             {/* Header Start */}
             <Header topSpace={{ md: true }} type="reverse-scroll">
                 <HeaderNav fluid="fluid" theme="dark" menu="light" className="application-header px-[35px] py-[0px] pr-[50px] md:px-0 md:py-[18px] sm:px-0 xs:py-[15px]" containerClass="sm:px-0">
@@ -427,7 +426,7 @@ const ApplicationPage = (props) => {
                 {/* Section End */}
 
                 {/* Footer Start */}
-                <FooterStyle08 className="bg-[#3a285e] text-[#ffffff80]" theme="dark" />
+                <FooterStyle01 className="bg-[#3a285e] text-[#ffffff80]" theme="dark" />
                 {/* Footer End */}
             </InViewPort>
         </div>
