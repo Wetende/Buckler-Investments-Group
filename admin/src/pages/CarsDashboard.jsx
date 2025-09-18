@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Head from "@/layout/head/Head";
 import Content from "@/layout/content/Content";
 import {
@@ -13,41 +14,73 @@ import {
   Col,
   PreviewCard,
   BlockBetween,
+  DataTable,
+  DataTableBody,
+  DataTableHead,
+  DataTableRow,
+  DataTableItem,
+  Badge,
 } from "@/components/Component";
-import { Card } from "reactstrap";
+import { Card, CardBody } from "reactstrap";
+import { useVehicles, useCarRentals, useCarEarnings } from "../hooks/useCars";
 
 const CarsDashboard = () => {
   const [sm, updateSm] = useState(false);
 
-  // Mock data for Cars metrics
-  const carsMetrics = {
-    totalVehicles: 145,
-    activeRentals: 67,
-    totalRevenue: 340000,
-    fleetUtilization: 72.8,
-    maintenanceAlerts: 8,
-    popularCategory: "SUV"
-  };
+  // Get real data from APIs
+  const { data: vehicles = [], isLoading: vehiclesLoading } = useVehicles({ owner_id: 1 }); // TODO: Get from auth
+  const { data: rentals = [], isLoading: rentalsLoading } = useCarRentals({ limit: 10 });
+  const { data: earnings = { total: 0, monthly: 0 }, isLoading: earningsLoading } = useCarEarnings();
 
-  const recentRentals = [
-    { id: 1, client: "Mark Stevens", vehicle: "Toyota Prado - KCB 123A", startDate: "2024-01-15", duration: 5, amount: 25000, status: "active" },
-    { id: 2, client: "Emma Wilson", vehicle: "Honda CRV - KCA 456B", startDate: "2024-01-16", duration: 3, amount: 18000, status: "pending" },
-    { id: 3, client: "Tom Anderson", vehicle: "Land Cruiser - KCC 789C", startDate: "2024-01-18", duration: 7, amount: 42000, status: "active" },
-  ];
+  // Calculate real metrics from API data
+  const carsMetrics = React.useMemo(() => {
+    const totalVehicles = vehicles.length;
+    const activeRentals = rentals.filter(rental => rental.status === 'active').length;
+    const availableVehicles = vehicles.filter(vehicle => vehicle.status === 'available').length;
+    const inMaintenanceVehicles = vehicles.filter(vehicle => vehicle.status === 'maintenance').length;
+    
+    // Calculate utilization rate
+    const fleetUtilization = totalVehicles > 0 ? ((totalVehicles - availableVehicles) / totalVehicles * 100).toFixed(1) : 0;
+    
+    // Find most popular category
+    const categoryCount = vehicles.reduce((acc, vehicle) => {
+      acc[vehicle.category] = (acc[vehicle.category] || 0) + 1;
+      return acc;
+    }, {});
+    const popularCategory = Object.keys(categoryCount).reduce((a, b) => categoryCount[a] > categoryCount[b] ? a : b, 'N/A');
 
-  const fleetStatus = [
-    { category: "Economy", total: 45, available: 32, rented: 13, maintenance: 0 },
-    { category: "SUV", total: 38, available: 24, rented: 12, maintenance: 2 },
-    { category: "Luxury", total: 28, available: 18, rented: 8, maintenance: 2 },
-    { category: "Van/Bus", total: 34, available: 26, rented: 6, maintenance: 2 },
-  ];
+    return {
+      totalVehicles,
+      activeRentals,
+      totalRevenue: earnings.total || 0,
+      fleetUtilization: parseFloat(fleetUtilization),
+      maintenanceAlerts: inMaintenanceVehicles,
+      popularCategory
+    };
+  }, [vehicles, rentals, earnings]);
 
-  const popularRoutes = [
-    { route: "Nairobi - Mombasa", bookings: 45, revenue: 180000 },
-    { route: "Nairobi - Nakuru", bookings: 32, revenue: 96000 },
-    { route: "City Tours", bookings: 28, revenue: 84000 },
-    { route: "Airport Transfers", bookings: 67, revenue: 134000 },
-  ];
+  // Get recent rentals (already from API)
+  const recentRentals = rentals.slice(0, 5);
+
+  // Calculate fleet status by category
+  const fleetStatus = React.useMemo(() => {
+    const categories = ['economy', 'compact', 'luxury', 'suv'];
+    return categories.map(category => {
+      const categoryVehicles = vehicles.filter(v => v.category === category);
+      const total = categoryVehicles.length;
+      const available = categoryVehicles.filter(v => v.status === 'available').length;
+      const rented = categoryVehicles.filter(v => v.status === 'rented').length;
+      const maintenance = categoryVehicles.filter(v => v.status === 'maintenance').length;
+      
+      return {
+        category: category.charAt(0).toUpperCase() + category.slice(1),
+        total,
+        available,
+        rented,
+        maintenance
+      };
+    }).filter(item => item.total > 0); // Only show categories with vehicles
+  }, [vehicles]);
 
   return (
     <>
@@ -74,15 +107,21 @@ const CarsDashboard = () => {
                 <div className={`toggle-expand-content ${sm ? "expanded" : ""}`}>
                   <ul className="nk-block-tools g-3">
                     <li>
-                      <Button color="primary" className="btn-white">
+                      <Button color="primary" className="btn-white" tag={Link} to="/cars/add-vehicle">
                         <Icon name="plus" />
                         <span>Add Vehicle</span>
                       </Button>
                     </li>
                     <li>
-                      <Button color="light" className="btn-outline-light btn-white">
-                        <Icon name="download-cloud" />
-                        <span>Fleet Report</span>
+                      <Button color="light" className="btn-outline-light btn-white" tag={Link} to="/cars/my-vehicles">
+                        <Icon name="eye" />
+                        <span>View All Vehicles</span>
+                      </Button>
+                    </li>
+                    <li>
+                      <Button color="light" className="btn-outline-light btn-white" tag={Link} to="/cars/rentals">
+                        <Icon name="calendar" />
+                        <span>View Rentals</span>
                       </Button>
                     </li>
                   </ul>
@@ -212,51 +251,81 @@ const CarsDashboard = () => {
                       <span className="sub-text">Action</span>
                     </div>
                   </div>
-                  {recentRentals.map((rental) => (
-                    <div key={rental.id} className="nk-tb-item">
+                  {rentalsLoading && (
+                    <div className="nk-tb-item">
                       <div className="nk-tb-col">
-                        <div className="user-card">
-                          <div className="user-avatar bg-success">
-                            <span>{rental.client.substring(0, 2).toUpperCase()}</span>
-                          </div>
-                          <div className="user-info">
-                            <span className="tb-lead">{rental.client}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="nk-tb-col tb-col-mb">
-                        <span className="tb-amount">{rental.vehicle}</span>
-                      </div>
-                      <div className="nk-tb-col tb-col-md">
-                        <span>{rental.startDate}</span>
-                      </div>
-                      <div className="nk-tb-col tb-col-md">
-                        <span>{rental.duration} days</span>
-                      </div>
-                      <div className="nk-tb-col tb-col-lg">
-                        <span className="tb-amount">KES {rental.amount.toLocaleString()}</span>
-                      </div>
-                      <div className="nk-tb-col tb-col-md">
-                        <span className={`badge badge-outline-${rental.status === 'active' ? 'success' : 'warning'}`}>
-                          {rental.status}
-                        </span>
-                      </div>
-                      <div className="nk-tb-col nk-tb-col-tools">
-                        <ul className="nk-tb-actions gx-1">
-                          <li>
-                            <Button size="sm" color="primary" outline>
-                              <Icon name="eye" />
-                            </Button>
-                          </li>
-                          <li>
-                            <Button size="sm" color="light" outline>
-                              <Icon name="edit" />
-                            </Button>
-                          </li>
-                        </ul>
+                        <span>Loading rentals...</span>
                       </div>
                     </div>
-                  ))}
+                  )}
+                  
+                  {!rentalsLoading && recentRentals.length === 0 && (
+                    <div className="nk-tb-item">
+                      <div className="nk-tb-col">
+                        <span className="text-muted">No recent rentals found.</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {!rentalsLoading && recentRentals.map((rental) => {
+                    // Calculate duration
+                    const startDate = new Date(rental.pickup_date);
+                    const endDate = new Date(rental.return_date);
+                    const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                    
+                    return (
+                      <div key={rental.id} className="nk-tb-item">
+                        <div className="nk-tb-col">
+                          <div className="user-card">
+                            <div className="user-avatar bg-success">
+                              <span>R{rental.renter_id}</span>
+                            </div>
+                            <div className="user-info">
+                              <span className="tb-lead">Renter #{rental.renter_id}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="nk-tb-col tb-col-mb">
+                          <span className="tb-amount">Vehicle #{rental.vehicle_id}</span>
+                        </div>
+                        <div className="nk-tb-col tb-col-md">
+                          <span>{startDate.toLocaleDateString()}</span>
+                        </div>
+                        <div className="nk-tb-col tb-col-md">
+                          <span>{duration} days</span>
+                        </div>
+                        <div className="nk-tb-col tb-col-lg">
+                          <span className="tb-amount">
+                            {rental.currency} {Number(rental.total_cost || 0).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="nk-tb-col tb-col-md">
+                          <Badge color={
+                            rental.status === 'active' ? 'success' :
+                            rental.status === 'confirmed' ? 'info' :
+                            rental.status === 'pending' ? 'warning' :
+                            rental.status === 'completed' ? 'light' : 'danger'
+                          } outline>
+                            {rental.status}
+                          </Badge>
+                        </div>
+                        <div className="nk-tb-col nk-tb-col-tools">
+                          <ul className="nk-tb-actions gx-1">
+                            <li>
+                              <Button size="sm" color="primary" outline>
+                                <Icon name="eye" />
+                              </Button>
+                            </li>
+                            <li>
+                              <Button size="sm" color="light" outline>
+                                <Icon name="edit" />
+                              </Button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

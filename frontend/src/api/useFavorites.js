@@ -1,60 +1,93 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import favoritesService from './favoritesService'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { axiosPrivate } from './axios'
 
-export const useFavorites = () => {
-  return useQuery({
-    queryKey: ['favorites'],
-    queryFn: () => favoritesService.listFavorites(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-  })
+// Favorites API functions
+const getFavorites = async (params = {}) => {
+    const { data } = await axiosPrivate.get('/user/favorites', { params })
+    return data
+}
+
+const addToFavorites = async (payload) => {
+    const { data } = await axiosPrivate.post('/user/favorites', {
+        id: 0, // Create new favorite
+        ...payload
+    })
+    return data
+}
+
+const removeFromFavorites = async (payload) => {
+    const { data } = await axiosPrivate.post('/user/favorites/remove', payload)
+    return data
+}
+
+const toggleFavoriteItem = async (payload) => {
+    const { data } = await axiosPrivate.post('/user/favorites/toggle', payload)
+    return data
+}
+
+// React Query hooks
+export const useFavorites = (filters = {}) => {
+    return useQuery({
+        queryKey: ['favorites', filters],
+        queryFn: () => getFavorites(filters),
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
+    })
 }
 
 export const useToggleFavorite = () => {
-  const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: ({ item_id, item_type, action }) => {
-      if (action === 'add') {
-        return favoritesService.addFavorite(item_id, item_type)
-      } else {
-        return favoritesService.removeFavorite(item_id, item_type)
-      }
-    },
-    onMutate: async ({ item_id, item_type, action }) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['favorites'] })
-
-      // Snapshot previous value
-      const previousFavorites = queryClient.getQueryData(['favorites'])
-
-      // Optimistically update
-      queryClient.setQueryData(['favorites'], (old) => {
-        if (!old) return []
-        
-        if (action === 'add') {
-          return [...old, { item_id, item_type, created_at: new Date().toISOString() }]
-        } else {
-          return old.filter(fav => !(fav.item_id === item_id && fav.item_type === item_type))
+    return useMutation({
+        mutationFn: toggleFavoriteItem,
+        onSuccess: () => {
+            // Invalidate favorites queries
+            queryClient.invalidateQueries({ queryKey: ['favorites'] })
+            // Invalidate related entity queries that might show favorite status
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] })
+            queryClient.invalidateQueries({ queryKey: ['properties'] })
+            queryClient.invalidateQueries({ queryKey: ['tours'] })
+            queryClient.invalidateQueries({ queryKey: ['bnb'] })
+        },
+        onError: (error) => {
+            console.error('Failed to toggle favorite:', error)
         }
-      })
-
-      return { previousFavorites }
-    },
-    onError: (err, variables, context) => {
-      // Revert on error
-      if (context?.previousFavorites) {
-        queryClient.setQueryData(['favorites'], context.previousFavorites)
-      }
-    },
-    onSettled: () => {
-      // Always refetch after mutation
-      queryClient.invalidateQueries({ queryKey: ['favorites'] })
-    },
-  })
+    })
 }
 
-export default {
-  useFavorites,
-  useToggleFavorite,
+export const useAddToFavorites = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: addToFavorites,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['favorites'] })
+        },
+        onError: (error) => {
+            console.error('Failed to add to favorites:', error)
+        }
+    })
 }
+
+export const useRemoveFromFavorites = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: removeFromFavorites,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['favorites'] })
+        },
+        onError: (error) => {
+            console.error('Failed to remove from favorites:', error)
+        }
+    })
+}
+
+const favoritesHooks = {
+    useFavorites,
+    useToggleFavorite,
+    useAddToFavorites,
+    useRemoveFromFavorites,
+}
+
+export default favoritesHooks

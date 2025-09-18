@@ -36,7 +36,7 @@ const MyBookingsPage = lazy(() => import("./Pages/Tours/MyBookings"));
 const BookingDetailPage = lazy(() => import("./Pages/Tours/BookingDetail"));
 const CarsHomePage = lazy(() => import("./Pages/Cars/CarHire"));
 const CarsListPage = lazy(() => import("./Pages/Cars/CarsList"));
-const CarDetailPage = lazy(() => import("./Pages/Cars/CarDetail"));
+const VehicleDetailPage = lazy(() => import("./Pages/Cars/VehicleDetail"));
 const InvestHomePage = lazy(() => import("./Pages/Invest/Invest"));
 const SlugPageComponent = lazy(() => import("./Pages/Blogs/SlugPage"));
 const AccountPage = lazy(() => import("./Pages/Account/Account"));
@@ -471,9 +471,9 @@ function App() {
                   <Route path="/tours/my-bookings" element={<MyBookingsPage />} />
                   <Route path="/tours/bookings/:bookingId" element={<BookingDetailPage />} />
                   <Route path="/tours/:id" element={<TourDetailPage />} />
-                  <Route path="/cars" element={<CarComingSoon />} />
+                  <Route path="/cars" element={<CarsHomePage />} />
                   <Route path="/cars/list" element={<CarsListPage />} />
-                  <Route path="/cars/:id" element={<CarDetailPage />} />
+                  <Route path="/cars/:id" element={<VehicleDetailPage />} />
                   <Route path="/invest" element={<InvestComingSoon />} />
                   <Route path="/blogs/:slug" element={<SlugPageComponent />} />
                   

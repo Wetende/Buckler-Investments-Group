@@ -44,6 +44,7 @@ import {
   DataTableItem,
   DataTableTitle,
 } from "@/components/table/DataTable";
+import { Badge, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 
 export {
   Accordian,
@@ -105,4 +106,9 @@ export {
   PreviewAltCard,
   RSelect,
   Progress,
+  Badge,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 };

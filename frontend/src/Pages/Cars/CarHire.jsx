@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 // Libraries
 import { Col, Container, Navbar, Row } from 'react-bootstrap'
@@ -16,16 +16,32 @@ import Tab03 from '../../Components/Tab/Tab03'
 import Testimonials from '../../Components/Testimonials/Testimonials'
 import TextSlider03 from '../../Components/TextSlider/TextSlider03'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
+import CarSearch from '../../Components/CarSearch/CarSearch'
+import VehicleListing from '../../Components/VehicleListing/VehicleListing'
 
 // Data
 import { TestimonialsData04 } from '../../Components/Testimonials/TestimonialsData'
 import { TextSliderData03 } from '../../Components/TextSlider/TextSliderData'
 import { TabData03 } from '../../Components/Tab/TabData'
 
+// API Hooks
+import { useFeaturedVehicles, useVehicleCategories } from '../../api/useCars'
+
 // Animations
 import { fadeIn, fadeInUp, zoomIn } from "../../Functions/GlobalAnimations"
 
-const RestaurantPage = (props) => {
+const CarHirePage = (props) => {
+  const [searchFilters, setSearchFilters] = useState({})
+  const [showSearchResults, setShowSearchResults] = useState(false)
+
+  // Fetch featured vehicles for display
+  const { data: featuredVehicles = [], isLoading: featuredLoading } = useFeaturedVehicles(6)
+  const { data: categories = [] } = useVehicleCategories()
+
+  const handleSearch = (filters) => {
+    setSearchFilters(filters)
+    setShowSearchResults(Object.keys(filters).length > 0)
+  }
 
   return (
     <div>
@@ -59,27 +75,50 @@ const RestaurantPage = (props) => {
       </Header>
       {/* Header End */}
 
-      {/* Parallax Scrolling Start */}
-      <div id="parallax-section" className="full-screen md:flex md:items-center landscape:md:h-[600px] overflow-hidden relative">
+      {/* Hero Section with Search Start */}
+      <div id="parallax-section" className="full-screen md:flex md:items-center landscape:md:h-[700px] overflow-hidden relative">
         <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://via.placeholder.com/1920x1100)` }}></Parallax>
         <div className="absolute h-full w-full opacity-60 top-0 left-0 bg-darkgray"></div>
         <Container className="relative h-full">
           <Row className="justify-center items-center h-full">
-            <Col xl={8} md={10} lg={8} className="flex-col flex justify-center text-center h-[600px]">
-              <div className="border-[#ca943d66] border-[8px] py-[7.5rem] px-[6.5rem] lg:p-[4.5rem] xs:p-8">
-                <i className="line-icon-French-Fries text-[70px] inline-block leading-[80px] text-[#ca943d] mb-[3.5rem]"></i>
+            <Col xl={10} md={12} lg={10} className="flex-col flex justify-center text-center">
+              <div className="mb-[80px]">
+                <i className="feather-map-pin text-[70px] inline-block leading-[80px] text-[#ca943d] mb-[3.5rem]"></i>
                 <h1 className="text-[100px] leading-[95px] font-serif font-semibold text-white uppercase -tracking-[4px] mb-[3.5rem] mx-auto lg:text-[90px] lg:leading-[90px] md:text-[70px] md:leading-[65px] sm:text-[45px] sm:leading-[43px] sm:-tracking-[1px]">Reliable<br></br>Car Hire</h1>
-                <span className="font-serif text-md uppercase tracking-[3px] text-white opacity-70 block">Self-drive and chauffeur options</span>
+                <span className="font-serif text-md uppercase tracking-[3px] text-white opacity-70 block mb-[50px]">Self-drive and chauffeur options across Kenya</span>
+              </div>
+              
+              {/* Search Component */}
+              <div className="search-wrapper">
+                <CarSearch
+                  onSearch={handleSearch}
+                  className="hero-search"
+                />
               </div>
             </Col>
           </Row>
-          <ScrollTo aria-label="Scrolling Link" href="#" to="about" offset={0} delay={0} spy={true} smooth={true} duration={800} className="absolute bottom-[50px] left-1/2 -translate-x-1/2 cursor-pointer">
-            <span className="hidden">Link for Scrolling</span>
-            <i className="ti-mouse icon-small text-white up-down-ani text-[28px] inline-block"></i>
-          </ScrollTo>
+          
+          {!showSearchResults && (
+            <ScrollTo aria-label="Scrolling Link" href="#" to="about" offset={0} delay={0} spy={true} smooth={true} duration={800} className="absolute bottom-[50px] left-1/2 -translate-x-1/2 cursor-pointer">
+              <span className="hidden">Link for Scrolling</span>
+              <i className="ti-mouse icon-small text-white up-down-ani text-[28px] inline-block"></i>
+            </ScrollTo>
+          )}
         </Container>
       </div>
-      {/* Parallax Scrolling End */}
+      {/* Hero Section with Search End */}
+
+      {/* Search Results Section */}
+      {showSearchResults && (
+        <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+          <VehicleListing
+            initialFilters={searchFilters}
+            showSearch={false}
+            title="Search Results"
+            subtitle="Vehicles matching your criteria"
+          />
+        </section>
+      )}
 
       {/* Section Start */}
       <m.section {...fadeIn} id="about" className="pt-[9%] pb-[384px] md:pb-[200px] sm:pb-[7%] xs:pt-32 xs:pb-35 restaurant-experience" style={{ background: `url(https://via.placeholder.com/1920x80) center top no-repeat, url(https://via.placeholder.com/200x319) right top 140px no-repeat` }}>
@@ -131,69 +170,87 @@ const RestaurantPage = (props) => {
       </section>
       {/* Overlap Section End */}
 
-      {/* Section Start */}
-      <section className="py-[130px] overflow-hidden lg:py-[90px] md:py-[75px] sm:py-[50px]">
-        <Container>
-          <Row className="justify-center">
-            <Col lg={4} md={6} className="text-center mb-[4.5rem] md:mb-16 sm:mb-12">
-              <div className="flex flex-row items-center justify-center text-center mb-[5px]">
-                <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
-                <div className="font-serif text-xmd text-[#ca943d] px-[10px]">travellers' choice</div>
-                <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
-              </div>
-              <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">Featured vehicles</h2>
-            </Col>
-          </Row>
-          <Row className="row-cols-1 row-cols-lg-3 row-cols-md-2 justify-center">
-            <m.div {...{ ...fadeIn, transition: { delay: 0.2 } }} className="col text-center interactive-banners-style-11 md:mb-[50px] sm:mb-[30px]">
-              <figure className="rounded-[6px] overflow-hidden relative">
-                <img width={360} height={258} className="w-full" src="https://via.placeholder.com/720x515" alt="Dishes" />
-                <figcaption>
-                  <div className="opacity-70 top-0 left-0 absolute w-full h-full bg-darkgray"></div>
-                  <div className="flex flex-col items-center justify-center h-full">
-                    <Link aria-label="link" to="#" className="bg-[#ca943d] z-[1] p-6 text-xmd leading-[20px] rounded-full w-[110px] h-[110px] uppercase font-serif text-white flex flex-col justify-center">From<span className="font-semibold text-darkgray -tracking-[.5px]"> KES</span></Link>
-                  </div>
-                </figcaption>
-              </figure>
-              <div className="text-center mt-[40px] sm:mt-[20px]">
-                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">COMPACT CITY CAR</span>
-                <span className="text-spanishgray uppercase inline-block text-sm">AUTOMATIC <span className="text-xxs inline-block mx-[10px]">◍</span> AC <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> 5 SEATS</span>
-              </div>
-            </m.div>
-            <m.div {...{ ...fadeIn, transition: { delay: 0.4 } }} className="col text-center interactive-banners-style-11 md:mb-[50px] sm:mb-[30px]">
-              <figure className="rounded-[6px] overflow-hidden relative">
-                <img width={360} height={258} className="w-full"src="https://via.placeholder.com/720x515" alt="Dishes" />
-                <figcaption>
-                  <div className="opacity-70 top-0 left-0 absolute w-full h-full bg-darkgray"></div>
-                  <div className="flex flex-col items-center justify-center h-full">
-                    <Link aria-label="link" to="#" className="bg-[#ca943d] z-[1] p-6 text-xmd leading-[20px] rounded-full w-[110px] h-[110px] uppercase font-serif text-white flex flex-col justify-center">Only<span className="font-semibold text-darkgray -tracking-[.5px]">$30.00</span></Link>
-                  </div>
-                </figcaption>
-              </figure>
-              <div className="text-center mt-[40px] sm:mt-[20px]">
-                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">COMFORT SEDAN</span>
-                <span className="text-spanishgray uppercase inline-block text-sm">SPACIOUS <span className="text-xxs inline-block mx-[10px]">◍</span> AC <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> FUEL EFFICIENT</span>
-              </div>
-            </m.div>
-            <m.div {...{ ...fadeIn, transition: { delay: 0.6 } }} className="col text-center interactive-banners-style-11 md:mb-[50px] sm:mb-[30px]">
-              <figure className="rounded-[6px] overflow-hidden relative">
-                <img width={360} height={258} className="w-full" src="https://via.placeholder.com/720x515" alt="Dishes" />
-                <figcaption>
-                  <div className="opacity-70 top-0 left-0 absolute w-full h-full bg-darkgray"></div>
-                  <div className="flex flex-col items-center justify-center h-full">
-                    <Link aria-label="link" to="#" className="bg-[#ca943d] z-[1] p-6 text-xmd leading-[20px] rounded-full w-[110px] h-[110px] uppercase font-serif text-white flex flex-col justify-center">Only<span className="font-semibold text-darkgray -tracking-[.5px]">$30.00</span></Link>
-                  </div>
-                </figcaption>
-              </figure>
-              <div className="text-center mt-[40px] sm:mt-[20px]">
-                <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase">SAFARI-READY 4X4</span>
-                <span className="text-spanishgray uppercase inline-block text-sm">HIGH CLEARANCE <span className="text-xxs inline-block mx-[10px]">◍</span> RUGGED <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> RELIABLE</span>
-              </div>
-            </m.div>
-          </Row>
-        </Container>
-      </section>
-      {/* Section End */}
+      {/* Featured Vehicles Section */}
+      {!showSearchResults && (
+        <section className="py-[130px] overflow-hidden lg:py-[90px] md:py-[75px] sm:py-[50px]">
+          <Container>
+            <Row className="justify-center">
+              <Col lg={4} md={6} className="text-center mb-[4.5rem] md:mb-16 sm:mb-12">
+                <div className="flex flex-row items-center justify-center text-center mb-[5px]">
+                  <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
+                  <div className="font-serif text-xmd text-[#ca943d] px-[10px]">travellers' choice</div>
+                  <span className="w-[25px] h-[1px] bg-[#ca943d] opacity-40"></span>
+                </div>
+                <h2 className="heading-5 font-serif font-semibold text-darkgray uppercase -tracking-[1px] sm:mb-[15px]">Featured vehicles</h2>
+              </Col>
+            </Row>
+            
+            {featuredLoading ? (
+              <Row className="row-cols-1 row-cols-lg-3 row-cols-md-2 justify-center">
+                {[...Array(3)].map((_, index) => (
+                  <Col key={index} className="text-center md:mb-[50px] sm:mb-[30px]">
+                    <div className="animate-pulse">
+                      <div className="bg-gray-200 rounded-[6px] h-[258px] mb-[40px]"></div>
+                      <div className="bg-gray-200 h-4 w-3/4 mx-auto mb-2 rounded"></div>
+                      <div className="bg-gray-200 h-3 w-1/2 mx-auto rounded"></div>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <Row className="row-cols-1 row-cols-lg-3 row-cols-md-2 justify-center">
+                {featuredVehicles.slice(0, 3).map((vehicle, index) => (
+                  <m.div 
+                    key={vehicle.id}
+                    {...{ ...fadeIn, transition: { delay: index * 0.2 } }} 
+                    className="col text-center interactive-banners-style-11 md:mb-[50px] sm:mb-[30px]"
+                  >
+                    <figure className="rounded-[6px] overflow-hidden relative">
+                      <img 
+                        width={360} 
+                        height={258} 
+                        className="w-full object-cover" 
+                        src={vehicle.images?.[0] || "https://via.placeholder.com/720x515"} 
+                        alt={`${vehicle.make} ${vehicle.model}`} 
+                      />
+                      <figcaption>
+                        <div className="opacity-70 top-0 left-0 absolute w-full h-full bg-darkgray"></div>
+                        <div className="flex flex-col items-center justify-center h-full">
+                          <Link 
+                            aria-label={`View ${vehicle.make} ${vehicle.model}`} 
+                            to={`/cars/${vehicle.id}`} 
+                            className="bg-[#ca943d] z-[1] p-6 text-xmd leading-[20px] rounded-full w-[110px] h-[110px] uppercase font-serif text-white flex flex-col justify-center hover:bg-[#b8832e] transition-colors"
+                          >
+                            From
+                            <span className="font-semibold text-white -tracking-[.5px]">
+                              KES {new Intl.NumberFormat().format(vehicle.daily_rate)}
+                            </span>
+                          </Link>
+                        </div>
+                      </figcaption>
+                    </figure>
+                    <div className="text-center mt-[40px] sm:mt-[20px]">
+                      <Link to={`/cars/${vehicle.id}`}>
+                        <span className="text-darkgray font-medium font-serif block text-golden-hover uppercase hover:text-[#ca943d] transition-colors">
+                          {vehicle.make} {vehicle.model}
+                        </span>
+                      </Link>
+                      <span className="text-spanishgray uppercase inline-block text-sm">
+                        {vehicle.transmission} 
+                        <span className="text-xxs inline-block mx-[10px]">◍</span> 
+                        {vehicle.fuel_type} 
+                        <span className="text-xxs leading-none inline-block align-middle mx-[10px]">◍</span> 
+                        {vehicle.seats} SEATS
+                      </span>
+                    </div>
+                  </m.div>
+                ))}
+              </Row>
+            )}
+          </Container>
+        </section>
+      )}
+      {/* Featured Vehicles Section End */}
 
       {/* Section Start */}
       <section className="p-0 overflow-hidden">
@@ -433,4 +490,4 @@ const RestaurantPage = (props) => {
   )
 }
 
-export default RestaurantPage
+export default CarHirePage

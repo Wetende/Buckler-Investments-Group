@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Routes,Route, useLocation, BrowserRouter } from "react-router-dom";
 import { ProductContextProvider } from "@/pages/pre-built/products/ProductContext";
 import { UserContextProvider } from "@/pages/pre-built/user-manage/UserContext";
+// Temporarily disable auth wrappers for development. Revert before committing tests.
+// import { AuthProvider, ProtectedRoute, RoleHome } from "@/layout/provider/Auth";
 
 import MainDashboard from "@/pages/MainDashboard";
 import BnbDashboard from "@/pages/BnbDashboard";
@@ -115,6 +117,40 @@ import QuillPreview from "@/pages/components/forms/rich-editor/QuillPreview";
 import TinymcePreview from "@/pages/components/forms/rich-editor/TinymcePreview";
 import KnobPreview from "@/pages/components/charts/KnobPreview";
 
+// BnB domain pages
+import MyListings from "@/pages/bnb/MyListings";
+import CreateListing from "@/pages/bnb/CreateListing";
+import BnbBookings from "@/pages/bnb/Bookings";
+import BnbCalendar from "@/pages/bnb/Calendar";
+import BnbEarnings from "@/pages/bnb/Earnings";
+import BnbPayouts from "@/pages/bnb/Payouts";
+import BnbReviews from "@/pages/bnb/Reviews";
+
+// Tours domain pages
+import MyTours from "@/pages/tours/MyTours";
+import CreateTour from "@/pages/tours/CreateTour";
+import TourBookings from "@/pages/tours/TourBookings";
+import TourEarnings from "@/pages/tours/TourEarnings";
+import TourReviews from "@/pages/tours/TourReviews";
+
+// Properties domain pages
+import MyProperties from "@/pages/properties/MyProperties";
+import AddProperty from "@/pages/properties/AddProperty";
+import PropertyInquiries from "@/pages/properties/Inquiries";
+import PropertyAnalytics from "@/pages/properties/Analytics";
+
+// Cars domain pages
+import MyVehicles from "@/pages/cars/MyVehicles";
+import AddVehicle from "@/pages/cars/AddVehicle";
+import VehicleSchedule from "@/pages/cars/VehicleSchedule";
+import CarRentals from "@/pages/cars/Rentals";
+import CarEarnings from "@/pages/cars/Earnings";
+
+// Investments domain pages
+import InvestmentProducts from "@/pages/investments/Products";
+import InvestmentOrders from "@/pages/investments/Orders";
+import InvestmentAnalytics from "@/pages/investments/Analytics";
+
 import Error404Classic from "@/pages/error/404-classic";
 import Error404Modern from "@/pages/error/404-modern";
 import Error504Modern from "@/pages/error/504-modern";
@@ -145,10 +181,13 @@ const Router = () => {
       v7_relativeSplatPath: true,
     }}>
       <ScrollToTop>
-        <Routes>
-          <Route element={<ThemeProvider />}>
-            <Route element={<Layout />}>
-              <Route index element={<MainDashboard />}></Route>
+        {/* AuthProvider temporarily disabled for development */}
+        {/* <AuthProvider> */}
+          <Routes>
+            <Route element={<ThemeProvider />}>
+              <Route element={<Layout />}>
+                {/* index now points to main dashboard during dev */}
+                <Route index element={<MainDashboard />}></Route>
               <Route path="bnb-dashboard" element={<BnbDashboard />}></Route>
               <Route path="tours-dashboard" element={<ToursDashboard />}></Route>
               <Route path="properties-dashboard" element={<PropertiesDashboard />}></Route>
@@ -158,6 +197,40 @@ const Router = () => {
               <Route path="analytics" element={<Analytics />}></Route>
               <Route path="invest" element={<Invest />}></Route>
               <Route path="_blank" element={<Blank />}></Route>
+
+              {/* BnB Routes */}
+              <Route path="bnb/my-listings" element={<MyListings />}></Route>
+              <Route path="bnb/create-listing" element={<CreateListing />}></Route>
+              <Route path="bnb/bookings" element={<BnbBookings />}></Route>
+              <Route path="bnb/calendar" element={<BnbCalendar />}></Route>
+              <Route path="bnb/earnings" element={<BnbEarnings />}></Route>
+              <Route path="bnb/payouts" element={<BnbPayouts />}></Route>
+              <Route path="bnb/reviews" element={<BnbReviews />}></Route>
+
+              {/* Tours Routes */}
+              <Route path="tours/my-tours" element={<MyTours />}></Route>
+              <Route path="tours/create-tour" element={<CreateTour />}></Route>
+              <Route path="tours/bookings" element={<TourBookings />}></Route>
+              <Route path="tours/earnings" element={<TourEarnings />}></Route>
+              <Route path="tours/reviews" element={<TourReviews />}></Route>
+
+              {/* Properties Routes */}
+              <Route path="properties/my-properties" element={<MyProperties />}></Route>
+              <Route path="properties/add-property" element={<AddProperty />}></Route>
+              <Route path="properties/inquiries" element={<PropertyInquiries />}></Route>
+              <Route path="properties/analytics" element={<PropertyAnalytics />}></Route>
+
+              {/* Cars Routes */}
+              <Route path="cars/my-vehicles" element={<MyVehicles />}></Route>
+              <Route path="cars/add-vehicle" element={<AddVehicle />}></Route>
+              <Route path="cars/vehicle/:vehicleId/schedule" element={<VehicleSchedule />}></Route>
+              <Route path="cars/rentals" element={<CarRentals />}></Route>
+              <Route path="cars/earnings" element={<CarEarnings />}></Route>
+
+              {/* Investments Routes */}
+              <Route path="investments/products" element={<InvestmentProducts />}></Route>
+              <Route path="investments/orders" element={<InvestmentOrders />}></Route>
+              <Route path="investments/analytics" element={<InvestmentAnalytics />}></Route>
 
               <Route path="project-card" element={<ProjectCardPage />}></Route>
               <Route path="project-list" element={<ProjectListPage />}></Route>
@@ -289,9 +362,9 @@ const Router = () => {
             </Route>
             <Route element={<LayoutNoSidebar />}>
               <Route path="auth-success" element={<Success />}></Route>
-                <Route path="auth-reset" element={<ForgotPassword />}></Route>
-                <Route path="auth-register" element={<Register />}></Route>
-                <Route path="auth-login" element={<Login />}></Route>
+              <Route path="auth-reset" element={<ForgotPassword />}></Route>
+              <Route path="auth-register" element={<Register />}></Route>
+              <Route path="auth-login" element={<Login />}></Route>
 
                 <Route path="errors">
                   <Route path="404-modern" element={<Error404Modern />}></Route>
@@ -305,6 +378,7 @@ const Router = () => {
             </Route>
           </Route>
         </Routes>
+        {/* </AuthProvider> */}
       </ScrollToTop>
     </BrowserRouter>
   );
