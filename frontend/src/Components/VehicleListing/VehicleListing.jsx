@@ -5,7 +5,7 @@ import VehicleCard from '../VehicleCard/VehicleCard'
 import CarSearch from '../CarSearch/CarSearch'
 import Buttons from '../Button/Buttons'
 import { useVehiclesSearch, useVehicles } from '../../api/useCars'
-import { useFavorites } from '../../api/useFavorites'
+import { useToggleFavorite } from '../../api/useFavorites'
 import { fadeIn, fadeInUp } from '../../Functions/GlobalAnimations'
 
 const VehicleListing = ({ 
@@ -39,7 +39,7 @@ const VehicleListing = ({
         enabled: !hasSearchFilters
     })
 
-    const { toggleFavorite } = useFavorites()
+    const toggleFavorite = useToggleFavorite()
 
     const vehicles = hasSearchFilters ? searchResults : allVehicles
     const isLoading = hasSearchFilters ? isSearchLoading : isListLoading

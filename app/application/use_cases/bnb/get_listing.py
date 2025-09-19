@@ -1,6 +1,8 @@
 from typing import Optional
+from datetime import datetime
 from domain.repositories.bnb import BnbRepository
-from application.dto.bnb import StListingRead
+from domain.value_objects.booking_status import CancellationPolicy
+from application.dto.bnb import StListingRead, HostInfoDTO
 from shared.exceptions.bnb import ListingNotFoundError
 
 class GetListingUseCase:
@@ -8,10 +10,21 @@ class GetListingUseCase:
         self._bnb_repository = bnb_repository
     
     async def execute(self, listing_id: int) -> StListingRead:
-        listing = await self._bnb_repository.get_by_id(listing_id)
+        # Get listing with host information
+        listing, host_info = await self._bnb_repository.get_with_host(listing_id)
         
         if not listing:
             raise ListingNotFoundError(f"Listing with ID {listing_id} not found")
+        
+        # Create host DTO if host information is available
+        host_dto = None
+        if host_info and host_info.get('id'):
+            host_dto = HostInfoDTO(
+                id=host_info['id'],
+                full_name=host_info.get('full_name', ''),
+                phone_number=host_info.get('phone_number'),
+                email=host_info.get('email')
+            )
         
         return StListingRead(
             id=listing.id,
@@ -26,8 +39,9 @@ class GetListingUseCase:
             instant_book=listing.instant_book,
             min_nights=listing.min_nights,
             max_nights=listing.max_nights,
-            created_at=listing.created_at,
-            updated_at=listing.updated_at,
+            created_at=listing.created_at or datetime.now(),
+            updated_at=listing.updated_at or datetime.now(),
+            host=host_dto,  # Include host information
             # Additional fields with defaults
             bedrooms=None,
             beds=None,
@@ -37,6 +51,6 @@ class GetListingUseCase:
             security_deposit=None,
             latitude=None,
             longitude=None,
-            cancellation_policy="MODERATE",
+            cancellation_policy=listing.cancellation_policy or CancellationPolicy.MODERATE,
             images=None
         )

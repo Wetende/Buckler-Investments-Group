@@ -99,7 +99,8 @@ axiosPrivate.interceptors.response.use(
                 pendingQueue = [];
                 isRefreshing = false;
                 clearAuthTokens();
-                window.location.href = '/login';
+                // Redirect to homepage where login modal is available
+                window.location.href = '/';
                 return Promise.reject(refreshError);
             }
         }

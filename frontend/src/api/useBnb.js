@@ -39,7 +39,7 @@ export const useAvailability = (id, params = {}) => {
   return useQuery({
     queryKey: ['bnb', 'listing', id, 'availability', params],
     queryFn: () => getAvailability(Number(id), params),
-    enabled: !!id,
+    enabled: !!id && !!(params.check_in && params.check_out), // Only run if dates provided
     staleTime: 2 * 60 * 1000,
   })
 }

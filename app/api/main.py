@@ -39,6 +39,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    redirect_slashes=False,  # Disable automatic trailing slash redirects
 )
 
 # Create and wire container
@@ -140,9 +141,10 @@ from .v1.search.routes import router as search_router
 from .v1.reviews.routes import router as reviews_router
 
 # Include business domain routers
+# Shared router first for auth routes, then specific domain routers
+app.include_router(shared_router, prefix="/api/v1")
 app.include_router(property_router, prefix="/api/v1/property")
 app.include_router(investment_router, prefix="/api/v1/investment")
-app.include_router(shared_router, prefix="/api/v1")
 
 # Include additional business routers
 app.include_router(tours_router, prefix="/api/v1/tours", tags=["Tours"])
@@ -151,7 +153,7 @@ app.include_router(bnb_router, prefix="/api/v1/bnb", tags=["BnB"])
 app.include_router(bundle_router, prefix="/api/v1/bundles", tags=["Bundles"])
 
 # Include favorites router
-app.include_router(favorites_router)
+app.include_router(favorites_router, prefix="/api/v1/favorites", tags=["Favorites"])
 
 # Include payment and payout routers
 app.include_router(payments_router, prefix="/api/v1/payments", tags=["Payments"]) 

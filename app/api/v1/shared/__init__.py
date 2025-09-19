@@ -15,7 +15,7 @@ from .media_routes import router as media_router
 from .admin_routes import router as admin_router
 
 # Main router that combines all shared routes
-router = APIRouter()
+router = APIRouter(redirect_slashes=False)
 
 # Include all shared sub-routers
 router.include_router(auth_router, prefix="/auth", tags=["Authentication"])

@@ -1,27 +1,69 @@
-import React from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from './AuthProvider'
+import React, { useContext } from 'react';
+import { Outlet } from 'react-router-dom';
+import { AuthContext } from './AuthProvider';
+import AuthRequiredWrapper from './AuthRequiredWrapper';
+import Buttons from '../Button/Buttons';
 
-const ProtectedRoute = ({ children, redirectTo = '/login' }) => {
-  const { isAuthenticated, isLoading } = useAuth()
-  const location = useLocation()
-
+const ProtectedRoute = () => {
+  const { isAuthenticated, isLoading } = useContext(AuthContext);
+  
   if (isLoading) {
-    // Show loading spinner while checking auth status
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-basecolor"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner-border text-primary mb-3" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+          <p className="text-gray-600">Verifying access...</p>
+        </div>
       </div>
-    )
+    );
   }
 
   if (!isAuthenticated) {
-    // Save the attempted location for redirecting after login
-    return <Navigate to={redirectTo} state={{ from: location }} replace />
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full text-center p-8">
+          <div className="mb-8">
+            <i className="fas fa-lock text-6xl text-gray-400 mb-4"></i>
+            <h2 className="heading-4 font-serif text-darkgray mb-4">Authentication Required</h2>
+            <p className="text-gray-600 mb-8">
+              Please sign in to access this page. You'll be redirected here after logging in.
+            </p>
+          </div>
+          
+          <AuthRequiredWrapper
+            modalTitle="Sign in to continue"
+            modalSubtitle="You'll be redirected to your intended page after logging in"
+            fallbackButton={
+              <Buttons
+                className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase w-full"
+                themeColor="#232323"
+                color="#fff"
+                size="lg"
+                title="Sign In"
+              />
+            }
+          >
+            {/* This will never render since user is not authenticated */}
+            <div></div>
+          </AuthRequiredWrapper>
+          
+          <div className="mt-6">
+            <a 
+              href="/" 
+              className="text-primary hover:underline text-sm"
+            >
+              ← Return to Homepage
+            </a>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  return children
-}
+  return <Outlet />;
+};
 
 export default ProtectedRoute
 

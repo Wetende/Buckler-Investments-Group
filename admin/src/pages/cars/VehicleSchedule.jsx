@@ -13,9 +13,8 @@ import {
   Icon,
   Row,
   Col,
-  Card,
-  CardBody,
 } from "@/components/Component";
+import { Card, CardBody } from "reactstrap";
 import VehicleAvailabilityCalendar from "../../components/calendar/VehicleAvailabilityCalendar";
 import { useVehicle, useCarRentals } from "../../hooks/useCars";
 

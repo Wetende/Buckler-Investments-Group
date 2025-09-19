@@ -15,6 +15,11 @@ class StListingType(str, Enum):
     ENTIRE = "ENTIRE"
     PRIVATE = "PRIVATE"
     SHARED = "SHARED"
+    APARTMENT = "APARTMENT"
+    LODGE = "LODGE"
+    RESORT = "RESORT"
+    VILLA = "VILLA"
+    STUDIO = "STUDIO"
 
 
 class CancellationPolicy(str, Enum):

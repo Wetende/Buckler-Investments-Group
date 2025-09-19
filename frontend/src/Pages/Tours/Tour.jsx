@@ -34,7 +34,7 @@ import { resetForm, sendEmail } from "../../Functions/Utilities";
 import ToursBookingModal from "../../Components/BookingModal/ToursBookingModal";
 import MultiStepBookingModal from "../../Components/BookingModal/MultiStepBookingModal";
 import Testimonials from "../../Components/Testimonials/Testimonials";
-import LiveChatWidget from "../../Components/LiveChat/LiveChatWidget";
+import { SupportContactButtons } from "../../Components/WhatsApp/WhatsAppContact";
 
 // Data
 import { InteractiveBannersData08 } from "../../Components/InteractiveBanners/InteractiveBannersData";
@@ -399,7 +399,6 @@ const TravelAgencyPage = (props) => {
   const [weatherData, setWeatherData] = useState(null);
   
   // Live chat state
-  const [isChatOpen, setIsChatOpen] = useState(false);
   
   useEffect(() => {
     const loadBundles = async () => {
@@ -1446,11 +1445,10 @@ const TravelAgencyPage = (props) => {
         <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />
         {/* Footer End */}
         
-        {/* Live Chat Widget */}
-        <LiveChatWidget
-          isOpen={isChatOpen}
-          onToggle={() => setIsChatOpen(!isChatOpen)}
-        />
+        {/* WhatsApp Support - Fixed Position */}
+        <div className="fixed bottom-6 right-6 z-50">
+          <SupportContactButtons />
+        </div>
     </div>
   );
 };

@@ -9,7 +9,7 @@ import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import BnbMenuData from '../../Components/Header/BnbMenuData'
+import getBnbMenuData, { BnbMenuData } from '../../Components/Header/BnbMenuData'
 import EnhancedBnbSearch from '../../Components/BnbSearch/EnhancedBnbSearch'
 import BnbCategoriesGrid from '../../Components/BnbCategories/BnbCategoriesGrid'
 import SocialIcons from '../../Components/SocialIcon/SocialIcons'
@@ -19,6 +19,7 @@ import Overlap from '../../Components/Overlap/Overlap'
 import CustomModal from '../../Components/CustomModal'
 import BlogMetro from '../../Components/Blogs/BlogMetro'
 import InteractiveBanners15 from '../../Components/InteractiveBanners/InteractiveBanners15'
+import LocationGroupedListings from '../../Components/LocationGroupedListings/LocationGroupedListings'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 import { fadeIn, zoomIn } from '../../Functions/GlobalAnimations'
 
@@ -28,6 +29,7 @@ import { InteractiveBannersData15 } from '../../Components/InteractiveBanners/In
 
 // API Hooks
 import { useFeaturedListings, useListings, useNearbyListings, useMyBookings, useSearchListings } from '../../api/useBnb';
+import { useListingsGroupedByLocation } from '../../hooks/useBnbLocation';
 import { getRefreshToken } from '../../api/axios'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
@@ -133,8 +135,8 @@ const ArchitecturePage = (props) => {
     if (searchParams.get('check_in')) params.check_in = searchParams.get('check_in')
     if (searchParams.get('check_out')) params.check_out = searchParams.get('check_out')
     if (searchParams.get('guests')) params.guests = parseInt(searchParams.get('guests'))
-    if (searchParams.get('min_price')) params.min_price = parseInt(searchParams.get('min_price'))
-    if (searchParams.get('max_price')) params.max_price = parseInt(searchParams.get('max_price'))
+    if (searchParams.get('min_price')) params.price_min = parseInt(searchParams.get('min_price'))
+    if (searchParams.get('max_price')) params.price_max = parseInt(searchParams.get('max_price'))
     return Object.keys(params).length > 0 ? params : null
   }
 
@@ -162,6 +164,12 @@ const ArchitecturePage = (props) => {
   const { data: featuredListings, isLoading: featuredLoading, isError: featuredError } = useFeaturedListings(8);
   const { data: latestListings, isLoading: latestLoading, isError: latestError } = useListings({}, 6);
   const { data: searchResults, isLoading: searchLoading, isError: searchError } = useSearchListings(searchCriteria || {}, !!searchCriteria)
+  
+  // Location-based grouping data (Airbnb-style)
+  const { data: locationGroupedData, isLoading: locationGroupedLoading, isError: locationGroupedError } = useListingsGroupedByLocation({
+    limitPerGroup: 4,
+    maxGroups: 5
+  });
 
   // Clear search function
   const clearSearch = () => {
@@ -239,9 +247,22 @@ const ArchitecturePage = (props) => {
             <span className="navbar-toggler-line"></span>
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
-          <Navbar.Collapse className="col-xs-auto col-lg-8 menu-order px-lg-0 justify-center">
-            <Menu {...props} data={BnbMenuData} />
+          <Navbar.Collapse className="col-auto justify-center">
+            <Menu {...props} data={BnbMenuData} className="text-black bnb-mobile-menu" />
           </Navbar.Collapse>
+          <style>{`
+            .bnb-mobile-menu .nav-link,
+            .bnb-mobile-menu .nav-link a,
+            .bnb-mobile-menu .navbar-nav .nav-item .nav-link {
+              color: #000 !important;
+            }
+            @media (max-width: 991.98px) {
+              .navbar-collapse .bnb-mobile-menu .nav-link,
+              .navbar-collapse .bnb-mobile-menu .nav-link a {
+                color: #000 !important;
+              }
+            }
+          `}</style>
           <Col xs="auto" lg={2} className="nav-bar-contact text-end xs:hidden pe-0">
             <a aria-label="link for top" href="#top" className="text-md text-[#fff] font-serif font-medium">
               <i className="feather-phone-call mr-[15px]"></i>
@@ -318,21 +339,22 @@ const ArchitecturePage = (props) => {
           {/* Enhanced BnB Search Section End */}
 
           {/* BnB Categories Section Start */}
-          <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] xs:py-[40px] bg-lightgray">
+          <section className="py-[60px] lg:py-[50px] md:py-[40px] sm:py-[30px] bg-white border-b border-mediumgray">
             <Container>
-              <Row className="justify-center">
-                <Col lg={7} className="text-center mb-16 md:mb-12 sm:mb-8 xs:mb-6">
-                  <h2 className="heading-4 font-serif font-semibold text-darkgray">
-                    Find your perfect stay that suits your needs
-                  </h2>
-                  <p className="text-lg md:text-md">
-                    From entire homes to private rooms, find accommodation that fits your travel style
-                  </p>
-                </Col>
-              </Row>
               <Row>
                 <Col>
-                  <BnbCategoriesGrid filter={false} />
+                  <BnbCategoriesGrid 
+                    filter={true} 
+                    onCategorySelect={(category) => {
+                      if (category) {
+                        setSearchCriteria({ category });
+                      } else {
+                        setSearchCriteria(null);
+                      }
+                    }}
+                    horizontal={true}
+                    showTitle={false}
+                  />
                 </Col>
               </Row>
             </Container>
@@ -363,30 +385,6 @@ const ArchitecturePage = (props) => {
           {/* Section End */}
         </div>
 
-        {/* Section Start */}
-        <section className="py-[80px] border-b border-mediumgray bg-white md:py-[40px]">
-          <Container>
-            <Row className="items-center justify-center md:items-start sm:text-center">
-              <Col lg={4} md={6} className="md:mb-[50px]">
-                <m.div className="inline-block text-center w-[300px] py-14 px-[15px] relative xs:p-[30px] xs:w-[315px]" {...{ ...fadeIn, transition: { delay: 0.2 } }}>
-                  <div className="border-r-0 border-solid	border-[10px] border-[#e5e7eb] h-full w-[67px] block absolute bottom-0 left-0 xs:left-[25px]"></div>
-                  <h1 className="text-[80px] leading-[72px] mb-0 mr-[15px] font-semibold tracking-[-5px] text-darkgray font-serif inline-block align-middle">28</h1>
-                  <div className="w-[40%] leading-[24px] text-darkgray text-xmd font-serif text-left relative inline-block align-middle lg:w-[50%] sm:w-[35%]">BnB nights booked</div>
-                  <div className="border-l-0 border-solid	border-[10px] border-[#e5e7eb] h-full w-[67px] block absolute bottom-0 right-0 xs:right-[25px]"></div>
-                </m.div>
-              </Col>
-              <m.div className="col-lg-3 col-md-4 text-left sm:text-center" {...{ ...fadeIn, transition: { delay: 0.4 } }}>
-                <span className="mb-[20px] text-[15px] font-serif uppercase block text-darkgray">Book with confidence</span>
-                <span className="w-[85%] leading-[34px] font-medium text-darkgray text-xlg font-serif block md:text-lg sm:w-full sm:mb-[15px]">Affordable, flexible BnB stays for every trip</span>
-              </m.div>
-              <m.div className="col-lg-5 col-md-10 text-left sm:text-center" {...{ ...fadeIn, transition: { delay: 0.5 } }}>
-                <p className="w-[85%] mb-[20px] block sm:w-full">Discover curated stays from Nairobi apartments to coastal villas and safari lodges – all verified by Buckler.</p>
-                <Buttons ariaLabel="link for About rentals" to="/page/about-us" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] sm:mb-0 after:bg-darkgray hover:text-darkgray" color="#232323" size="xlg" title="About Buckler BnB" />
-              </m.div>
-            </Row>
-          </Container>
-        </section>
-        {/* Section End */}
 
         {/* Nearby Listings Section */}
         {coords && (
@@ -505,41 +503,53 @@ const ArchitecturePage = (props) => {
             )}
           </section>
         )}
-        {/* Featured Listings Section */}
-        <m.section {...{ ...fadeIn, transition: { delay: 0.5, duration: 1.2 } }}>
-          {featuredLoading ? (
-            <FeaturedListingsSkeleton />
-          ) : featuredError ? (
-            <ErrorState 
-              title="Failed to load featured stays" 
-              message="We're having trouble loading our featured properties. Please try again."
-            />
-          ) : interactiveBannersData.length > 0 ? (
-            <Container fluid className="lg:px-[30px]">
-              <InteractiveBanners15 
-                data={interactiveBannersData} 
-                grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" 
-                animation={fadeIn} 
-              />
-              <div className="mt-6 text-center">
-                <Buttons 
-                  ariaLabel="view all stays" 
-                  to="/bnb/list" 
-                  className="font-medium font-serif uppercase btn-link after:h-[2px] after:bg-spanishgray" 
-                  color="#939393" 
-                  size="xlg" 
-                  title="View all stays" 
-                />
-              </div>
+        {/* Grouped Listings Sections - Airbnb Style */}
+        
+        {/* Location-Grouped Listings (Airbnb Style) */}
+        {!searchCriteria && (
+          <LocationGroupedListings 
+            groups={locationGroupedData?.groups || []}
+            isLoading={locationGroupedLoading}
+          />
+        )}
+
+        {/* Beachfront Properties Section */}
+        {interactiveBannersData.length > 4 && (
+          <m.section className="py-[80px] lg:py-[60px] md:py-[50px] sm:py-[40px] bg-lightgray" {...{ ...fadeIn, transition: { delay: 0.4 } }}>
+            <Container>
+              <Row className="justify-between items-center mb-12">
+                <Col lg={8}>
+                  <h2 className="heading-5 font-serif font-semibold text-darkgray mb-2">
+                    🏖️ Coastal getaways
+                  </h2>
+                  <p className="text-lg text-gray-600">
+                    Wake up to ocean views along Kenya's stunning coastline
+                  </p>
+                </Col>
+                <Col lg={4} className="text-right">
+                  <Buttons 
+                    ariaLabel="view all coastal stays" 
+                    to="/bnb/list?category=beachfront" 
+                    className="font-medium font-serif uppercase btn-link after:h-[2px] after:bg-darkgray" 
+                    color="#232323" 
+                    size="lg" 
+                    title="View all" 
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <InteractiveBanners15 
+                    data={interactiveBannersData.slice(4, 8)} 
+                    grid="row-cols-1 row-cols-xl-4 row-cols-md-2 gap-y-10" 
+                    animation={fadeIn} 
+                  />
+                </Col>
+              </Row>
             </Container>
-          ) : (
-            <EmptyListingsState 
-              title="No featured stays available" 
-              message="Our featured listings are currently being updated. Please check back soon."
-            />
-          )}
-        </m.section>
-        {/* Section End */}
+          </m.section>
+        )}
+
 
         {/* Section Start */}
         <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">

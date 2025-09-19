@@ -7,16 +7,16 @@ import Buttons from '../Button/Buttons'
 import CustomModal from '../CustomModal'
 import { login, getCurrentUser } from '../../api/authService'
 import { resetForm } from '../../Functions/Utilities'
-import { useAuth } from './AuthProvider'
+import { useAuth } from '../../api/useAuth'
 
-const LoginModal = ({ className = '', onSuccess = () => {} }) => {
+const LoginModal = ({ className = '', onSuccess = () => {}, triggerButton = null }) => {
   const { login: setAuthUser } = useAuth()
   return (
     <CustomModal.Wrapper
       className={className}
       closeBtnOuter={false}
       modalBtn={
-        <LoginBtn />
+        triggerButton || <LoginBtn />
       }
     >
       <div className="bg-white rounded-[6px] p-16 md:p-12 sm:p-8 max-w-[500px] mx-auto relative">

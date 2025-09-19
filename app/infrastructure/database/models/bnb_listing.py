@@ -36,6 +36,10 @@ class StListing(Base):
     service_fee: Mapped[Optional[Decimal]] = mapped_column(Numeric(12,2), nullable=True)
     security_deposit: Mapped[Optional[Decimal]] = mapped_column(Numeric(12,2), nullable=True)
     address: Mapped[str] = mapped_column(String(500), nullable=False)
+    # Structured location fields for Airbnb-style grouping
+    county: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    town: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    area_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("areas.id", ondelete="SET NULL"), nullable=True)
     latitude: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     longitude: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     amenities: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
@@ -52,6 +56,11 @@ class StListing(Base):
     __table_args__ = (
         Index("ix_st_listings_host_id", "host_id"),
         Index("ix_st_listings_created_at", "created_at"),
+        # Location-based indexes for geographic grouping
+        Index("ix_st_listings_county", "county"),
+        Index("ix_st_listings_town", "town"),
+        Index("ix_st_listings_area_id", "area_id"),
+        Index("ix_st_listings_county_town", "county", "town"),
     )
 
 

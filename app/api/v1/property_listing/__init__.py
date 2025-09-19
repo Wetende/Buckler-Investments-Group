@@ -14,10 +14,11 @@ from .admin_routes import router as admin_router
 from .catalog_routes import router as catalog_router
 
 # Main router that combines all property-related routes
-router = APIRouter()
+router = APIRouter(redirect_slashes=False)
 
 # Include all property sub-routers
-router.include_router(public_router, prefix="/public", tags=["Properties - Public"])
+# Public routes at root level for frontend compatibility
+router.include_router(public_router, tags=["Properties - Public"])
 router.include_router(admin_router, prefix="/admin", tags=["Properties - Admin"])
 router.include_router(catalog_router, prefix="/catalog", tags=["Properties - Catalog"])
 

@@ -12,8 +12,9 @@ class BookingStatus(str, Enum):
 
 @dataclass
 class BundleBooking(DomainEntity):
-    bundle_id: int
-    user_id: int
-    total_price: Money
+    # Required fields with defaults to satisfy dataclass ordering
+    bundle_id: int = 0
+    user_id: int = 0
+    total_price: Money = None
     status: BookingStatus = BookingStatus.PENDING
-    booked_at: datetime = datetime.utcnow()
+    booked_at: datetime = None

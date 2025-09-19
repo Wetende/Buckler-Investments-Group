@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useContext } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { m, AnimatePresence } from 'framer-motion';
@@ -7,6 +7,8 @@ import { Input } from '../Form/Form';
 import Buttons from '../Button/Buttons';
 import MessageBox from '../MessageBox/MessageBox';
 import { useCreateBooking, useAvailability } from '../../api/useBnb';
+import { AuthContext } from '../Auth/AuthProvider';
+import BookingAuthFlow from '../Auth/BookingAuthFlow';
 
 // Child component to handle availability hooks at top-level of a component
 const AvailabilityStatus = ({ listingId, checkIn, checkOut, guests, onChange }) => {
@@ -64,7 +66,9 @@ const BnbBookingModal = ({
   triggerButton, 
   className = "" 
 }) => {
+  const { isAuthenticated, isLoading } = useContext(AuthContext);
   const [bookingSuccess, setBookingSuccess] = useState(null);
+  const [showBookingForm, setShowBookingForm] = useState(false);
   const createBooking = useCreateBooking();
   const [availabilityData, setAvailabilityData] = useState({ availability: null, checkingAvailability: false });
 
@@ -177,8 +181,32 @@ const BnbBookingModal = ({
               title="View Bookings"
             />
           </div>
+        ) : !isAuthenticated ? (
+          // Authentication Required - Inline auth flow
+          <div>
+            <div className="text-center mb-6">
+              <i className="fas fa-lock text-5xl text-gray-400 mb-4"></i>
+              <h3 className="heading-6 font-serif text-darkgray mb-2">
+                Sign in to Book
+              </h3>
+              <p className="text-base mb-4 text-gray-600">
+                Please sign in to your account to book this stay.
+              </p>
+            </div>
+
+            <BookingAuthFlow 
+              onSuccess={() => {
+                // User is now authenticated, booking form will show
+                setShowBookingForm(true);
+              }}
+            />
+
+            <div className="mt-4 text-center text-sm text-gray-500">
+              Secure booking with your account credentials
+            </div>
+          </div>
         ) : (
-          // Booking Form
+          // Booking Form (Authenticated Users)
           <>
             <div className="mb-6">
               <h3 className="heading-6 font-serif text-darkgray mb-2">

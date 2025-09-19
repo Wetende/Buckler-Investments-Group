@@ -5,9 +5,10 @@ from ...value_objects.money import Money
 
 @dataclass
 class TourBooking(DomainEntity):
-    tour_id: int
-    customer_id: int
-    booking_date: date
-    participants: int
-    total_price: Money
-    status: str
+    # Required fields with defaults to satisfy dataclass ordering
+    tour_id: int = 0
+    customer_id: int = 0
+    booking_date: date = None
+    participants: int = 1
+    total_price: Money = None
+    status: str = "pending"

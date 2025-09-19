@@ -58,10 +58,14 @@ from application.use_cases.bnb.cancel_booking import CancelBookingUseCase
 from application.use_cases.bnb.get_host_bookings import GetHostBookingsUseCase
 from application.use_cases.bnb.approve_booking import ApproveBookingUseCase
 from application.use_cases.bnb.reject_booking import RejectBookingUseCase
+# Location-based grouping use cases
+from application.use_cases.bnb.get_listings_grouped_by_location import GetListingsGroupedByLocationUseCase
+from application.use_cases.bnb.get_listings_by_location import GetListingsByLocationUseCase
 from application.use_cases.tours.search_tours import SearchToursUseCase
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
 from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
 from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
+from application.use_cases.tours.get_operator_tour_bookings import GetOperatorTourBookingsUseCase
 from application.use_cases.tours.modify_tour_booking import ModifyTourBookingUseCase
 from application.use_cases.tours.cancel_tour_booking import CancelTourBookingUseCase
 from application.use_cases.tours.confirm_tour_booking import ConfirmTourBookingUseCase
@@ -72,6 +76,13 @@ from application.use_cases.tours.list_tours import ListToursUseCase
 from application.use_cases.tours.delete_tour import DeleteTourUseCase
 from application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
 from application.use_cases.cars.create_rental import CreateRentalUseCase
+from application.use_cases.cars.create_vehicle import CreateVehicleUseCase
+from application.use_cases.cars.list_vehicles import ListVehiclesUseCase
+from application.use_cases.cars.get_vehicle import GetVehicleUseCase
+from application.use_cases.cars.delete_vehicle import DeleteVehicleUseCase
+from application.use_cases.cars.get_rental import GetRentalUseCase
+from application.use_cases.cars.list_rentals import ListRentalsUseCase
+from application.use_cases.cars.check_availability import CheckAvailabilityUseCase
 from application.use_cases.property.search_properties import SearchPropertiesUseCase
 from application.use_cases.property.create_property import CreatePropertyUseCase
 from application.use_cases.investment.list_investments import ListInvestmentsUseCase
@@ -226,7 +237,7 @@ class AppContainer(containers.DeclarativeContainer):
 
     # Database - Factory approach with proper session management
     @staticmethod
-    def create_managed_session() -> AsyncSessionLocal:
+    def create_managed_session():
         """Create a session that will be properly managed."""
         return AsyncSessionLocal()
 
@@ -413,6 +424,17 @@ class AppContainer(containers.DeclarativeContainer):
         booking_repository=booking_repository,
     )
 
+    # Location-based grouping use cases
+    get_listings_grouped_by_location_use_case = providers.Factory(
+        GetListingsGroupedByLocationUseCase,
+        bnb_repository=bnb_repository,
+    )
+
+    get_listings_by_location_use_case = providers.Factory(
+        GetListingsByLocationUseCase,
+        bnb_repository=bnb_repository,
+    )
+
     # Tour Use Cases
     search_tours_use_case = providers.Factory(
         SearchToursUseCase,
@@ -433,6 +455,12 @@ class AppContainer(containers.DeclarativeContainer):
     get_user_tour_bookings_use_case = providers.Factory(
         GetUserTourBookingsUseCase,
         tour_booking_repository=tour_booking_repository,
+    )
+
+    get_operator_tour_bookings_use_case = providers.Factory(
+        GetOperatorTourBookingsUseCase,
+        booking_repository=tour_booking_repository,
+        tour_repository=tour_repository,
     )
 
     modify_tour_booking_use_case = providers.Factory(
@@ -485,6 +513,42 @@ class AppContainer(containers.DeclarativeContainer):
 
     create_rental_use_case = providers.Factory(
         CreateRentalUseCase,
+        vehicle_repository=vehicle_repository,
+        car_rental_repository=car_rental_repository,
+    )
+
+    create_vehicle_use_case = providers.Factory(
+        CreateVehicleUseCase,
+        vehicle_repository=vehicle_repository,
+    )
+
+    list_vehicles_use_case = providers.Factory(
+        ListVehiclesUseCase,
+        vehicle_repository=vehicle_repository,
+    )
+
+    get_vehicle_use_case = providers.Factory(
+        GetVehicleUseCase,
+        vehicle_repository=vehicle_repository,
+    )
+
+    delete_vehicle_use_case = providers.Factory(
+        DeleteVehicleUseCase,
+        vehicle_repository=vehicle_repository,
+    )
+
+    get_rental_use_case = providers.Factory(
+        GetRentalUseCase,
+        car_rental_repository=car_rental_repository,
+    )
+
+    list_rentals_use_case = providers.Factory(
+        ListRentalsUseCase,
+        car_rental_repository=car_rental_repository,
+    )
+
+    check_availability_use_case = providers.Factory(
+        CheckAvailabilityUseCase,
         vehicle_repository=vehicle_repository,
         car_rental_repository=car_rental_repository,
     )

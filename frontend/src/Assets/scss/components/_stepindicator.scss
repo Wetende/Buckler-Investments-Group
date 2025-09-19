@@ -1,0 +1,336 @@
+/**
+ * Step Indicator Components
+ * Mobile-first responsive step indicators for multi-step forms
+ */
+
+.mobile-step-indicator {
+  @apply w-full;
+
+  .step-progress-track {
+    @apply relative w-full;
+    
+    .progress-segments {
+      @apply flex space-x-1;
+      
+      .progress-segment {
+        @apply flex-1 h-2 rounded-full transition-colors duration-300;
+        
+        &.active {
+          @apply bg-neonorange;
+        }
+        
+        &.inactive {
+          @apply bg-gray-200;
+        }
+      }
+    }
+    
+    .progress-percentage {
+      @apply absolute -bottom-6 left-0 text-xs text-gray-500;
+    }
+  }
+
+  .step-labels {
+    &.compact {
+      @apply flex justify-between items-center text-xs text-gray-600 mb-4;
+      
+      .step-label {
+        @apply flex-1 text-center;
+        
+        &.current {
+          @apply text-neonorange font-medium;
+        }
+        
+        .step-text {
+          @apply truncate px-1;
+        }
+      }
+    }
+    
+    &.detailed {
+      @apply grid grid-cols-2 gap-2 text-xs mb-4;
+      
+      @screen sm {
+        @apply grid-cols-3;
+      }
+      
+      .step-item {
+        @apply flex items-center p-2 rounded-lg transition-all duration-200;
+        
+        &.active {
+          @apply bg-neonorange text-white shadow-md;
+        }
+        
+        &.completed {
+          @apply bg-green-100 text-green-700;
+        }
+        
+        &.inactive {
+          @apply bg-gray-100 text-gray-500;
+        }
+        
+        .step-number {
+          @apply w-5 h-5 rounded-full flex items-center justify-center text-xs mr-2 flex-shrink-0;
+          
+          &.active {
+            @apply bg-white text-neonorange;
+          }
+          
+          &.completed {
+            @apply bg-green-500 text-white;
+          }
+          
+          &.inactive {
+            @apply bg-gray-300 text-gray-600;
+          }
+        }
+        
+        .step-title {
+          @apply truncate;
+        }
+      }
+    }
+  }
+
+  .context-breadcrumb {
+    @apply text-xs text-gray-500 mb-2;
+  }
+}
+
+.desktop-step-indicator {
+  @apply w-full;
+
+  .step-header {
+    @apply flex items-center justify-between mb-6;
+    
+    .main-title {
+      @apply text-2xl font-serif font-semibold;
+    }
+    
+    .step-counter {
+      @apply text-lg text-gray-600;
+    }
+  }
+
+  .horizontal-stepper {
+    @apply flex items-center justify-between mb-8;
+    
+    .step-item {
+      @apply flex flex-col items-center text-center cursor-pointer transition-all duration-300;
+      
+      &.clickable {
+        &:hover {
+          @apply transform scale-105;
+        }
+      }
+      
+      &.active {
+        @apply transform scale-105;
+      }
+      
+      .step-circle {
+        @apply relative w-12 h-12 rounded-full flex items-center justify-center font-semibold text-lg mb-2 transition-all duration-300;
+        
+        &.active {
+          @apply bg-neonorange text-white shadow-lg;
+          
+          .pulse-animation {
+            @apply absolute inset-0 rounded-full bg-neonorange opacity-30 animate-ping;
+          }
+        }
+        
+        &.completed {
+          @apply bg-green-500 text-white shadow-md;
+        }
+        
+        &.inactive {
+          @apply bg-gray-200 text-gray-500;
+        }
+        
+        .checkmark-icon {
+          @apply w-6 h-6;
+        }
+      }
+      
+      .step-label {
+        @apply max-w-28 transition-colors duration-300;
+        
+        &.active {
+          @apply text-neonorange font-semibold;
+        }
+        
+        &.completed {
+          @apply text-green-700 font-medium;
+        }
+        
+        &.inactive {
+          @apply text-gray-500;
+        }
+        
+        .step-title {
+          @apply text-sm font-medium;
+        }
+        
+        .step-description {
+          @apply text-xs text-gray-400 mt-1;
+        }
+      }
+    }
+    
+    .connector-line {
+      @apply flex-1 h-0.5 mx-4 transition-colors duration-300;
+      
+      &.completed {
+        @apply bg-green-500;
+      }
+      
+      &.inactive {
+        @apply bg-gray-200;
+      }
+    }
+  }
+
+  .overall-progress {
+    .progress-bar {
+      @apply w-full bg-gray-200 rounded-full h-2 mb-4;
+      
+      .progress-fill {
+        @apply bg-neonorange h-2 rounded-full transition-all duration-500;
+      }
+    }
+    
+    .progress-stats {
+      @apply flex justify-between text-sm text-gray-600;
+    }
+  }
+}
+
+// Responsive breakpoints
+@screen sm {
+  .mobile-step-indicator {
+    .step-labels.detailed {
+      .step-item {
+        @apply p-3;
+        
+        .step-number {
+          @apply w-6 h-6 text-sm mr-3;
+        }
+      }
+    }
+  }
+}
+
+@screen md {
+  .mobile-step-indicator {
+    .step-labels.compact {
+      @apply text-sm;
+      
+      .step-label .step-text {
+        @apply px-2;
+      }
+    }
+  }
+}
+
+// Dark mode support (if implemented)
+@media (prefers-color-scheme: dark) {
+  .mobile-step-indicator,
+  .desktop-step-indicator {
+    .step-progress-track .progress-segments .progress-segment.inactive,
+    .horizontal-stepper .connector-line.inactive {
+      @apply bg-gray-700;
+    }
+    
+    .step-labels.detailed .step-item.inactive,
+    .horizontal-stepper .step-item .step-circle.inactive {
+      @apply bg-gray-700 text-gray-300;
+    }
+    
+    .progress-percentage,
+    .context-breadcrumb,
+    .step-counter,
+    .progress-stats {
+      @apply text-gray-400;
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes step-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes step-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Animation classes
+.step-animate-in {
+  animation: step-slide-in 0.3s ease-out;
+}
+
+.step-fade-in {
+  animation: step-fade-in 0.2s ease-out;
+}
+
+// Utility classes for step indicators
+.step-icon-success {
+  @apply text-green-500;
+}
+
+.step-icon-warning {
+  @apply text-yellow-500;
+}
+
+.step-icon-error {
+  @apply text-red-500;
+}
+
+.step-pulse {
+  @apply animate-pulse;
+}
+
+// Form integration styles
+.multi-step-form {
+  .step-content {
+    @apply min-h-[400px];
+    
+    @screen lg {
+      @apply min-h-[500px];
+    }
+  }
+  
+  .step-navigation {
+    @apply bg-gray-50 px-6 py-4 border-t border-gray-200;
+    
+    @screen lg {
+      @apply px-8;
+    }
+    
+    .nav-buttons {
+      @apply flex justify-between items-center;
+      
+      .nav-hint {
+        @apply text-center;
+        
+        .hint-text {
+          @apply text-sm text-gray-600 mb-2;
+        }
+      }
+    }
+  }
+}

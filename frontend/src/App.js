@@ -29,6 +29,7 @@ const MyBnbBookingsPage = lazy(() => import("./Pages/Account/MyBnbBookings"));
 const WishlistPage = lazy(() => import("./Pages/Account/Wishlist"));
 const HostDashboardPage = lazy(() => import("./Pages/Host/HostDashboard"));
 const BnbDetailPage = lazy(() => import("./Pages/Bnb/BnbDetail"));
+const JoinUsPage = lazy(() => import("./Pages/JoinUs/JoinUs"));
 const ToursHomePage = lazy(() => import("./Pages/Tours/Tour"));
 const ToursListPage = lazy(() => import("./Pages/Tours/ToursList"));
 const TourDetailPage = lazy(() => import("./Pages/Tours/TourDetail"));
@@ -176,9 +177,6 @@ const MobileMenuClassicPage = lazy(() =>
 );
 const MobileMenuModernPage = lazy(() =>
   import("./Pages/Header/MobileMenu/MobileMenuModernPage")
-);
-const MobileMenuFullScreen = lazy(() =>
-  import("./Pages/Header/MobileMenu/MobileMenuFullScreen")
 );
 const HamburgerMenuPage = lazy(() =>
   import("./Pages/Header/HamburgerMenu/HamburgerMenuPage")
@@ -416,14 +414,23 @@ function App() {
       behavior: "instant",
     });
     setFooterHeight(0);
-    setCustomModal({
-      ...customModal,
-      el: null,
-      isOpen: false,
-    });
+    // Only reset modal if we're actually navigating to a different page
+    // Don't reset on every location change to avoid closing modals unexpectedly
+    const currentPath = location.pathname;
+    const previousPath = sessionStorage.getItem('previousPath');
+
+    if (previousPath && previousPath !== currentPath) {
+      setCustomModal({
+        ...customModal,
+        el: null,
+        isOpen: false,
+      });
+    }
+
+    sessionStorage.setItem('previousPath', currentPath);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, [location.pathname]); // Only depend on pathname, not full location object
 
   return (
     <GlobalContext.Provider
@@ -452,24 +459,15 @@ function App() {
                   <Route path="/properties/list" element={<PropertiesListPage />} />
                   <Route path="/properties/:id" element={<PropertyDetailPage />} />
 
-                  {/* Rentals (BnB) sub-home and list */}
+                  {/* Rentals (BnB) sub-home and list - PUBLIC */}
                   <Route path="/bnb" element={<BnbHomePage />} />
                   <Route path="/bnb/list" element={<BnbListPage />} />
                   <Route path="/bnb/:id" element={<BnbDetailPage />} />
-                  <Route path="/bnb/booking/:bookingId/confirmation" element={<BookingConfirmationPage />} />
-                  
-                  {/* Account pages */}
-                  <Route path="/account/bnb-bookings" element={<MyBnbBookingsPage />} />
-                  <Route path="/account/wishlist" element={<WishlistPage />} />
-                  
-                  {/* Host pages */}
-                  <Route path="/host/dashboard" element={<HostDashboardPage />} />
+                  <Route path="/join-us" element={<JoinUsPage />} />
 
-                  {/* Tours sub-home and list */}
+                  {/* Tours sub-home and list - PUBLIC */}
                   <Route path="/tours" element={<ToursHomePage />} />
                   <Route path="/tours/list" element={<ToursListPage />} />
-                  <Route path="/tours/my-bookings" element={<MyBookingsPage />} />
-                  <Route path="/tours/bookings/:bookingId" element={<BookingDetailPage />} />
                   <Route path="/tours/:id" element={<TourDetailPage />} />
                   <Route path="/cars" element={<CarsHomePage />} />
                   <Route path="/cars/list" element={<CarsListPage />} />
@@ -480,17 +478,23 @@ function App() {
                   {/* Auth Routes */}
                   <Route path="/password-reset" element={<PasswordReset />} />
                   
-                  {/* Protected Routes */}
-                  <Route path="/account" element={
-                    <ProtectedRoute>
-                      <AccountPage />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/host/dashboard" element={
-                    <ProtectedRoute>
-                      <HostDashboard />
-                    </ProtectedRoute>
-                  } />
+                  {/* Protected Routes - Require Login (Booking/Personal Data) */}
+                  <Route element={<ProtectedRoute />}>
+                    {/* Account & Profile */}
+                    <Route path="/account" element={<AccountPage />} />
+                    <Route path="/account/bnb-bookings" element={<MyBnbBookingsPage />} />
+                    <Route path="/account/wishlist" element={<WishlistPage />} />
+                    
+                    {/* Host Management */}
+                    <Route path="/host/dashboard" element={<HostDashboard />} />
+                    
+                    {/* Booking Confirmations & Management */}
+                    <Route path="/bnb/booking/:bookingId/confirmation" element={<BookingConfirmationPage />} />
+                    <Route path="/tours/my-bookings" element={<MyBookingsPage />} />
+                    <Route path="/tours/bookings/:bookingId" element={<BookingDetailPage />} />
+                    
+                    {/* Future: Add checkout, payment pages here */}
+                  </Route>
                   <Route path="/" element={<HomeDecorPage style={{ "--base-color": "#bf8c4c" }} />} />
 
                   {/* Headers */}
@@ -575,10 +579,6 @@ function App() {
                       path="mobile-menu-modern"
                       element={<MobileMenuModernPage />}
                     />
-                    <Route
-                      path="mobile-menu-full-screen"
-                      element={<MobileMenuFullScreen />}
-                    />{" "}
                     <Route
                       path="hamburger-menu"
                       element={<HamburgerMenuPage />}

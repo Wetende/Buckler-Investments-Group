@@ -7,9 +7,10 @@ from decimal import Decimal
 
 @dataclass
 class TourAvailability(DomainEntity):
-    tour_id: int
-    date: date
-    available_spots: int
+    # Required fields with defaults to satisfy dataclass ordering
+    tour_id: int = 0
+    date: date = None
+    available_spots: int = 0
     price_override: Optional[Decimal] = None
 
 

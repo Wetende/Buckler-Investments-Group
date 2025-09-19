@@ -3,35 +3,53 @@ import { axiosPrivate } from './axios'
 
 // Favorites API functions
 const getFavorites = async (params = {}) => {
-    const { data } = await axiosPrivate.get('/user/favorites', { params })
+    const { data } = await axiosPrivate.get('/favorites', { params })
     return data
 }
 
 const addToFavorites = async (payload) => {
-    const { data } = await axiosPrivate.post('/user/favorites', {
-        id: 0, // Create new favorite
-        ...payload
+    const { data } = await axiosPrivate.post('/favorites', {
+        property_id: payload.property_id || payload.id
     })
     return data
 }
 
 const removeFromFavorites = async (payload) => {
-    const { data } = await axiosPrivate.post('/user/favorites/remove', payload)
+    const { data } = await axiosPrivate.get(`/favorites/${payload.property_id || payload.id}/delete`)
     return data
 }
 
 const toggleFavoriteItem = async (payload) => {
-    const { data } = await axiosPrivate.post('/user/favorites/toggle', payload)
-    return data
+    // Check if item is favorited, then add or remove
+    try {
+        const favorites = await getFavorites()
+        const isFavorited = favorites.some(fav => fav.property_id === (payload.property_id || payload.id))
+        
+        if (isFavorited) {
+            return await removeFromFavorites(payload)
+        } else {
+            return await addToFavorites(payload)
+        }
+    } catch (error) {
+        throw error
+    }
 }
 
 // React Query hooks
-export const useFavorites = (filters = {}) => {
+export const useFavorites = (filters = {}, enabled = true) => {
     return useQuery({
         queryKey: ['favorites', filters],
         queryFn: () => getFavorites(filters),
+        enabled: enabled, // Only run when explicitly enabled
         staleTime: 5 * 60 * 1000, // 5 minutes
         gcTime: 10 * 60 * 1000, // 10 minutes
+        retry: (failureCount, error) => {
+            // Don't retry on authentication errors
+            if (error?.response?.status === 401) {
+                return false
+            }
+            return failureCount < 3
+        },
     })
 }
 

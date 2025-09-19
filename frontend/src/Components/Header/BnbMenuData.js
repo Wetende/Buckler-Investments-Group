@@ -1,6 +1,25 @@
+import React from 'react';
+import BnbServiceSelectionModal from '../HostApplication/BnbServiceSelectionModal';
+import Buttons from '../Button/Buttons';
+
 const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173'
 
-const BnbMenuData = [
+// Role-based dashboard routing
+const getDashboardUrl = (userRole) => {
+  const roleRoutes = {
+    'USER': `${ADMIN_BASE_URL}`,
+    'HOST': `${ADMIN_BASE_URL}/bnb`,
+    'TOUR_OPERATOR': `${ADMIN_BASE_URL}/tours`, 
+    'VEHICLE_OWNER': `${ADMIN_BASE_URL}/cars`,
+    'AGENT': `${ADMIN_BASE_URL}/properties`,
+    'ADMIN': `${ADMIN_BASE_URL}/main`,
+    'SUPER_ADMIN': `${ADMIN_BASE_URL}/main`
+  }
+  return roleRoutes[userRole] || `${ADMIN_BASE_URL}`
+}
+
+// Export function to generate menu based on user context
+const getBnbMenuData = (user = null) => [
   {
     title: "Stays",
     link: "/bnb/list",
@@ -131,10 +150,24 @@ const BnbMenuData = [
     ]
   },
   {
-    title: "Dashboard",
-    link: ADMIN_BASE_URL,
+    title: "Become a Host",
+    component: (
+      <BnbServiceSelectionModal
+        triggerButton={
+          <button className="bg-transparent border-0 p-0 cursor-pointer hover:text-neonorange transition-colors font-inherit text-inherit">
+            Become a Host
+          </button>
+        }
+      />
+    ),
     megamenu: false
   },
+  // Dashboard - only show for authenticated users, route based on role
+  ...(user ? [{
+    title: "Dashboard",
+    link: getDashboardUrl(user.role),
+    megamenu: false
+  }] : []),
   {
     title: "Account",
     link: "/account",
@@ -158,5 +191,9 @@ const BnbMenuData = [
   }
 ];
 
-export default BnbMenuData;
+// Export the function for dynamic menu generation
+export default getBnbMenuData;
+
+// Export static menu for backward compatibility 
+export const BnbMenuData = getBnbMenuData();
 

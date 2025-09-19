@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
 // Libraries
-import { Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row, Navbar } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
 import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import BnbMenuData from '../../Components/Header/BnbMenuData'
+import getBnbMenuData, { BnbMenuData } from '../../Components/Header/BnbMenuData'
 import EnhancedBnbSearch from '../../Components/BnbSearch/EnhancedBnbSearch'
 import Buttons from '../../Components/Button/Buttons'
 import InteractiveBanners15 from '../../Components/InteractiveBanners/InteractiveBanners15'
@@ -140,12 +140,20 @@ const BnbListPage = (props) => {
           containerClass="sm:!px-0"
           className="py-[0px] border-b border-[#ffffff1a] px-[35px] md:pr-[15px] md:pl-0 md:py-[20px] bg-[#23262d]"
         >
-          <Col xs="auto" lg={2} sm={6} className="me-auto ps-lg-0 me-auto ps-lg-0">
+          <Col xs="auto" lg={2} sm={6} className="me-auto ps-lg-0">
             <Link aria-label="header logo link" className="flex items-center" to="/">
               <span className="font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
             </Link>
           </Col>
-          <Menu {...props} data={BnbMenuData} />
+          <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+          </Navbar.Toggle>
+          <Navbar.Collapse className="col-auto justify-center">
+            <Menu {...props} data={BnbMenuData} className="text-black" />
+          </Navbar.Collapse>
         </HeaderNav>
       </Header>
       {/* Header End */}

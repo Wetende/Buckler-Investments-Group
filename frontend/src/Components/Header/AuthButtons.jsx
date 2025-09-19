@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAuth } from '../Auth/AuthProvider'
+import { useAuth } from '../../api/useAuth'
 import LoginModal from '../Auth/LoginModal'
 import RegisterModal from '../Auth/RegisterModal'
 import ProfileDropdown from '../Auth/ProfileDropdown'

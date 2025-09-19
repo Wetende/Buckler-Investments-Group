@@ -14,7 +14,7 @@ import VehicleReviews from '../../Components/Reviews/VehicleReviews'
 
 // API Hooks
 import { useVehicle, useVehicleReviews, useFeaturedVehicles } from '../../api/useCars'
-import { useFavorites } from '../../api/useFavorites'
+import { useToggleFavorite } from '../../api/useFavorites'
 
 // Animations
 import { fadeIn, fadeInUp } from '../../Functions/GlobalAnimations'
@@ -29,7 +29,7 @@ const VehicleDetail = () => {
     const { data: vehicle, isLoading, error } = useVehicle(id)
     const { data: reviews = [] } = useVehicleReviews(id)
     const { data: relatedVehicles = [] } = useFeaturedVehicles(3)
-    const { toggleFavorite } = useFavorites()
+    const toggleFavorite = useToggleFavorite()
 
     const handleFavorite = async () => {
         try {

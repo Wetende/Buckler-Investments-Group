@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Modal, ModalBody } from 'reactstrap'
 import { Row, Col } from 'react-bootstrap'
 import { m } from 'framer-motion'
 import Buttons from '../Button/Buttons'
+import CustomModal from '../CustomModal'
+import LoginModal from '../Auth/LoginModal'
 import PaymentModal from '../Payment/PaymentModal'
 import { useCreateRental, useCheckAvailability } from '../../api/useCars'
 import { useAuth } from '../../api/useAuth'
@@ -10,8 +11,7 @@ import { useCreateRentalPayment } from '../../api/usePayments'
 import { fadeIn } from '../../Functions/GlobalAnimations'
 
 const CarBookingModal = ({ 
-    isOpen, 
-    onClose, 
+    modalBtn,
     vehicle,
     initialDates = {},
     className = '' 
@@ -118,11 +118,12 @@ const CarBookingModal = ({
 
     const handlePaymentSuccess = () => {
         setShowPaymentModal(false)
-        onClose()
         alert('Booking and payment completed successfully! We will confirm your booking soon.')
         // Reset form
         setCurrentStep(1)
         setRentalId(null)
+        // Close the modal by triggering the CustomModal close
+        window.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 27 }))
     }
 
     const formatPrice = (price) => {
@@ -145,19 +146,15 @@ const CarBookingModal = ({
     if (!vehicle) return null
 
     return (
-        <Modal 
-            isOpen={isOpen} 
-            toggle={onClose} 
-            className={`modal-dialog-centered ${className}`}
-            size="lg"
+        <CustomModal.Wrapper
+            modalBtn={modalBtn}
+            className={className}
+            animation="fadeIn"
         >
-            <ModalBody>
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
-                >
+            <div className="max-w-4xl w-full bg-white rounded-lg shadow-xl relative">
+                <CustomModal.Close className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
                     <i className="feather-x text-xl"></i>
-                </button>
+                </CustomModal.Close>
 
                 <div className="p-6">
                     {/* Header */}
@@ -440,13 +437,14 @@ const CarBookingModal = ({
                         </div>
                         
                         <div className="flex gap-3">
-                            <Buttons
-                                onClick={onClose}
-                                className="btn-fancy btn-transparent font-medium font-serif rounded-[2px] uppercase"
-                                themeColor="#777"
-                                color="#777"
-                                title="Cancel"
-                            />
+                            <CustomModal.Close>
+                                <Buttons
+                                    className="btn-fancy btn-transparent font-medium font-serif rounded-[2px] uppercase"
+                                    themeColor="#777"
+                                    color="#777"
+                                    title="Cancel"
+                                />
+                            </CustomModal.Close>
                             
                             {currentStep < 3 ? (
                                 <Buttons
@@ -473,19 +471,29 @@ const CarBookingModal = ({
                         </div>
                     </div>
 
-                    {/* Auth Warning */}
-                    {!isAuthenticated && (
-                        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
-                            <div className="flex items-center">
-                                <i className="feather-info text-yellow-600 mr-2"></i>
-                                <span className="text-yellow-800">
-                                    Please log in to complete your booking.
-                                </span>
+                    {/* Authentication Check */}
+                    {!isAuthenticated ? (
+                        <div className="text-center mt-6 p-6 bg-gray-50 rounded-lg">
+                            <div className="mb-4">
+                                <i className="fas fa-lock text-3xl text-gray-400 mb-2"></i>
+                                <h4 className="heading-6 font-serif text-darkgray mb-2">
+                                    Sign in to Book
+                                </h4>
+                                <p className="text-sm text-gray-600">
+                                    Please sign in to your account to book this vehicle.
+                                </p>
+                            </div>
+                            
+                            <LoginModal onSuccess={() => {}} />
+                            
+                            <div className="mt-3 text-xs text-gray-500">
+                                Don't have an account? 
+                                <a href="/register" className="text-primary font-medium ml-1">Create one here</a>
                             </div>
                         </div>
-                    )}
+                    ) : null}
                 </div>
-            </ModalBody>
+            </div>
 
             {/* Payment Modal */}
             <PaymentModal
@@ -505,7 +513,7 @@ const CarBookingModal = ({
                     }
                 }}
             />
-        </Modal>
+        </CustomModal.Wrapper>
     )
 }
 

@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { axiosInstance, axiosPrivate } from './axios'
+import axios from 'axios';
+
+const API_BASE = '/api/v1';
 
 // Auth API functions
 const login = async (credentials) => {
@@ -31,8 +34,69 @@ const refreshToken = async () => {
 export const useAuth = () => {
     const queryClient = useQueryClient()
 
+    // Login mutation
+    const loginMutation = useMutation({
+        mutationFn: async (credentials) => {
+            // Handle both email/password and phone login
+            const response = await axiosInstance.post('/auth/login', credentials);
+            const { access_token, user } = response.data;
+            localStorage.setItem('authToken', access_token);
+            return user;
+        },
+        onSuccess: (user) => {
+            // Set user data in cache
+            queryClient.setQueryData(['auth', 'user'], user);
+            // Invalidate and refetch user data
+            queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
+        },
+        onError: (error) => {
+            console.error('Login failed:', error);
+        },
+    });
+
+    // Register mutation
+    const registerMutation = useMutation({
+        mutationFn: async (userData) => {
+            const response = await axiosInstance.post('/auth/register', userData);
+            const { access_token, user } = response.data;
+            localStorage.setItem('authToken', access_token);
+            return user;
+        },
+        onSuccess: (user) => {
+            // Set user data in cache
+            queryClient.setQueryData(['auth', 'user'], user);
+            // Invalidate and refetch user data
+            queryClient.invalidateQueries({ queryKey: ['auth', 'user'] });
+        },
+        onError: (error) => {
+            console.error('Registration failed:', error);
+        },
+    });
+
+    // Logout function
+    const logout = () => {
+        localStorage.removeItem('authToken');
+        queryClient.setQueryData(['auth', 'user'], null);
+        queryClient.clear();
+    };
+
+    // Refresh token mutation
+    const refreshTokenMutation = useMutation({
+        mutationFn: async () => {
+            const response = await axiosPrivate.post('/auth/refresh');
+            const { access_token } = response.data;
+            localStorage.setItem('authToken', access_token);
+            return access_token;
+        },
+        onError: () => {
+            logout();
+        },
+    });
+
+    const getToken = () => localStorage.getItem('authToken');
+
     // Get current user query
-    const { data: user, isLoading, error } = useQuery({
+    const { data: user, isLoading: userLoading, error } = useQuery({
         queryKey: ['auth', 'user'],
         queryFn: getCurrentUser,
         enabled: !!localStorage.getItem('authToken'), // Only run if token exists
@@ -42,13 +106,19 @@ export const useAuth = () => {
     })
 
     const isAuthenticated = !!user && !!localStorage.getItem('authToken')
+    const isLoading = loginMutation.isPending || registerMutation.isPending || userLoading
 
-    return {
+    return { 
+        login: loginMutation.mutateAsync,
+        register: registerMutation.mutateAsync,
+        logout, 
+        refreshToken: refreshTokenMutation.mutate, 
+        getToken,
         user,
-        isAuthenticated,
         isLoading,
-        error,
-    }
+        isAuthenticated,
+        error
+    };
 }
 
 export const useLogin = () => {
@@ -131,6 +201,10 @@ export const useRefreshToken = () => {
     })
 }
 
+// useAuth is already exported above as named export
+// Export useAuth as default for compatibility
+export default useAuth
+
 const authHooks = {
     useAuth,
     useLogin,
@@ -139,4 +213,5 @@ const authHooks = {
     useRefreshToken,
 }
 
-export default authHooks
+// Named export for the hooks object
+export { authHooks }

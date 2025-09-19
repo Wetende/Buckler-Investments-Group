@@ -10,7 +10,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import RegisterBtn from './RegisterBtn'
 import useAuth from '../../api/useAuth'
 
-const RegisterModal = ({ className = '', onSuccess = () => {} }) => {
+const RegisterModal = ({ className = '', onSuccess = () => {}, triggerButton = null }) => {
   const navigate = useNavigate()
   const { login } = useAuth()
   return (
@@ -18,7 +18,7 @@ const RegisterModal = ({ className = '', onSuccess = () => {} }) => {
       className={className}
       closeBtnOuter={false}
       modalBtn={
-        <RegisterBtn />
+        triggerButton || <RegisterBtn />
       }
     >
       <div className="bg-white rounded-[6px] p-16 md:p-12 sm:p-8 max-w-[500px] mx-auto relative">

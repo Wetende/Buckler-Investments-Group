@@ -6,11 +6,14 @@ from ...value_objects.money import Money
 
 @dataclass
 class Vehicle(DomainEntity):
-    make: str
-    model: str
-    year: int
-    daily_rate: Money
-    owner_id: int
+    # Required fields
+    make: str = ""
+    model: str = ""
+    year: int = 0
+    daily_rate: Money = field(default_factory=lambda: Money(0, "KES"))
+    owner_id: int = 0
+    
+    # Optional fields with defaults
     features: Optional[List[str]] = field(default_factory=list)
     images: Optional[List[str]] = field(default_factory=list)
     location: Optional[str] = None
@@ -20,8 +23,6 @@ class Vehicle(DomainEntity):
     fuel_type: str = "petrol"  # petrol, diesel, electric, hybrid
     seats: int = 5
     status: str = "available"  # available, rented, maintenance
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
 
     def is_available_for_dates(self, start_date: datetime, end_date: datetime) -> bool:
         """Check if vehicle is available for rental during specified dates"""

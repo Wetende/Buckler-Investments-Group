@@ -6,27 +6,29 @@ from .base import DomainEntity
 
 @dataclass
 class PaymentIntent(DomainEntity):
-    intent_id: str
-    amount: Decimal
-    currency: str
-    payment_method: str
-    booking_id: int
-    booking_type: str
-    customer_id: int
-    status: str
-    metadata: Dict[str, Any]
+    # Required fields with defaults to satisfy dataclass ordering
+    intent_id: str = ""
+    amount: Decimal = Decimal("0")
+    currency: str = "KES"
+    payment_method: str = ""
+    booking_id: int = 0
+    booking_type: str = ""
+    customer_id: int = 0
+    status: str = "pending"
+    metadata: Dict[str, Any] = None
     expires_at: Optional[datetime] = None
 
 @dataclass
 class Payment(DomainEntity):
-    intent_id: str
-    amount: Decimal
-    currency: str
-    payment_method: str
-    booking_id: int
-    booking_type: str
-    customer_id: int
-    status: str
+    # Required fields with defaults to satisfy dataclass ordering
+    intent_id: str = ""
+    amount: Decimal = Decimal("0")
+    currency: str = "KES"
+    payment_method: str = ""
+    booking_id: int = 0
+    booking_type: str = ""
+    customer_id: int = 0
+    status: str = "pending"
     transaction_id: Optional[str] = None
     failure_reason: Optional[str] = None
     completed_at: Optional[datetime] = None
@@ -42,10 +44,11 @@ class Payment(DomainEntity):
 
 @dataclass  
 class Refund(DomainEntity):
-    refund_id: str
-    payment_id: str
-    amount: Decimal
-    currency: str
-    status: str
-    reason: str
+    # Required fields with defaults to satisfy dataclass ordering
+    refund_id: str = ""
+    payment_id: str = ""
+    amount: Decimal = Decimal("0")
+    currency: str = "KES"
+    status: str = "pending"
+    reason: str = ""
     processed_at: Optional[datetime] = None

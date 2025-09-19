@@ -3,10 +3,12 @@ from datetime import date
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
+from sqlalchemy.orm import selectinload
 from domain.repositories.bnb import BnbRepository, BookingRepository
 from domain.entities.bnb import ShortTermListing, Booking
 from infrastructure.database.models.bnb_listing import StListing as StListingModel
 from infrastructure.database.models.booking import Booking as BookingModel
+from infrastructure.database.models.user import User as UserModel
 from shared.mappers.bnb import BnbMapper
 from infrastructure.config.database import AsyncSessionLocal
 
@@ -59,6 +61,39 @@ class SqlAlchemyBnbRepository(BnbRepository):
             return BnbMapper.model_to_entity(model) if model else None
 
         return await self._execute_in_session(_get)
+    
+    async def get_with_host(self, listing_id: int) -> tuple[Optional[ShortTermListing], Optional[dict]]:
+        """Get listing with host information"""
+        async def _get_with_host():
+            # Join listing with user (host) information
+            stmt = select(StListingModel, UserModel).join(
+                UserModel, StListingModel.host_id == UserModel.id
+            ).where(StListingModel.id == listing_id)
+            
+            result = await self._session.execute(stmt)
+            row = result.first()
+            
+            if not row:
+                return None, None
+            
+            listing_model, user_model = row
+            
+            # Convert listing to entity
+            listing_entity = BnbMapper.model_to_entity(listing_model) if listing_model else None
+            
+            # Convert user to dict for host information
+            host_info = None
+            if user_model:
+                host_info = {
+                    'id': user_model.id,
+                    'full_name': user_model.name,
+                    'phone_number': user_model.phone,
+                    'email': user_model.email
+                }
+            
+            return listing_entity, host_info
+
+        return await self._execute_in_session(_get_with_host)
 
     async def update(self, entity: ShortTermListing) -> ShortTermListing:
         async def _update():
@@ -98,21 +133,108 @@ class SqlAlchemyBnbRepository(BnbRepository):
     async def search_available(
         self, check_in: date, check_out: date, guests: int
     ) -> List[ShortTermListing]:
-        # NOTE: This is a simplified search. A real implementation would check for booking conflicts.
-        stmt = select(StListingModel).where(
-            and_(
-                StListingModel.capacity >= guests,
+        async def _search_available():
+            # NOTE: This is a simplified search. A real implementation would check for booking conflicts.
+            stmt = select(StListingModel).where(
+                and_(
+                    StListingModel.capacity >= guests,
+                )
             )
-        )
-        result = await self._session.execute(stmt)
-        models = result.scalars().all()
-        return [BnbMapper.model_to_entity(model) for model in models]
+            result = await self._session.execute(stmt)
+            models = result.scalars().all()
+            return [BnbMapper.model_to_entity(model) for model in models]
+        
+        return await self._execute_in_session(_search_available)
 
     async def get_by_host(self, host_id: int) -> List[ShortTermListing]:
-        stmt = select(StListingModel).where(StListingModel.host_id == host_id)
-        result = await self._session.execute(stmt)
-        models = result.scalars().all()
-        return [BnbMapper.model_to_entity(model) for model in models]
+        async def _get_by_host():
+            stmt = select(StListingModel).where(StListingModel.host_id == host_id)
+            result = await self._session.execute(stmt)
+            models = result.scalars().all()
+            return [BnbMapper.model_to_entity(model) for model in models]
+        
+        return await self._execute_in_session(_get_by_host)
+    
+    async def list_with_location(self, limit: int = 100, offset: int = 0) -> List[ShortTermListing]:
+        """Get listings with location data populated for grouping"""
+        async def _list_with_location():
+            stmt = select(StListingModel).where(
+                and_(
+                    StListingModel.county.isnot(None),  # Only listings with county data
+                    StListingModel.county != ''
+                )
+            ).order_by(StListingModel.created_at.desc()).limit(limit).offset(offset)
+            result = await self._session.execute(stmt)
+            models = result.scalars().all()
+            return [BnbMapper.model_to_entity(model) for model in models]
+        
+        return await self._execute_in_session(_list_with_location)
+    
+    async def list_by_location(
+        self, 
+        county: str = None, 
+        town: str = None,
+        limit: int = 20, 
+        offset: int = 0
+    ) -> List[ShortTermListing]:
+        """Get listings filtered by county and/or town"""
+        async def _list_by_location():
+            conditions = []
+            
+            if county:
+                conditions.append(StListingModel.county.ilike(f"%{county}%"))
+            
+            if town:
+                conditions.append(StListingModel.town.ilike(f"%{town}%"))
+            
+            stmt = select(StListingModel)
+            if conditions:
+                stmt = stmt.where(and_(*conditions))
+            
+            stmt = stmt.order_by(StListingModel.created_at.desc()).limit(limit).offset(offset)
+            result = await self._session.execute(stmt)
+            models = result.scalars().all()
+            return [BnbMapper.model_to_entity(model) for model in models]
+        
+        return await self._execute_in_session(_list_by_location)
+    
+    async def get_location_stats(self) -> List[dict]:
+        """Get statistics about listings grouped by location"""
+        async def _get_location_stats():
+            from sqlalchemy import func, text
+            
+            # Query to group by county and get counts
+            stmt = select(
+                StListingModel.county,
+                StListingModel.town,
+                func.count(StListingModel.id).label('listing_count'),
+                func.avg(StListingModel.nightly_price).label('avg_price')
+            ).where(
+                and_(
+                    StListingModel.county.isnot(None),
+                    StListingModel.county != ''
+                )
+            ).group_by(
+                StListingModel.county, 
+                StListingModel.town
+            ).order_by(
+                text('listing_count DESC')
+            ).limit(20)
+            
+            result = await self._session.execute(stmt)
+            rows = result.fetchall()
+            
+            return [
+                {
+                    'county': row.county,
+                    'town': row.town,
+                    'listing_count': row.listing_count,
+                    'average_price': float(row.avg_price) if row.avg_price else 0
+                }
+                for row in rows
+            ]
+        
+        return await self._execute_in_session(_get_location_stats)
 
 
 class SqlAlchemyBookingRepository(BookingRepository):

@@ -8,6 +8,16 @@ from pydantic import BaseModel, Field, ConfigDict
 from domain.value_objects.booking_status import StListingType, CancellationPolicy, BookingStatus
 
 
+class HostInfoDTO(BaseModel):
+    """Host contact information for listings"""
+    id: int
+    full_name: str
+    phone_number: Optional[str] = None
+    email: Optional[str] = None
+    
+    model_config = ConfigDict(from_attributes=True)
+
+
 class StListingRead(BaseModel):
     id: int
     host_id: int
@@ -22,6 +32,10 @@ class StListingRead(BaseModel):
     service_fee: Optional[Decimal] = None
     security_deposit: Optional[Decimal] = None
     address: str
+    # Structured location fields for geographic grouping  
+    county: Optional[str] = None
+    town: Optional[str] = None
+    area_id: Optional[int] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     amenities: Optional[dict] = None
@@ -31,6 +45,7 @@ class StListingRead(BaseModel):
     min_nights: Optional[int] = None
     max_nights: Optional[int] = None
     images: Optional[list] = None
+    host: Optional[HostInfoDTO] = None  # Host contact information
     created_at: datetime
     updated_at: datetime
 
@@ -50,6 +65,10 @@ class StListingCU(BaseModel):
     service_fee: Optional[Decimal] = Field(None, ge=0)
     security_deposit: Optional[Decimal] = Field(None, ge=0)
     address: str
+    # Structured location fields for geographic grouping
+    county: Optional[str] = Field(None, max_length=100)
+    town: Optional[str] = Field(None, max_length=100)
+    area_id: Optional[int] = Field(None, ge=1)
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     amenities: Optional[dict] = None
@@ -113,9 +132,10 @@ class MessageRead(BaseModel):
 
 # Search and response DTOs for use cases
 class SearchListingsRequest(BaseModel):
-    check_in: date
-    check_out: date
-    guests: int
+    check_in: Optional[date] = None
+    check_out: Optional[date] = None
+    guests: Optional[int] = None
+    price_min: Optional[Decimal] = None
     price_max: Optional[Decimal] = None
     instant_book_only: bool = False
     location: Optional[str] = None
@@ -144,6 +164,25 @@ class ListingResponse(BaseModel):
             rating=getattr(entity, 'rating', None)
         )
 
+
+# Location-based grouping DTOs for Airbnb-style homepage
+class LocationGroupingResponse(BaseModel):
+    county: str
+    town: Optional[str] = None
+    listing_count: int
+    sample_listings: List[StListingRead]
+
+class LocationGroupedListingsResponse(BaseModel):
+    groups: List[LocationGroupingResponse]
+    popular_locations: List[str]
+    total_listings: int
+
+class LocationStatsResponse(BaseModel):
+    county: str
+    town: Optional[str] = None
+    total_listings: int
+    average_price: Optional[Decimal] = None
+    available_this_weekend: int
 
 class CreateBookingRequest(BaseModel):
     listing_id: int

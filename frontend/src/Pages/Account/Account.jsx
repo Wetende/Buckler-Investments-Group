@@ -5,7 +5,7 @@ import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import BnbMenuData from '../../Components/Header/BnbMenuData'
+import getBnbMenuData, { BnbMenuData } from '../../Components/Header/BnbMenuData'
 import PageTitle from '../../Components/PageTitle/PageTitle'
 import Buttons from '../../Components/Button/Buttons'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
@@ -70,7 +70,8 @@ const Account = (props) => {
   const handleLogout = async () => {
     try {
       await logout()
-      window.location.href = '/login'
+      // Redirect to homepage where login modal is available
+      window.location.href = '/'
     } catch (e) {
       setMessage('Logout failed')
     }

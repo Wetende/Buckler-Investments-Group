@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { m, AnimatePresence } from 'framer-motion';
 import CustomModal from '../CustomModal';
+import LoginModal from '../Auth/LoginModal';
 import { Input } from '../Form/Form';
 import Buttons from '../Button/Buttons';
 import MessageBox from '../MessageBox/MessageBox';
+import { AuthContext } from '../Auth/AuthProvider';
 
 const ToursBookingModal = ({ 
   tour, 
@@ -13,6 +15,7 @@ const ToursBookingModal = ({
   className = "",
   onBookingSuccess 
 }) => {
+  const { isAuthenticated, isLoading } = useContext(AuthContext);
   const [bookingSuccess, setBookingSuccess] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -114,8 +117,28 @@ const ToursBookingModal = ({
               title="View Bookings"
             />
           </div>
+        ) : !isAuthenticated ? (
+          // Authentication Required
+          <div className="text-center">
+            <div className="mb-6">
+              <i className="fas fa-lock text-5xl text-gray-400 mb-4"></i>
+              <h3 className="heading-6 font-serif text-darkgray mb-4">
+                Sign in to Book
+              </h3>
+              <p className="text-lg mb-6 text-gray-600">
+                Please sign in to your account to book this tour.
+              </p>
+            </div>
+            
+            <LoginModal onSuccess={() => {}} />
+            
+            <div className="mt-4 text-sm text-gray-500">
+              Don't have an account? 
+              <a href="/register" className="text-primary font-medium ml-1">Create one here</a>
+            </div>
+          </div>
         ) : (
-          // Booking Form
+          // Booking Form (Authenticated Users)
           <>
             <div className="mb-6">
               <h3 className="heading-6 font-serif text-darkgray mb-2">

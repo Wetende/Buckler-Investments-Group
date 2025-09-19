@@ -1,20 +1,20 @@
 import React, { useState, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row, Navbar } from 'react-bootstrap'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import BnbMenuData from '../../Components/Header/BnbMenuData'
+import getBnbMenuData, { BnbMenuData } from '../../Components/Header/BnbMenuData'
 import PageTitle from '../../Components/PageTitle/PageTitle'
 import Buttons from '../../Components/Button/Buttons'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 import BnbBookingModal from '../../Components/BookingModal/BnbBookingModal'
 import { fadeIn, fadeInLeft, zoomIn } from '../../Functions/GlobalAnimations'
 import WishlistButton from '../../Components/Wishlist/WishlistButton'
-import LiveChatWidget from '../../Components/LiveChat/LiveChatWidget'
+import { HostContactButtons } from '../../Components/WhatsApp/WhatsAppContact'
 
 // API Hooks
 import { useListing, useAvailability } from '../../api/useBnb'
@@ -54,7 +54,6 @@ const BnbDetail = (props) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-  const [isChatOpen, setIsChatOpen] = useState(false)
 
   // Fetch listing data
   const {
@@ -73,8 +72,8 @@ const BnbDetail = (props) => {
     data: availability,
     isLoading: availabilityLoading
   } = useAvailability(id, {
-    start_date: today.toISOString().split('T')[0],
-    end_date: thirtyDaysLater.toISOString().split('T')[0]
+    check_in: today.toISOString().split('T')[0],
+    check_out: thirtyDaysLater.toISOString().split('T')[0]
   })
 
   // Transform images for gallery
@@ -102,7 +101,15 @@ const BnbDetail = (props) => {
                 <span className="font-serif font-semibold text-[18px] text-white">Buckler Investment Group</span>
               </Link>
             </Col>
-            <Menu {...props} data={BnbMenuData} />
+            <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+            </Navbar.Toggle>
+            <Navbar.Collapse className="col-auto justify-center">
+              <Menu {...props} data={BnbMenuData} className="text-black" />
+            </Navbar.Collapse>
           </HeaderNav>
         </Header>
         
@@ -139,7 +146,15 @@ const BnbDetail = (props) => {
                 <span className="font-serif font-semibold text-[18px] text-white">Buckler Investment Group</span>
               </Link>
             </Col>
-            <Menu {...props} data={BnbMenuData} />
+            <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+            </Navbar.Toggle>
+            <Navbar.Collapse className="col-auto justify-center">
+              <Menu {...props} data={BnbMenuData} className="text-black" />
+            </Navbar.Collapse>
           </HeaderNav>
         </Header>
         
@@ -195,7 +210,15 @@ const BnbDetail = (props) => {
               </span>
             </Link>
           </Col>
-          <Menu {...props} data={BnbMenuData} />
+          <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+          </Navbar.Toggle>
+          <Navbar.Collapse className="col-auto justify-center">
+            <Menu {...props} data={BnbMenuData} />
+          </Navbar.Collapse>
           <Col xs="auto" lg={2} className="nav-bar-contact text-end xs:hidden pe-0">
             <a aria-label="link for top" href="#top" className="text-md text-[#fff] font-serif font-medium">
               <i className="feather-phone-call mr-[15px]"></i>
@@ -420,19 +443,15 @@ const BnbDetail = (props) => {
                   </div>
                 </div>
 
-                {/* Host Info */}
+                {/* Host Contact */}
                 <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
                   <h5 className="font-serif font-semibold text-darkgray mb-4">Contact Host</h5>
                   <p className="text-sm text-gray-600 mb-4">
-                    Have questions about this listing? Get in touch with the host.
+                    Have questions about this listing? Call or message the host directly.
                   </p>
-                  <Buttons
-                    className="btn-fancy btn-outline font-medium font-serif rounded-none uppercase w-full"
-                    themeColor="#232323"
-                    color="#232323"
-                    title="Message Host"
-                    size="md"
-                    onClick={() => setIsChatOpen((v) => !v)}
+                  <HostContactButtons 
+                    listing={listing}
+                    className="w-full"
                   />
                 </div>
               </m.div>
@@ -442,8 +461,6 @@ const BnbDetail = (props) => {
       </section>
       {/* Details Section End */}
 
-      {/* Live Chat */}
-      <LiveChatWidget isOpen={isChatOpen} onToggle={() => setIsChatOpen((v) => !v)} tourId={null} bookingId={null} />
 
       {/* Footer Start */}
       <FooterStyle01 theme="dark" className="text-[#7F8082] bg-darkgray" />

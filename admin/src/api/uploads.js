@@ -32,7 +32,7 @@ export const uploadFiles = async (files, options = {}, onUploadProgress) => {
   if (options.entity_id) formData.append('entity_id', options.entity_id)
   if (options.entity_type) formData.append('entity_type', options.entity_type)
   
-  const { data } = await axiosPrivate.post('/api/v1/admin/upload', formData, {
+  const { data } = await axiosPrivate.post('/admin/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     },
@@ -133,7 +133,7 @@ export const uploadDocument = async (file, options = {}, onUploadProgress) => {
  * @returns {Promise} Delete response
  */
 export const deleteFile = async (fileId) => {
-  const { data } = await axiosPrivate.get(`/api/v1/admin/upload/${fileId}/delete`)
+  const { data } = await axiosPrivate.get(`/admin/upload/${fileId}/delete`)
   return data
 }
 
@@ -143,7 +143,7 @@ export const deleteFile = async (fileId) => {
  * @returns {Promise} File details
  */
 export const getFile = async (fileId) => {
-  const { data } = await axiosPrivate.get(`/api/v1/admin/upload/${fileId}`)
+  const { data } = await axiosPrivate.get(`/admin/upload/${fileId}`)
   return data
 }
 
@@ -155,7 +155,7 @@ export const getFile = async (fileId) => {
  * @returns {Promise} File list
  */
 export const listFiles = async (entityType, entityId, params = {}) => {
-  const { data } = await axiosPrivate.get('/api/v1/admin/upload', {
+  const { data } = await axiosPrivate.get('/admin/upload', {
     params: {
       entity_type: entityType,
       entity_id: entityId,
@@ -171,7 +171,7 @@ export const listFiles = async (entityType, entityId, params = {}) => {
  * @returns {Promise} Bulk delete response
  */
 export const bulkDeleteFiles = async (fileIds) => {
-  const { data } = await axiosPrivate.post('/api/v1/admin/upload/bulk-delete', {
+  const { data } = await axiosPrivate.post('/admin/upload/bulk-delete', {
     file_ids: fileIds
   })
   return data

@@ -34,13 +34,8 @@ const BookingDetailPage = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-      return;
-    }
-  }, [isAuthenticated, navigate]);
+  // Authentication is handled by ProtectedRoute wrapper
+  // No manual redirect needed since this page should be in protected routes
 
   // Load booking data
   useEffect(() => {

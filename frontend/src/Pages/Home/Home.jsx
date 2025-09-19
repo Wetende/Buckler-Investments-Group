@@ -193,7 +193,7 @@ const HomeDecorPage = (props) => {
   // Load featured content from all domains
   const { data: featuredTours, isLoading: toursLoading } = useFeaturedTours(4);
   const { data: featuredBnb, isLoading: bnbLoading } = useFeaturedListings(4);
-  const { data: featuredProperties, isLoading: propertiesLoading } = useProperties({ limit: 4 });
+  const { data: featuredProperties, isLoading: propertiesLoading } = useProperties({}, 4);
 
   // Mock tour data for display
   const mockTourData = [

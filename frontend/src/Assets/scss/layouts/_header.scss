@@ -296,6 +296,7 @@ header {
           cursor: pointer;
           padding: 0;
           display: block;
+          color: #232323 !important; // Dark text for dropdown visibility
 
           >i {
             top: 50%;
@@ -313,7 +314,7 @@ header {
           }
 
           &:hover {
-            color: #232323;
+            color: #0066cc !important; // Blue hover color for better visibility
           }
         }
 
@@ -332,7 +333,7 @@ header {
       .simple-dropdown {
         &.active {
           >.nav-link {
-            color: #232323;
+            color: #0066cc !important; // Blue color for active dropdown items
           }
         }
       }

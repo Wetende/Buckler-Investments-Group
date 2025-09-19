@@ -123,7 +123,8 @@ const LoginRegister = (props) => {
                     try {
                       await registerUser({ username: values.username, email: values.email, password: values.password })
                       resetForm(actions)
-                      window.location.href = '/login'
+                      // Redirect to homepage where login modal is available
+                      window.location.href = '/'
                     } catch (e) {
                       actions.setStatus('Registration failed')
                     }

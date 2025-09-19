@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Button, Icon, Modal, ModalBody, Row, Col } from '@/components/Component';
+import { Button, Icon, Row, Col } from '@/components/Component';
+import { Modal, ModalBody } from 'reactstrap';
 import { useCarRentals, useCheckAvailability } from '../../hooks/useCars';
 import { toast } from 'react-toastify';
 

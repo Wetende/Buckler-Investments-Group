@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Modal, ModalBody } from 'reactstrap'
 import { Row, Col } from 'react-bootstrap'
 import { m } from 'framer-motion'
 import Buttons from '../Button/Buttons'
+import CustomModal from '../CustomModal'
 import { usePaymentMethods, useProcessCardPayment, useProcessMobilePayment } from '../../api/usePayments'
 import { fadeIn } from '../../Functions/GlobalAnimations'
 
@@ -108,14 +108,11 @@ const PaymentModal = ({
 
     if (!paymentData) return null
 
+    if (!isOpen) return null
+
     return (
-        <Modal 
-            isOpen={isOpen} 
-            toggle={onClose} 
-            className={`modal-dialog-centered ${className}`}
-            size="md"
-        >
-            <ModalBody>
+        <div className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${className}`}>
+            <div className="max-w-md w-full mx-4 bg-white rounded-lg shadow-xl relative">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
@@ -399,8 +396,8 @@ const PaymentModal = ({
                         </div>
                     </m.div>
                 </div>
-            </ModalBody>
-        </Modal>
+            </div>
+        </div>
     )
 }
 

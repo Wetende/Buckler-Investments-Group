@@ -6,13 +6,14 @@ from ...value_objects.booking_status import BookingStatus
 
 @dataclass
 class Booking(DomainEntity):
-    guest_id: int
-    listing_id: int
-    check_in: date
-    check_out: date
-    guests: int
-    total_amount: Money
-    status: BookingStatus
+    # Required fields with defaults to satisfy dataclass ordering
+    guest_id: int = 0
+    listing_id: int = 0
+    check_in: date = None
+    check_out: date = None
+    guests: int = 1
+    total_amount: Money = None
+    status: BookingStatus = BookingStatus.PENDING
     
     def calculate_nights(self) -> int:
         return (self.check_out - self.check_in).days

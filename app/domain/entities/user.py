@@ -6,9 +6,10 @@ from shared.constants.user_roles import UserRole
 
 @dataclass
 class User(DomainEntity):
-    email: str
-    hashed_password: str
-    full_name: str
+    # Required fields with defaults to satisfy dataclass ordering
+    email: str = ""
+    hashed_password: str = ""
+    full_name: str = ""
     is_active: bool = True
     role: UserRole = UserRole.USER
     phone_number: Optional[str] = None

@@ -212,18 +212,20 @@ export const Menu = memo((props) => {
   }, [])
 
   return (
-    <div className={`${props.mobileMenu ? `mobile-menu-${props.mobileMenu}` : ""}${props.className ? ` ${props.className}` : ""}`}>
+    <div className={`${props.mobileMenu ? `mobile-menu-${props.mobileMenu}` : ""}${props.className ? ` ${props.className}` : ""}`} style={props.className?.includes('text-black') ? {color: '#000'} : {}}>
       <ul className="navbar-nav">
         {props.data.map((item, i) => {
           return (
             <li className={`nav-item${item.dropdown || item.megamenu ? ` dropdown` : ""}${isMenuActive === i ? " open" : ""}`} key={i}>
               {
-                item.link ? (
-                  <Link className="nav-link" to={item.link}>
+                item.component ? (
+                  <div className="nav-link">{item.component}</div>
+                ) : item.link ? (
+                  <Link className={`nav-link ${props.className?.includes('text-black') ? 'text-black !important' : ''}`} to={item.link}>
                     {item.title}
                   </Link>
                 ) : (
-                  <span className="nav-link">{item.title}</span>
+                  <span className={`nav-link ${props.className?.includes('text-black') ? 'text-black !important' : ''}`}>{item.title}</span>
                 )
               }
               {(item.dropdown || item.megamenu) && (
@@ -236,12 +238,12 @@ export const Menu = memo((props) => {
                       <li key={i} className="simple-dropdown">
                         {
                           item.link ? (
-                            <Link className="nav-link" to={item.link}>
+                            <Link className={`nav-link ${props.className?.includes('text-black') ? 'text-black !important' : ''}`} to={item.link}>
                               {item.title}
                               {item.dropdown && (<i className="fas fa-angle-right"></i>)}
                             </Link>
                           ) : (
-                            <span className="nav-link">
+                            <span className={`nav-link ${props.className?.includes('text-black') ? 'text-black !important' : ''}`}>
                               {item.title}
                               {item.dropdown && (<i className="fas fa-angle-right"></i>)}
                             </span>
@@ -421,12 +423,14 @@ export const MobileMenu = (props) => {
                 return (
                   <li className={`nav-item${item.dropdown || item.megamenu ? ` dropdown` : ""}${isMenuActive === i ? " open" : ""}`} key={i}>
                     {
-                      item.link ? (
-                        <Link className="nav-link" to={item.link}>
+                      item.component ? (
+                        <div className="nav-link">{item.component}</div>
+                      ) : item.link ? (
+                        <Link className="nav-link text-black" to={item.link}>
                           {item.title}
                         </Link>
                       ) : (
-                        <span className="nav-link">{item.title}</span>
+                        <span className="nav-link text-black">{item.title}</span>
                       )
                     }
                     {(item.dropdown || item.megamenu) && (
@@ -439,12 +443,12 @@ export const MobileMenu = (props) => {
                             <li key={i} className="simple-dropdown">
                               {
                                 item.link ? (
-                                  <Link className="nav-link" to={item.link}>
+                                  <Link className="nav-link text-black" to={item.link}>
                                     {item.title}
                                     {item.dropdown && (<i className="fas fa-angle-right"></i>)}
                                   </Link>
                                 ) : (
-                                  <span className="nav-link">
+                                  <span className="nav-link text-black">
                                     {item.title}
                                     {item.dropdown && (<i className="fas fa-angle-right"></i>)}
                                   </span>
@@ -458,14 +462,14 @@ export const MobileMenu = (props) => {
                                         {
                                           item.link ? (
                                             <Link
-                                              className={`nav-link${item.dropdown ? " md:text-black md:mt-[15px] md:mb-[7px]" : ""}`}
+                                              className={`nav-link text-black${item.dropdown ? " md:mt-[15px] md:mb-[7px]" : ""}`}
                                               to={item.link}
                                             >
                                               {item.title}
                                               {item.dropdown && (<i className="fas fa-angle-right"></i>)}
                                             </Link>
                                           ) : (
-                                            <span className="nav-link">
+                                            <span className="nav-link text-black">
                                               {item.title}
                                               {item.dropdown && (<i className="fas fa-angle-right"></i>)}
                                             </span>
@@ -479,7 +483,7 @@ export const MobileMenu = (props) => {
                                                   className="simple-dropdown"
                                                   key={i}
                                                 >
-                                                  <Link className="nav-link" to={item.link}>{item.title}</Link>
+                                                  <Link className="nav-link text-black" to={item.link}>{item.title}</Link>
                                                 </li>
                                               );
                                             })}
@@ -501,7 +505,7 @@ export const MobileMenu = (props) => {
                           {item.megamenu.map((item, i) => {
                             return (
                               <ul key={i} className={`${(item.dropdown.filter(item => item.img).length > 0) ? "img-wrapper" : "inline-block"}`}>
-                                <li className="title text-md font-medium mb-[10px] whitespace-nowrap">
+                                <li className="title text-md font-medium mb-[10px] whitespace-nowrap text-black">
                                   {item.title}
                                 </li>
                                 {item.dropdown &&
@@ -509,7 +513,7 @@ export const MobileMenu = (props) => {
                                     return (
                                       <li className="nav-item" key={i}>
                                         <Link
-                                          className="nav-link"
+                                          className="nav-link text-black"
                                           to={item.link ? item.link : "#"}
                                         >
                                           {item.icon && (
@@ -898,7 +902,8 @@ export const CollapsibleMenu = (props) => {
             <Accordion.Item key={i} eventKey={i}>
               <Accordion.Header>
                 {
-                  item.link ? (<Link aria-label="link" className="menu-link"
+                  item.component ? item.component
+                  : item.link ? (<Link aria-label="link" className="menu-link"
                     to={item.link} > {item.title} </Link>)
                     : (<span className="menu-link"> {item.title} </span>)
                 }
@@ -916,7 +921,8 @@ export const CollapsibleMenu = (props) => {
                             <Accordion.Item key={i} eventKey={i}>
                               <Accordion.Header>
                                 {
-                                  item.link ? (<Link aria-label="link" className="menu-link"
+                                  item.component ? item.component
+                                  : item.link ? (<Link aria-label="link" className="menu-link"
                                     to={item.link} > {item.title} </Link>)
                                     : (<span className="menu-link"> {item.title} </span>)
                                 }
@@ -951,7 +957,8 @@ export const CollapsibleMenu = (props) => {
                                                         key={i}
                                                       >
                                                         {
-                                                          item.link ? (<Link aria-label="link" className="menu-link"
+                                                          item.component ? item.component
+                                                          : item.link ? (<Link aria-label="link" className="menu-link"
                                                             to={item.link} > {item.title} </Link>)
                                                             : (<span className="menu-link"> {item.title} </span>)
                                                         }
@@ -1066,7 +1073,7 @@ Menu.defaultProps = {
 };
 
 MobileMenu.defaultProps = {
-  type: "full",
+  type: "modern",
   data: HeaderData,
 };
 

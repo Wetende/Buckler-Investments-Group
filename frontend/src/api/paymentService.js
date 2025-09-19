@@ -50,6 +50,19 @@ export const completeRentalPayment = async (paymentId, paymentDetails) => {
     return data
 }
 
+// Additional payment functions
+export const createPaymentIntent = async (payload) => {
+    // Alias for initializePayment for consistency
+    return await initializePayment(payload)
+}
+
+export const getBookingPayments = async (bookingId, bookingType = 'bnb') => {
+    const { data } = await axiosPrivate.get(`/payments/bookings/${bookingId}`, {
+        params: { booking_type: bookingType }
+    })
+    return data
+}
+
 const paymentService = {
     initializePayment,
     verifyPayment,
@@ -60,6 +73,8 @@ const paymentService = {
     refundPayment,
     createRentalPayment,
     completeRentalPayment,
+    createPaymentIntent,
+    getBookingPayments,
 }
 
 export default paymentService

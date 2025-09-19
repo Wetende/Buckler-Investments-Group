@@ -9,12 +9,13 @@ from ..value_objects.booking_status import BookingStatus
 @dataclass
 class Review(DomainEntity):
     """Review entity representing customer reviews for listings, tours, and cars."""
-    target_type: str  # 'bnb_listing', 'tour', 'car', 'bundle'
-    target_id: int
-    rating: int  # 1-5 stars
-    title: str
-    comment: str
-    reviewer_id: int
+    # Required fields with defaults to satisfy dataclass ordering
+    target_type: str = ""  # 'bnb_listing', 'tour', 'car', 'bundle'
+    target_id: int = 0
+    rating: int = 5  # 1-5 stars
+    title: str = ""
+    comment: str = ""
+    reviewer_id: int = 0
     booking_id: Optional[int] = None
     response: Optional[str] = None
     response_date: Optional[datetime] = None

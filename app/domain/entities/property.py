@@ -15,14 +15,15 @@ class PropertyFeatures:
 
 @dataclass
 class Property(DomainEntity):
-    agent_id: int
-    title: str
-    description: str
-    address: str
-    listing_price: Money
-    property_type: str  # e.g., 'SINGLE_FAMILY', 'APARTMENT', 'LAND'
-    status: str  # e.g., 'FOR_SALE', 'SOLD', 'PENDING'
-    features: PropertyFeatures
+    # Required fields with defaults to satisfy dataclass ordering
+    agent_id: int = 0
+    title: str = ""
+    description: str = ""
+    address: str = ""
+    listing_price: Money = None
+    property_type: str = "APARTMENT"  # e.g., 'SINGLE_FAMILY', 'APARTMENT', 'LAND'
+    status: str = "FOR_SALE"  # e.g., 'FOR_SALE', 'SOLD', 'PENDING'
+    features: PropertyFeatures = None
     image_urls: List[str] = field(default_factory=list)
 
     def update_price(self, new_price: Money) -> None:

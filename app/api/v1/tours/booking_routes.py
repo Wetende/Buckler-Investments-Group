@@ -9,6 +9,7 @@ from application.use_cases.tours.complete_tour_booking import CompleteTourBookin
 from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
 from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
 from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
+from application.use_cases.tours.get_operator_tour_bookings import GetOperatorTourBookingsUseCase
 from application.use_cases.tours.modify_tour_booking import ModifyTourBookingUseCase
 from application.use_cases.analytics.tour_operator_dashboard import TourOperatorDashboardUseCase
 from application.use_cases.analytics.tour_operator_earnings import TourOperatorEarningsUseCase
@@ -96,13 +97,14 @@ async def cancel_tour_booking_get(
 
 # Operator booking management
 @router.get("/operator/bookings", response_model=List[TourBookingResponseDTO])
+@inject
 async def get_operator_tour_bookings(
     # TODO: Get operator_id from authentication context
     operator_id: int = Query(1, description="Operator ID (from auth context)"),
+    use_case: GetOperatorTourBookingsUseCase = Depends(Provide[AppContainer.get_operator_tour_bookings_use_case]),
 ):
     """Get all tour bookings for the operator's tours"""
-    # TODO: Implement operator booking retrieval
-    return []
+    return await use_case.execute(operator_id)
 
 @router.post("/bookings/{booking_id}/confirm", response_model=TourBookingResponseDTO)
 @inject

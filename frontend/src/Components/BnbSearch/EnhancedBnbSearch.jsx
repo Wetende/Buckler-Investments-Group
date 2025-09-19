@@ -40,7 +40,7 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
       <Container>
         <Row className="justify-center">
           <Col lg={12}>
-            <m.div {...fadeIn} className="bg-white rounded-[10px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] p-[30px] lg:p-[25px] md:p-[20px]">
+            <m.div {...fadeIn} className="bg-white rounded-lg shadow-lg border border-gray-200 p-[30px] lg:p-[25px] md:p-[20px]">
               <Formik
                 initialValues={{
                   location: '',
@@ -88,12 +88,12 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                     <div className="grid grid-cols-12 gap-4 items-end mb-6">
                       {/* Location */}
                       <div className="col-span-12 md:col-span-4">
-                        <label className="block text-sm font-medium text-darkgray mb-2">Where</label>
+                        <label className="!mb-[10px] font-medium text-darkgray text-base d-block">Where</label>
                         <div className="relative">
                           <Input 
                             name="location" 
                             placeholder="Search destinations"
-                            className="!border-[#ddd] !rounded-[8px] !py-[12px] !px-[16px] text-base"
+                            className="w-full !h-[50px] !text-base border-2 border-gray-300 focus:border-basecolor rounded-lg"
                             list="locations"
                           />
                           <datalist id="locations">
@@ -106,40 +106,40 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
 
                       {/* Check-in */}
                       <div className="col-span-6 md:col-span-2">
-                        <label className="block text-sm font-medium text-darkgray mb-2">Check-in</label>
+                        <label className="!mb-[10px] font-medium text-darkgray text-base d-block">Check-in</label>
                         <Input 
                           name="check_in" 
                           type="date"
-                          className="!border-[#ddd] !rounded-[8px] !py-[12px] !px-[16px]"
+                          className="w-full !h-[50px] !text-base border-2 border-gray-300 focus:border-basecolor rounded-lg"
                         />
                       </div>
 
                       {/* Check-out */}
                       <div className="col-span-6 md:col-span-2">
-                        <label className="block text-sm font-medium text-darkgray mb-2">Check-out</label>
+                        <label className="!mb-[10px] font-medium text-darkgray text-base d-block">Check-out</label>
                         <Input 
                           name="check_out" 
                           type="date"
-                          className="!border-[#ddd] !rounded-[8px] !py-[12px] !px-[16px]"
+                          className="w-full !h-[50px] !text-base border-2 border-gray-300 focus:border-basecolor rounded-lg"
                         />
                       </div>
 
                       {/* Guests */}
                       <div className="col-span-8 md:col-span-2">
-                        <label className="block text-sm font-medium text-darkgray mb-2">Who</label>
-                        <div className="flex items-center space-x-2">
+                        <label className="!mb-[10px] font-medium text-darkgray text-base d-block">Who</label>
+                        <div className="flex items-center space-x-2 h-[50px] px-3 border-2 border-gray-300 focus-within:border-basecolor rounded-lg bg-white">
                           <button
                             type="button"
                             onClick={() => setFieldValue('adults', Math.max(1, values.adults - 1))}
-                            className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center hover:border-[#222]"
+                            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                           >
                             -
                           </button>
-                          <span className="min-w-[60px] text-center">{values.adults + values.children} guests</span>
+                          <span className="min-w-[60px] text-center text-base">{values.adults + values.children} guests</span>
                           <button
                             type="button"
                             onClick={() => setFieldValue('adults', Math.min(16, values.adults + 1))}
-                            className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center hover:border-[#222]"
+                            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                           >
                             +
                           </button>
@@ -151,7 +151,8 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                         <Buttons
                           ariaLabel="Search stays"
                           type="submit"
-                          className="btn-fill !bg-red-600 hover:!bg-red-700 !border-red-600 font-medium font-serif rounded-[8px] uppercase w-full"
+                          className="btn-fancy btn-fill font-medium font-serif rounded-lg uppercase w-full h-[50px]"
+                          themeColor="#232323"
                           color="#fff"
                           title={isSubmitting ? 'Searching...' : 'Search'}
                         />
@@ -163,18 +164,18 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                       <button
                         type="button"
                         onClick={() => setShowFilters(!showFilters)}
-                        className="text-sm font-medium text-[#717171] hover:text-[#222] flex items-center"
+                        className="text-base font-medium text-darkgray hover:text-basecolor flex items-center transition-colors"
                       >
-                        <i className="fas fa-sliders-h mr-2"></i>
+                        <i className="feather-sliders mr-2"></i>
                         {showFilters ? 'Hide filters' : 'More filters'}
                       </button>
                       
-                      <div className="flex items-center space-x-4 text-sm text-[#717171]">
-                        <span>Property type:</span>
+                      <div className="flex items-center space-x-4 text-base text-darkgray">
+                        <span className="font-medium">Property type:</span>
                         <select
                           value={values.property_type}
                           onChange={(e) => setFieldValue('property_type', e.target.value)}
-                          className="border border-[#ddd] rounded-[4px] px-2 py-1"
+                          className="border-2 border-gray-300 focus:border-basecolor rounded-lg px-3 py-2 text-base"
                         >
                           <option value="">Any type</option>
                           {propertyTypes.map((type) => (
@@ -192,12 +193,12 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="mt-6 pt-6 border-t border-[#ebebeb]"
+                        className="mt-6 pt-6 border-t border-gray-200 bg-lightgray p-4 sm:p-6 rounded-lg"
                       >
                         <div className="grid grid-cols-12 gap-6">
                           {/* Guest Details */}
                           <div className="col-span-12 md:col-span-4">
-                            <h4 className="font-medium text-darkgray mb-3">Guests</h4>
+                            <h4 className="heading-6 font-serif font-semibold text-darkgray mb-4">Guests</h4>
                             <div className="space-y-3">
                               <div className="flex items-center justify-between">
                                 <span>Adults</span>
@@ -205,15 +206,15 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                                   <button
                                     type="button"
                                     onClick={() => setFieldValue('adults', Math.max(1, values.adults - 1))}
-                                    className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center"
+                                    className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                                   >
                                     -
                                   </button>
-                                  <span className="w-8 text-center">{values.adults}</span>
+                                  <span className="w-8 text-center text-base font-medium">{values.adults}</span>
                                   <button
                                     type="button"
                                     onClick={() => setFieldValue('adults', Math.min(16, values.adults + 1))}
-                                    className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center"
+                                    className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                                   >
                                     +
                                   </button>
@@ -225,15 +226,15 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                                   <button
                                     type="button"
                                     onClick={() => setFieldValue('children', Math.max(0, values.children - 1))}
-                                    className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center"
+                                    className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                                   >
                                     -
                                   </button>
-                                  <span className="w-8 text-center">{values.children}</span>
+                                  <span className="w-8 text-center text-base font-medium">{values.children}</span>
                                   <button
                                     type="button"
                                     onClick={() => setFieldValue('children', Math.min(10, values.children + 1))}
-                                    className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center"
+                                    className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                                   >
                                     +
                                   </button>
@@ -245,15 +246,15 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                                   <button
                                     type="button"
                                     onClick={() => setFieldValue('infants', Math.max(0, values.infants - 1))}
-                                    className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center"
+                                    className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                                   >
                                     -
                                   </button>
-                                  <span className="w-8 text-center">{values.infants}</span>
+                                  <span className="w-8 text-center text-base font-medium">{values.infants}</span>
                                   <button
                                     type="button"
                                     onClick={() => setFieldValue('infants', Math.min(5, values.infants + 1))}
-                                    className="w-8 h-8 rounded-full border border-[#ddd] flex items-center justify-center"
+                                    className="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center hover:border-basecolor transition-colors"
                                   >
                                     +
                                   </button>
@@ -264,29 +265,31 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
 
                           {/* Price Range */}
                           <div className="col-span-12 md:col-span-4">
-                            <h4 className="font-medium text-darkgray mb-3">Price range (KES per night)</h4>
+                            <h4 className="heading-6 font-serif font-semibold text-darkgray mb-4">Price range (KES per night)</h4>
                             <div className="space-y-3">
                               <Input
                                 name="min_price"
                                 type="number"
                                 placeholder="Min price"
-                                className="!border-[#ddd] !rounded-[8px]"
+                                labelClass="!mb-[10px] font-medium text-darkgray text-base d-block"
+                                className="w-full !h-[50px] !text-base border-2 border-gray-300 focus:border-basecolor rounded-lg"
                               />
                               <Input
                                 name="max_price"
                                 type="number"
                                 placeholder="Max price"
-                                className="!border-[#ddd] !rounded-[8px]"
+                                labelClass="!mb-[10px] font-medium text-darkgray text-base d-block"
+                                className="w-full !h-[50px] !text-base border-2 border-gray-300 focus:border-basecolor rounded-lg"
                               />
                             </div>
                           </div>
 
                           {/* Amenities */}
                           <div className="col-span-12 md:col-span-4">
-                            <h4 className="font-medium text-darkgray mb-3">Amenities</h4>
-                            <div className="grid grid-cols-2 gap-2">
+                            <h4 className="heading-6 font-serif font-semibold text-darkgray mb-4">Amenities</h4>
+                            <div className="grid grid-cols-2 gap-3">
                               {amenities.map((amenity) => (
-                                <label key={amenity.value} className="flex items-center space-x-2 text-sm">
+                                <label key={amenity.value} className="flex items-center space-x-3 text-base cursor-pointer">
                                   <input
                                     type="checkbox"
                                     checked={values.amenities.includes(amenity.value)}
@@ -297,9 +300,9 @@ const EnhancedBnbSearch = ({ onSearch, className = "" }) => {
                                         setFieldValue('amenities', values.amenities.filter(a => a !== amenity.value));
                                       }
                                     }}
-                                    className="rounded border-[#ddd]"
+                                    className="w-4 h-4 rounded border-2 border-gray-300 text-basecolor focus:ring-basecolor focus:ring-2"
                                   />
-                                  <span>{amenity.label}</span>
+                                  <span className="text-darkgray">{amenity.label}</span>
                                 </label>
                               ))}
                             </div>

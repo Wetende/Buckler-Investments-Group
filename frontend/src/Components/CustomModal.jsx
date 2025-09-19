@@ -30,7 +30,9 @@ const Wrapper = (props) => {
     };
 
     const handleCloseEvent = () => {
-        modalEl.current.node.classList.remove("open");
+        if (modalEl.current?.node) {
+            modalEl.current.node.classList.remove("open");
+        }
         setTimeout(() => {
             setCustomModal({
                 ...customModal,
@@ -43,16 +45,20 @@ const Wrapper = (props) => {
     const handleOpenEvent = () => {
         setCustomModal({
             ...customModal,
-            el: modalEl.current.node,
+            el: modalEl.current?.node || null,
             isOpen: true
         })
         setTimeout(() => {
-            modalEl.current.node.classList.add("open");
+            if (modalEl.current?.node) {
+                modalEl.current.node.classList.add("open");
+            }
         }, 100);
     }
 
     useEffect(() => {
-        modalEl.current.node.classList.add("custom_modal");
+        if (modalEl.current?.node) {
+            modalEl.current.node.classList.add("custom_modal");
+        }
         const close = (e) => {
             if (e.keyCode === 27) {
                 handleCloseEvent();
@@ -93,7 +99,7 @@ const Wrapper = (props) => {
             <ReactModal
                 className={props.animation}
                 ref={modalEl}
-                isOpen={(customModal.el !== null && customModal.el === modalEl.current.node && customModal.isOpen === true) ? true : false}
+                isOpen={(customModal.el !== null && modalEl.current?.node && customModal.el === modalEl.current.node && customModal.isOpen === true) ? true : false}
                 onRequestClose={handleCloseEvent}
                 style={customStyles}
                 contentLabel="Example Modal"

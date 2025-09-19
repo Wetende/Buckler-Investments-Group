@@ -13,10 +13,18 @@ class TourRepository(BaseRepository[Tour]):
         start_date: date
     ) -> List[Tour]:
         pass
+    
+    @abstractmethod
+    async def get_by_operator(self, operator_id: int) -> List[Tour]:
+        pass
 
 class TourBookingRepository(BaseRepository[TourBooking]):
     @abstractmethod
     async def get_by_customer(self, customer_id: int) -> List[TourBooking]:
+        pass
+    
+    @abstractmethod
+    async def get_by_tour_id(self, tour_id: int) -> List[TourBooking]:
         pass
 
 

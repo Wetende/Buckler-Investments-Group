@@ -14,9 +14,10 @@ class BundledItem:
 
 @dataclass
 class Bundle(DomainEntity):
-    user_id: int
+    # Required fields with defaults to satisfy dataclass ordering
+    user_id: int = 0
     items: List[BundledItem] = field(default_factory=list)
-    total_price: Money = field(init=False)
+    total_price: Money = field(init=False, default=None)
 
     def __post_init__(self):
         self.calculate_total_price()

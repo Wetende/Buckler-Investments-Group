@@ -6,17 +6,16 @@ from ...value_objects.money import Money
 
 @dataclass
 class CarRental(DomainEntity):
-    vehicle_id: int
-    renter_id: int
-    pickup_date: datetime
-    return_date: datetime
-    total_cost: Money
-    status: str  # pending, confirmed, active, completed, cancelled
+    # Required fields with defaults to satisfy dataclass ordering
+    vehicle_id: int = 0
+    renter_id: int = 0
+    pickup_date: datetime = None
+    return_date: datetime = None
+    total_cost: Money = None
+    status: str = "pending"  # pending, confirmed, active, completed, cancelled
     pickup_location: Optional[str] = None
     return_location: Optional[str] = None
     notes: Optional[str] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
 
     def duration_days(self) -> int:
         """Calculate rental duration in days"""

@@ -48,6 +48,9 @@ import {
 } from '../api/tours'
 import { toast } from 'react-toastify'
 
+// Create local alias for use in default export
+const useDeleteTourImage = useDeleteFile
+
 // =============================================================================
 // TOURS MANAGEMENT HOOKS
 // =============================================================================
@@ -378,8 +381,8 @@ export const useRespondTourReview = () => {
 // Re-export from useUploads for convenience
 export { useUploadTourImages } from './useUploads'
 
-// Re-export from useUploads for convenience  
-export { useDeleteFile as useDeleteTourImage } from './useUploads'
+// Export local alias
+export { useDeleteTourImage }
 
 export default {
   // Tours Management

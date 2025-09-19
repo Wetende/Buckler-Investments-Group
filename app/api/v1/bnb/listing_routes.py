@@ -9,6 +9,8 @@ from application.use_cases.bnb.get_listing import GetListingUseCase
 from application.use_cases.bnb.list_listings import ListListingsUseCase
 from application.use_cases.bnb.delete_listing import DeleteListingUseCase
 from application.use_cases.bnb.get_host_listings import GetHostListingsUseCase
+from application.use_cases.bnb.get_listings_grouped_by_location import GetListingsGroupedByLocationUseCase
+from application.use_cases.bnb.get_listings_by_location import GetListingsByLocationUseCase
 from application.dto.bnb import (
     SearchListingsRequest,
     ListingResponse,
@@ -16,6 +18,8 @@ from application.dto.bnb import (
     StListingRead,
     AvailabilityUpsert,
     AvailabilityItem,
+    LocationGroupedListingsResponse,
+    LocationStatsResponse,
 )
 from shared.exceptions.bnb import ListingNotFoundError
 
@@ -41,6 +45,40 @@ async def list_listings(
 ):
     """List all public listings with pagination"""
     return await use_case.execute(limit=limit, offset=offset)
+
+# Location-based grouping endpoints (Airbnb-style)
+@router.get("/listings/grouped-by-location", response_model=LocationGroupedListingsResponse)
+@inject
+async def get_listings_grouped_by_location(
+    limit_per_group: int = Query(4, ge=1, le=10, description="Listings per location group"),
+    max_groups: int = Query(6, ge=1, le=15, description="Maximum location groups"),
+    use_case: GetListingsGroupedByLocationUseCase = Depends(Provide[AppContainer.get_listings_grouped_by_location_use_case]),
+):
+    """Get listings grouped by location for homepage display (Airbnb-style)"""
+    return await use_case.execute(limit_per_group=limit_per_group, max_groups=max_groups)
+
+@router.get("/listings/by-county/{county}", response_model=List[StListingRead])
+@inject
+async def get_listings_by_county(
+    county: str,
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    use_case: GetListingsByLocationUseCase = Depends(Provide[AppContainer.get_listings_by_location_use_case]),
+):
+    """Get listings filtered by county (e.g., 'Mombasa', 'Nairobi')"""
+    return await use_case.execute(county=county, limit=limit, offset=offset)
+
+@router.get("/listings/by-town/{town}", response_model=List[StListingRead])
+@inject
+async def get_listings_by_town(
+    town: str,
+    county: Optional[str] = Query(None, description="Optional county filter"),
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    use_case: GetListingsByLocationUseCase = Depends(Provide[AppContainer.get_listings_by_location_use_case]),
+):
+    """Get listings filtered by town (e.g., 'Kiambu', 'Nakuru')"""
+    return await use_case.execute(county=county, town=town, limit=limit, offset=offset)
 
 # Place static routes BEFORE dynamic parameterized routes to avoid path conflicts
 @router.get("/listings/featured", response_model=List[StListingRead])
@@ -82,8 +120,8 @@ async def get_listing_details(
 @inject
 async def get_listing_availability(
     listing_id: int,
-    start_date: str = Query(..., description="Start date (YYYY-MM-DD)"),
-    end_date: str = Query(..., description="End date (YYYY-MM-DD)"),
+    start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
     use_case: GetListingUseCase = Depends(Provide[AppContainer.get_listing_use_case]),
 ):
     """Get listing availability calendar for date range"""
@@ -94,10 +132,18 @@ async def get_listing_availability(
         from datetime import date, timedelta
         from decimal import Decimal
         
-        start = date.fromisoformat(start_date)
-        end = date.fromisoformat(end_date)
-        availability = []
+        # Default to next 30 days if no dates provided
+        if not start_date or not end_date:
+            start = date.today()
+            end = start + timedelta(days=30)
+        else:
+            try:
+                start = date.fromisoformat(start_date)
+                end = date.fromisoformat(end_date)
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
         
+        availability = []
         current_date = start
         while current_date <= end:
             availability.append(AvailabilityItem(
@@ -111,8 +157,6 @@ async def get_listing_availability(
         return availability
     except ListingNotFoundError:
         raise HTTPException(status_code=404, detail="Listing not found")
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid date format")
 
 # (static routes moved above dynamic routes)
 

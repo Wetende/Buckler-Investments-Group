@@ -64,6 +64,12 @@ class SqlAlchemyTourRepository(TourRepository):
         result = await self._session.execute(stmt)
         models = result.scalars().all()
         return [TourMapper.model_to_entity(model) for model in models]
+    
+    async def get_by_operator(self, operator_id: int) -> List[Tour]:
+        stmt = select(TourModel).where(TourModel.operator_id == operator_id)
+        result = await self._session.execute(stmt)
+        models = result.scalars().all()
+        return [TourMapper.model_to_entity(model) for model in models]
 
 
 class SqlAlchemyTourBookingRepository(TourBookingRepository):
@@ -115,6 +121,12 @@ class SqlAlchemyTourBookingRepository(TourBookingRepository):
 
     async def get_by_customer(self, customer_id: int) -> List[TourBooking]:
         stmt = select(TourBookingModel).where(TourBookingModel.customer_id == customer_id)
+        result = await self._session.execute(stmt)
+        models = result.scalars().all()
+        return [TourMapper.booking_model_to_entity(model) for model in models]
+    
+    async def get_by_tour_id(self, tour_id: int) -> List[TourBooking]:
+        stmt = select(TourBookingModel).where(TourBookingModel.tour_id == tour_id)
         result = await self._session.execute(stmt)
         models = result.scalars().all()
         return [TourMapper.booking_model_to_entity(model) for model in models]

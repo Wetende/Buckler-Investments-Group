@@ -18,6 +18,12 @@ class ListListingsUseCase:
                 capacity=listing.capacity,
                 nightly_price=listing.nightly_price.amount,
                 address=listing.address,
+                # Location fields for geographic grouping
+                county=listing.county,
+                town=listing.town,
+                area_id=listing.area_id,
+                latitude=listing.latitude,
+                longitude=listing.longitude,
                 amenities=listing.amenities,
                 rules=listing.rules,
                 instant_book=listing.instant_book,
@@ -32,8 +38,6 @@ class ListListingsUseCase:
                 cleaning_fee=None,
                 service_fee=None,
                 security_deposit=None,
-                latitude=None,
-                longitude=None,
                 cancellation_policy="MODERATE",
                 images=None
             )

@@ -1,59 +1,31 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { getCurrentUser, logout as logoutService } from '../../api/authService'
-import { getRefreshToken } from '../../api/axios'
+import React, { createContext, useState, useEffect } from 'react';
+import { useAuth } from '../../api/useAuth';
 
-const AuthContext = createContext()
+export const AuthContext = createContext();
 
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
-}
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { login, logout, refreshToken, getToken } = useAuth();
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-
-  // Check authentication status on mount
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const refreshToken = getRefreshToken()
-        if (refreshToken) {
-          const userData = await getCurrentUser()
-          setUser(userData)
-          setIsAuthenticated(true)
+    const initializeAuth = async () => {
+      const token = getToken();
+      if (token) {
+        try {
+          await refreshToken(token);
+          const userData = { /* Fetch or assume user data */ };
+          setUser(userData);
+          setIsAuthenticated(true);
+        } catch (error) {
+          logout();
         }
-      } catch (error) {
-        console.error('Auth check failed:', error)
-        setUser(null)
-        setIsAuthenticated(false)
-      } finally {
-        setIsLoading(false)
       }
-    }
-
-    checkAuthStatus()
-  }, [])
-
-  const login = (userData) => {
-    setUser(userData)
-    setIsAuthenticated(true)
-  }
-
-  const logout = async () => {
-    try {
-      await logoutService()
-    } catch (error) {
-      console.error('Logout error:', error)
-    } finally {
-      setUser(null)
-      setIsAuthenticated(false)
-    }
-  }
+      setIsLoading(false);
+    };
+    initializeAuth();
+  }, []);
 
   const value = {
     user,
@@ -61,10 +33,9 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     login,
     logout,
-    setUser,
-  }
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
-export default AuthProvider
+export default AuthProvider;

@@ -1,6 +1,8 @@
 import React from 'react'
 import { m } from 'framer-motion'
 import { useToggleFavorite, useFavorites } from '../../api/useFavorites'
+import AuthRequiredWrapper from '../Auth/AuthRequiredWrapper'
+import { useAuth } from '../../api/useAuth'
 
 const WishlistButton = ({ 
   itemId, 
@@ -8,10 +10,11 @@ const WishlistButton = ({
   className = "",
   size = "md" 
 }) => {
-  const { data: favorites } = useFavorites()
+  const { isAuthenticated } = useAuth()
+  const { data: favorites } = useFavorites({}, isAuthenticated) // Only fetch when authenticated
   const toggleFavorite = useToggleFavorite()
 
-  const isFavorited = favorites?.some(fav => 
+  const isFavorited = isAuthenticated && favorites?.some(fav => 
     fav.item_id === itemId && fav.item_type === itemType
   )
 
@@ -37,28 +40,50 @@ const WishlistButton = ({
   }
 
   return (
-    <m.button
-      onClick={handleToggle}
-      disabled={toggleFavorite.isLoading}
-      className={`
-        ${sizeClasses[size]}
-        rounded-full bg-white shadow-lg border border-gray-200
-        flex items-center justify-center
-        hover:shadow-xl transition-all duration-200
-        ${toggleFavorite.isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-        ${className}
-      `}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      aria-label={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'}
+    <AuthRequiredWrapper
+      modalTitle="Sign in to save favorites"
+      modalSubtitle="Save your favorite places to view them later"
+      fallbackButton={
+        <m.button
+          className={`
+            ${sizeClasses[size]}
+            rounded-full bg-white shadow-lg border border-gray-200
+            flex items-center justify-center
+            hover:shadow-xl transition-all duration-200
+            cursor-pointer
+            ${className}
+          `}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label="Sign in to add to wishlist"
+        >
+          <i className="far fa-heart text-gray-600 transition-colors duration-200" />
+        </m.button>
+      }
     >
-      <i 
+      <m.button
+        onClick={handleToggle}
+        disabled={toggleFavorite.isLoading}
         className={`
-          ${isFavorited ? 'fas fa-heart text-red-500' : 'far fa-heart text-gray-600'}
-          transition-colors duration-200
+          ${sizeClasses[size]}
+          rounded-full bg-white shadow-lg border border-gray-200
+          flex items-center justify-center
+          hover:shadow-xl transition-all duration-200
+          ${toggleFavorite.isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          ${className}
         `}
-      />
-    </m.button>
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        aria-label={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'}
+      >
+        <i 
+          className={`
+            ${isFavorited ? 'fas fa-heart text-red-500' : 'far fa-heart text-gray-600'}
+            transition-colors duration-200
+          `}
+        />
+      </m.button>
+    </AuthRequiredWrapper>
   )
 }
 
