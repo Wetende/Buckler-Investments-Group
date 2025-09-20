@@ -1,115 +1,283 @@
 from dependency_injector import containers, providers
+import os
 import sys
 from pathlib import Path
 
-# Ensure 'app' package root (containing 'infrastructure', 'domain', 'application') is importable
+# Ensure 'app' package root is importable
+# (contains 'infrastructure', 'domain', 'application')
 _APP_ROOT = Path(__file__).resolve().parents[1]
 if str(_APP_ROOT) not in sys.path:
     sys.path.insert(0, str(_APP_ROOT))
 
-from infrastructure.config.database import AsyncSessionLocal
+from infrastructure.config.database import AsyncSessionLocal  # noqa: E402
 
 # Repositories
-from domain.repositories.bnb import BnbRepository, BookingRepository
-from domain.repositories.tours import TourRepository, TourBookingRepository
-from domain.repositories.cars import VehicleRepository, CarRentalRepository
-from domain.repositories.property import PropertyRepository
-from domain.repositories.investment import InvestmentRepository, InvestmentHoldingRepository
-from domain.repositories.user import UserRepository
-from domain.repositories.bundle import BundleRepository
-from domain.repositories.bundle_booking import BundleBookingRepository
-# from domain.repositories.payment import PaymentRepository  # Temporarily disabled
-from domain.repositories.review import ReviewRepository
-from infrastructure.database.repositories.bnb import (
+from domain.repositories.bnb import (  # noqa: E402
+    BnbRepository,
+    BookingRepository,
+)
+from domain.repositories.tours import (  # noqa: E402
+    TourRepository,
+    TourBookingRepository,
+)
+from domain.repositories.cars import (  # noqa: E402
+    VehicleRepository,
+    CarRentalRepository,
+)
+from domain.repositories.property import PropertyRepository  # noqa: E402
+from domain.repositories.investment import (  # noqa: E402
+    InvestmentRepository,
+    InvestmentHoldingRepository,
+)
+from domain.repositories.user import UserRepository  # noqa: E402
+from domain.repositories.bundle import BundleRepository  # noqa: E402
+from domain.repositories.bundle_booking import (  # noqa: E402
+    BundleBookingRepository,
+)
+# from domain.repositories.payment import PaymentRepository
+# Temporarily disabled
+from domain.repositories.review import ReviewRepository  # noqa: E402
+from infrastructure.database.repositories.bnb import (  # noqa: E402
     SqlAlchemyBnbRepository,
     SqlAlchemyBookingRepository,
 )
-from infrastructure.database.repositories.tours import (
+from infrastructure.database.repositories.tours import (  # noqa: E402
     SqlAlchemyTourRepository,
     SqlAlchemyTourBookingRepository,
     SqlAlchemyTourAvailabilityRepository,
 )
-from infrastructure.database.repositories.cars import (
+from infrastructure.database.repositories.cars import (  # noqa: E402
     SqlAlchemyVehicleRepository,
     SqlAlchemyCarRentalRepository,
 )
-from infrastructure.database.repositories.property import SqlAlchemyPropertyRepository
-from infrastructure.database.repositories.investment import (
+from infrastructure.database.repositories.property import (  # noqa: E402
+    SqlAlchemyPropertyRepository,
+)
+from infrastructure.database.repositories.investment import (  # noqa: E402
     SqlAlchemyInvestmentRepository,
     SqlAlchemyInvestmentHoldingRepository,
 )
-from infrastructure.database.repositories.user import SqlAlchemyUserRepository
-from infrastructure.database.repositories.bundle import SqlAlchemyBundleRepository
-from infrastructure.database.repositories.bundle_booking import SqlAlchemyBundleBookingRepository
-# from infrastructure.database.repositories.payment import SqlAlchemyPaymentRepository  # Temporarily disabled
-from infrastructure.database.repositories.review import SqlAlchemyReviewRepository
+from infrastructure.database.repositories.user import (  # noqa: E402
+    SqlAlchemyUserRepository,
+)
+from infrastructure.database.repositories.bundle import (  # noqa: E402
+    SqlAlchemyBundleRepository,
+)
+from infrastructure.database.repositories.bundle_booking import (  # noqa: E402
+    SqlAlchemyBundleBookingRepository,
+)
+# from infrastructure.database.repositories.payment import (
+#     SqlAlchemyPaymentRepository,
+# )
+# Temporarily disabled
+from infrastructure.database.repositories.review import (  # noqa: E402
+    SqlAlchemyReviewRepository,
+)
 
 # Use Cases
-from application.use_cases.bnb.search_listings import SearchListingsUseCase
-from application.use_cases.bnb.create_booking import CreateBookingUseCase
-from application.use_cases.bnb.create_listing import CreateListingUseCase
-from application.use_cases.bnb.get_listing import GetListingUseCase
-from application.use_cases.bnb.list_listings import ListListingsUseCase
-from application.use_cases.bnb.delete_listing import DeleteListingUseCase
-from application.use_cases.bnb.get_host_listings import GetHostListingsUseCase
-from application.use_cases.bnb.get_booking import GetBookingUseCase
-from application.use_cases.bnb.get_user_bookings import GetUserBookingsUseCase
-from application.use_cases.bnb.cancel_booking import CancelBookingUseCase
-from application.use_cases.bnb.get_host_bookings import GetHostBookingsUseCase
-from application.use_cases.bnb.approve_booking import ApproveBookingUseCase
-from application.use_cases.bnb.reject_booking import RejectBookingUseCase
+from application.use_cases.bnb.search_listings import (  # noqa: E402
+    SearchListingsUseCase,
+)
+from application.use_cases.bnb.create_booking import (  # noqa: E402
+    CreateBookingUseCase,
+)
+from application.use_cases.bnb.create_listing import (  # noqa: E402
+    CreateListingUseCase,
+)
+from application.use_cases.bnb.get_listing import (  # noqa: E402
+    GetListingUseCase,
+)
+from application.use_cases.bnb.list_listings import (  # noqa: E402
+    ListListingsUseCase,
+)
+from application.use_cases.bnb.delete_listing import (  # noqa: E402
+    DeleteListingUseCase,
+)
+from application.use_cases.bnb.get_host_listings import (  # noqa: E402
+    GetHostListingsUseCase,
+)
+from application.use_cases.bnb.get_booking import (  # noqa: E402
+    GetBookingUseCase,
+)
+from application.use_cases.bnb.get_user_bookings import (  # noqa: E402
+    GetUserBookingsUseCase,
+)
+from application.use_cases.bnb.cancel_booking import (  # noqa: E402
+    CancelBookingUseCase,
+)
+from application.use_cases.bnb.get_host_bookings import (  # noqa: E402
+    GetHostBookingsUseCase,
+)
+from application.use_cases.bnb.approve_booking import (  # noqa: E402
+    ApproveBookingUseCase,
+)
+from application.use_cases.bnb.reject_booking import (  # noqa: E402
+    RejectBookingUseCase,
+)
 # Location-based grouping use cases
-from application.use_cases.bnb.get_listings_grouped_by_location import GetListingsGroupedByLocationUseCase
-from application.use_cases.bnb.get_listings_by_location import GetListingsByLocationUseCase
-from application.use_cases.tours.search_tours import SearchToursUseCase
-from application.use_cases.tours.create_tour_booking import CreateTourBookingUseCase
-from application.use_cases.tours.get_tour_booking import GetTourBookingUseCase
-from application.use_cases.tours.get_user_tour_bookings import GetUserTourBookingsUseCase
-from application.use_cases.tours.get_operator_tour_bookings import GetOperatorTourBookingsUseCase
-from application.use_cases.tours.modify_tour_booking import ModifyTourBookingUseCase
-from application.use_cases.tours.cancel_tour_booking import CancelTourBookingUseCase
-from application.use_cases.tours.confirm_tour_booking import ConfirmTourBookingUseCase
-from application.use_cases.tours.complete_tour_booking import CompleteTourBookingUseCase
-from application.use_cases.tours.create_tour import CreateTourUseCase
-from application.use_cases.tours.get_tour import GetTourUseCase
-from application.use_cases.tours.list_tours import ListToursUseCase
-from application.use_cases.tours.delete_tour import DeleteTourUseCase
-from application.use_cases.cars.search_vehicles import SearchVehiclesUseCase
-from application.use_cases.cars.create_rental import CreateRentalUseCase
-from application.use_cases.cars.create_vehicle import CreateVehicleUseCase
-from application.use_cases.cars.list_vehicles import ListVehiclesUseCase
-from application.use_cases.cars.get_vehicle import GetVehicleUseCase
-from application.use_cases.cars.delete_vehicle import DeleteVehicleUseCase
-from application.use_cases.cars.get_rental import GetRentalUseCase
-from application.use_cases.cars.list_rentals import ListRentalsUseCase
-from application.use_cases.cars.check_availability import CheckAvailabilityUseCase
-from application.use_cases.property.search_properties import SearchPropertiesUseCase
-from application.use_cases.property.create_property import CreatePropertyUseCase
-from application.use_cases.investment.list_investments import ListInvestmentsUseCase
-from application.use_cases.investment.make_investment import MakeInvestmentUseCase
-from application.use_cases.user.create_user import CreateUserUseCase
-from application.use_cases.auth.refresh_token import RefreshTokenUseCase
-from application.use_cases.auth.logout import LogoutUseCase
-from application.use_cases.auth.password_reset import PasswordResetRequestUseCase, PasswordResetConfirmUseCase
-from application.use_cases.auth.change_password import ChangePasswordUseCase
-from domain.services.password_service import PasswordService
-from infrastructure.services.bcrypt_password_service import BcryptPasswordService
-from application.use_cases.bundle.create_bundle import CreateBundleUseCase
-from application.use_cases.bundle.book_bundle import BookBundleUseCase
-# from application.use_cases.payment.create_payment_intent import CreatePaymentIntentUseCase  # Temporarily disabled
-# from infrastructure.external_services.payment.stripe_service import StripePaymentService  # Temporarily disabled
-# from infrastructure.external_services.payment.mpesa_service import MpesaPaymentService  # Temporarily disabled
-from application.use_cases.review.create_review import CreateReviewUseCase
-from application.use_cases.review.get_reviews import GetReviewsUseCase
-from application.use_cases.review.get_review_stats import GetReviewStatsUseCase
-from application.use_cases.review.respond_to_review import RespondToReviewUseCase
-from application.use_cases.review.get_user_reviews import GetUserReviewsUseCase
-from application.use_cases.review.flag_review import FlagReviewUseCase
-from application.use_cases.review.delete_review import DeleteReviewUseCase
-from application.use_cases.analytics.host_dashboard import HostDashboardUseCase
-from application.use_cases.analytics.host_earnings import HostEarningsUseCase
-from application.use_cases.analytics.tour_operator_dashboard import TourOperatorDashboardUseCase
-from application.use_cases.analytics.tour_operator_earnings import TourOperatorEarningsUseCase
+from application.use_cases.bnb.get_listings_grouped_by_location import (  # noqa: E402, E501
+    GetListingsGroupedByLocationUseCase,
+)
+from application.use_cases.bnb.get_listings_by_location import (  # noqa: E402, E501
+    GetListingsByLocationUseCase,
+)
+from application.use_cases.tours.search_tours import (  # noqa: E402
+    SearchToursUseCase,
+)
+from application.use_cases.tours.create_tour_booking import (  # noqa: E402
+    CreateTourBookingUseCase,
+)
+from application.use_cases.tours.get_tour_booking import (  # noqa: E402
+    GetTourBookingUseCase,
+)
+from application.use_cases.tours.get_user_tour_bookings import (  # noqa: E402
+    GetUserTourBookingsUseCase,
+)
+from application.use_cases.tours.get_operator_tour_bookings import (  # noqa: E402, E501
+    GetOperatorTourBookingsUseCase,
+)
+from application.use_cases.tours.modify_tour_booking import (  # noqa: E402
+    ModifyTourBookingUseCase,
+)
+from application.use_cases.tours.cancel_tour_booking import (  # noqa: E402
+    CancelTourBookingUseCase,
+)
+from application.use_cases.tours.confirm_tour_booking import (  # noqa: E402
+    ConfirmTourBookingUseCase,
+)
+from application.use_cases.tours.complete_tour_booking import (  # noqa: E402
+    CompleteTourBookingUseCase,
+)
+from application.use_cases.tours.create_tour import (  # noqa: E402
+    CreateTourUseCase,
+)
+from application.use_cases.tours.get_tour import (  # noqa: E402
+    GetTourUseCase,
+)
+from application.use_cases.tours.list_tours import (  # noqa: E402
+    ListToursUseCase,
+)
+from application.use_cases.tours.delete_tour import (  # noqa: E402
+    DeleteTourUseCase,
+)
+from application.use_cases.tours.update_tour_availability import (  # noqa: E402, E501
+    UpdateTourAvailabilityUseCase,
+)
+from application.use_cases.tours.update_tour_pricing import (  # noqa: E402
+    UpdateTourPricingUseCase,
+)
+from application.use_cases.cars.search_vehicles import (  # noqa: E402
+    SearchVehiclesUseCase,
+)
+from application.use_cases.cars.create_rental import (  # noqa: E402
+    CreateRentalUseCase,
+)
+from application.use_cases.cars.create_vehicle import (  # noqa: E402
+    CreateVehicleUseCase,
+)
+from application.use_cases.cars.list_vehicles import (  # noqa: E402
+    ListVehiclesUseCase,
+)
+from application.use_cases.cars.get_vehicle import (  # noqa: E402
+    GetVehicleUseCase,
+)
+from application.use_cases.cars.delete_vehicle import (  # noqa: E402
+    DeleteVehicleUseCase,
+)
+from application.use_cases.cars.get_rental import (  # noqa: E402
+    GetRentalUseCase,
+)
+from application.use_cases.cars.list_rentals import (  # noqa: E402
+    ListRentalsUseCase,
+)
+from application.use_cases.cars.check_availability import (  # noqa: E402
+    CheckAvailabilityUseCase,
+)
+from application.use_cases.property.search_properties import (  # noqa: E402
+    SearchPropertiesUseCase,
+)
+from application.use_cases.property.create_property import (  # noqa: E402
+    CreatePropertyUseCase,
+)
+from application.use_cases.investment.list_investments import (  # noqa: E402
+    ListInvestmentsUseCase,
+)
+from application.use_cases.investment.make_investment import (  # noqa: E402
+    MakeInvestmentUseCase,
+)
+from application.use_cases.user.create_user import (  # noqa: E402
+    CreateUserUseCase,
+)
+from application.use_cases.auth.refresh_token import (  # noqa: E402
+    RefreshTokenUseCase,
+)
+from application.use_cases.auth.logout import (  # noqa: E402
+    LogoutUseCase,
+)
+from application.use_cases.auth.password_reset import (  # noqa: E402
+    PasswordResetRequestUseCase,
+    PasswordResetConfirmUseCase,
+)
+from application.use_cases.auth.change_password import (  # noqa: E402
+    ChangePasswordUseCase,
+)
+from domain.services.password_service import (  # noqa: E402
+    PasswordService,
+)
+from infrastructure.services.bcrypt_password_service import (  # noqa: E402
+    BcryptPasswordService,
+)
+from application.use_cases.bundle.create_bundle import (  # noqa: E402
+    CreateBundleUseCase,
+)
+from application.use_cases.bundle.book_bundle import (  # noqa: E402
+    BookBundleUseCase,
+)
+# from application.use_cases.payment.create_payment_intent import (
+#     CreatePaymentIntentUseCase,
+# )
+# Temporarily disabled
+# from infrastructure.external_services.payment.stripe_service import (
+#     StripePaymentService,
+# )
+# Temporarily disabled
+# from infrastructure.external_services.payment.mpesa_service import (
+#     MpesaPaymentService,
+# )
+# Temporarily disabled
+from application.use_cases.review.create_review import (  # noqa: E402
+    CreateReviewUseCase,
+)
+from application.use_cases.review.get_reviews import (  # noqa: E402
+    GetReviewsUseCase,
+)
+from application.use_cases.review.get_review_stats import (  # noqa: E402
+    GetReviewStatsUseCase,
+)
+from application.use_cases.review.respond_to_review import (  # noqa: E402
+    RespondToReviewUseCase,
+)
+from application.use_cases.review.get_user_reviews import (  # noqa: E402
+    GetUserReviewsUseCase,
+)
+from application.use_cases.review.flag_review import (  # noqa: E402
+    FlagReviewUseCase,
+)
+from application.use_cases.review.delete_review import (  # noqa: E402
+    DeleteReviewUseCase,
+)
+from application.use_cases.analytics.host_dashboard import (  # noqa: E402
+    HostDashboardUseCase,
+)
+from application.use_cases.analytics.host_earnings import (  # noqa: E402
+    HostEarningsUseCase,
+)
+from application.use_cases.analytics.tour_operator_dashboard import (  # noqa: E402, E501
+    TourOperatorDashboardUseCase,
+)
+from application.use_cases.analytics.tour_operator_earnings import (  # noqa: E402, E501
+    TourOperatorEarningsUseCase,
+)
 
 
 class BundleUseCases(containers.DeclarativeContainer):
@@ -213,7 +381,7 @@ class PropertyUseCases(containers.DeclarativeContainer):
 
 
 class AppContainer(containers.DeclarativeContainer):
-    """Application-wide DI container wiring repositories, services, and use cases."""
+    """DI container for repositories, services, and use cases."""
     wiring_config = containers.WiringConfiguration(
         modules=[
             "api.v1.bnb.routes",
@@ -249,30 +417,49 @@ class AppContainer(containers.DeclarativeContainer):
     )
 
     # Payment Services
-    # Note: use safe mock defaults; in production pull from env/config
-    # Deliberately simple for now to enable flow
-    from infrastructure.external_services.payment.stripe_service import StripePaymentService  # type: ignore
-    from infrastructure.external_services.payment.mpesa_service import MpesaPaymentService  # type: ignore
+    # Note: defaults are for local dev only; use env in production
+    from infrastructure.external_services.payment.stripe_service import (  # type: ignore  # noqa: E402, E501
+        StripePaymentService,
+    )
+    from infrastructure.external_services.payment.mpesa_service import (  # type: ignore  # noqa: E402, E501
+        MpesaPaymentService,
+    )
+
+    STRIPE_API_KEY = os.getenv(
+        "STRIPE_API_KEY",
+        "sk_test_mock_key",
+    )  # nosec B105
+    M_PESA_CONSUMER_KEY = os.getenv(
+        "MPESA_CONSUMER_KEY",
+        "mock_key",
+    )  # nosec B105
+    M_PESA_CONSUMER_SECRET = os.getenv(
+        "MPESA_CONSUMER_SECRET",
+        "mock_secret",
+    )  # nosec B105
+    M_PESA_SHORTCODE = os.getenv("MPESA_SHORTCODE", "174379")
 
     stripe_service = providers.Singleton(
         StripePaymentService,
-        api_key="sk_test_mock_key"
+        api_key=STRIPE_API_KEY,
     )
 
     mpesa_service = providers.Singleton(
         MpesaPaymentService,
-        consumer_key="mock_key",
-        consumer_secret="mock_secret",
-        shortcode="174379"
+        consumer_key=M_PESA_CONSUMER_KEY,
+        consumer_secret=M_PESA_CONSUMER_SECRET,
+        shortcode=M_PESA_SHORTCODE,
     )
 
     # BNB Repositories
-    bnb_repository: providers.Factory[BnbRepository] = providers.Factory(
+    bnb_repository: providers.Factory[BnbRepository]
+    bnb_repository = providers.Factory(
         SqlAlchemyBnbRepository,
         session=db_session_factory,
     )
 
-    booking_repository: providers.Factory[BookingRepository] = providers.Factory(
+    booking_repository: providers.Factory[BookingRepository]
+    booking_repository = providers.Factory(
         SqlAlchemyBookingRepository,
         session=db_session_factory,
     )
@@ -283,42 +470,51 @@ class AppContainer(containers.DeclarativeContainer):
         session=db_session_factory,
     )
 
-    tour_booking_repository: providers.Factory[TourBookingRepository] = providers.Factory(
+    tour_booking_repository: providers.Factory[TourBookingRepository]
+    tour_booking_repository = providers.Factory(
         SqlAlchemyTourBookingRepository,
         session=db_session_factory,
     )
 
     # Tour Availability Repository
-    from domain.repositories.tours import TourAvailabilityRepository  # type: ignore
-    tour_availability_repository: providers.Factory[TourAvailabilityRepository] = providers.Factory(
+    from domain.repositories.tours import TourAvailabilityRepository  # type: ignore  # noqa: E402, E501
+    tour_availability_repository: providers.Factory[TourAvailabilityRepository]
+    tour_availability_repository = providers.Factory(
         SqlAlchemyTourAvailabilityRepository,
         session=db_session_factory,
     )
 
     # Car Repositories
-    vehicle_repository: providers.Factory[VehicleRepository] = providers.Factory(
+    vehicle_repository: providers.Factory[VehicleRepository]
+    vehicle_repository = providers.Factory(
         SqlAlchemyVehicleRepository,
         session=db_session_factory,
     )
 
-    car_rental_repository: providers.Factory[CarRentalRepository] = providers.Factory(
+    car_rental_repository: providers.Factory[CarRentalRepository]
+    car_rental_repository = providers.Factory(
         SqlAlchemyCarRentalRepository,
         session=db_session_factory,
     )
 
     # Property Repository
-    property_repository: providers.Factory[PropertyRepository] = providers.Factory(
+    property_repository: providers.Factory[PropertyRepository]
+    property_repository = providers.Factory(
         SqlAlchemyPropertyRepository,
         session=db_session_factory,
     )
 
     # Investment Repositories
-    investment_repository: providers.Factory[InvestmentRepository] = providers.Factory(
+    investment_repository: providers.Factory[InvestmentRepository]
+    investment_repository = providers.Factory(
         SqlAlchemyInvestmentRepository,
         session=db_session_factory,
     )
 
-    investment_holding_repository: providers.Factory[InvestmentHoldingRepository] = providers.Factory(
+    investment_holding_repository: providers.Factory[
+        InvestmentHoldingRepository
+    ]
+    investment_holding_repository = providers.Factory(
         SqlAlchemyInvestmentHoldingRepository,
         session=db_session_factory,
     )
@@ -330,21 +526,28 @@ class AppContainer(containers.DeclarativeContainer):
     )
 
     # Bundle Repository
-    bundle_repository: providers.Factory[BundleRepository] = providers.Factory(
+    bundle_repository: providers.Factory[BundleRepository]
+    bundle_repository = providers.Factory(
         SqlAlchemyBundleRepository,
         session=db_session_factory,
     )
 
-    bundle_booking_repository: providers.Factory[BundleBookingRepository] = providers.Factory(
+    bundle_booking_repository: providers.Factory[BundleBookingRepository]
+    bundle_booking_repository = providers.Factory(
         SqlAlchemyBundleBookingRepository,
         session=db_session_factory,
     )
 
     # Payment Repository
-    from domain.repositories.payment import PaymentRepository  # type: ignore
-    from infrastructure.database.repositories.payment import SqlAlchemyPaymentRepository  # type: ignore
+    from domain.repositories.payment import (  # type: ignore  # noqa: E402
+        PaymentRepository,
+    )
+    from infrastructure.database.repositories.payment import (  # type: ignore  # noqa: E402, E501
+        SqlAlchemyPaymentRepository,
+    )
 
-    payment_repository: providers.Factory[PaymentRepository] = providers.Factory(
+    payment_repository: providers.Factory[PaymentRepository]
+    payment_repository = providers.Factory(
         SqlAlchemyPaymentRepository,
         session=db_session_factory,
     )
@@ -505,6 +708,17 @@ class AppContainer(containers.DeclarativeContainer):
         tour_repository=tour_repository,
     )
 
+    update_tour_availability_use_case = providers.Factory(
+        UpdateTourAvailabilityUseCase,
+        tour_repository=tour_repository,
+        availability_repository=tour_availability_repository,
+    )
+
+    update_tour_pricing_use_case = providers.Factory(
+        UpdateTourPricingUseCase,
+        tour_repository=tour_repository,
+    )
+
     # Car Use Cases
     search_vehicles_use_case = providers.Factory(
         SearchVehiclesUseCase,
@@ -591,9 +805,15 @@ class AppContainer(containers.DeclarativeContainer):
     )
 
     # Payment Use Cases
-    from application.use_cases.payment.create_payment_intent import CreatePaymentIntentUseCase  # type: ignore
-    from application.use_cases.payment.get_payment_status import GetPaymentStatusUseCase  # type: ignore
-    from application.use_cases.payment.get_booking_payments import GetBookingPaymentsUseCase  # type: ignore
+    from application.use_cases.payment.create_payment_intent import (  # type: ignore  # noqa: E402, E501
+        CreatePaymentIntentUseCase,
+    )
+    from application.use_cases.payment.get_payment_status import (  # type: ignore  # noqa: E402, E501
+        GetPaymentStatusUseCase,
+    )
+    from application.use_cases.payment.get_booking_payments import (  # type: ignore  # noqa: E402, E501
+        GetBookingPaymentsUseCase,
+    )
 
     create_payment_intent_use_case = providers.Factory(
         CreatePaymentIntentUseCase,

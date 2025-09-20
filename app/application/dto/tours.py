@@ -114,3 +114,8 @@ class TourAvailabilityItem(BaseModel):
 class TourAvailabilityDTO(BaseModel):
     tour_id: int
     items: List[TourAvailabilityItem]
+
+# Pricing DTOs
+class TourPricingUpdateDTO(BaseModel):
+    price: Decimal = Field(..., gt=0)
+    currency: Optional[str] = Field(None, max_length=3, description="Optional currency override")

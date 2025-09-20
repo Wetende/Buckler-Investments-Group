@@ -3,6 +3,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { m, AnimatePresence } from 'framer-motion';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 // Components
 import CustomModal from '../CustomModal';
@@ -31,7 +32,8 @@ const MultiStepBookingModal = ({
   onBookingSuccess,
   preSelectedDate = null 
 }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, login } = useAuth();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingData, setBookingData] = useState({});
@@ -39,6 +41,13 @@ const MultiStepBookingModal = ({
   const [selectedDate, setSelectedDate] = useState(preSelectedDate);
   const [selectedAvailability, setSelectedAvailability] = useState(null);
   const [pricingBreakdown, setPricingBreakdown] = useState(null);
+
+  // Add at the top of the component, after hooks
+  useEffect(() => {
+    if (!isAuthenticated && currentStep === 1) {
+      setCurrentStep(0); // New step for auth prompt
+    }
+  }, [isAuthenticated, currentStep]);
 
   // Load availability when modal opens
   useEffect(() => {
@@ -146,6 +155,10 @@ const MultiStepBookingModal = ({
 
   // Handle step navigation
   const nextStep = () => {
+    if (currentStep === 0) {
+      // After auth prompt, they should have navigated away
+      return;
+    }
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
@@ -287,6 +300,36 @@ const MultiStepBookingModal = ({
           {({ values, errors, touched, setFieldValue, isValid }) => (
             <Form>
               <AnimatePresence mode="wait">
+                {/* Step 0: Authentication Prompt */}
+                {currentStep === 0 && (
+                  <m.div key="step0" {...slideIn}>
+                    <div className="text-center mb-8">
+                      <h3 className="text-xl font-semibold mb-4">Become a Host</h3>
+                      <p className="text-gray-600 mb-6">To host listings, you need to create a host account.</p>
+                      
+                      <Buttons
+                        type="button"
+                        className="btn-fancy btn-fill w-full mb-4"
+                        themeColor="#232323"
+                        color="#fff"
+                        title="Continue to Signup"
+                        onClick={() => navigate('/register?type=host')}
+                      />
+                      
+                      <Buttons
+                        type="button"
+                        className="btn-fancy btn-outline w-full"
+                        title="I already have an account"
+                        onClick={() => navigate('/login')}
+                      />
+                      
+                      <p className="text-sm text-gray-500 mt-4">
+                        By signing up, you agree to our terms and conditions.
+                      </p>
+                    </div>
+                  </m.div>
+                )}
+
                 {/* Step 1: Date Selection */}
                 {currentStep === 1 && (
                   <m.div key="step1" {...slideIn}>
