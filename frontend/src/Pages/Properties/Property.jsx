@@ -8,7 +8,7 @@ import { Parallax } from "react-scroll-parallax";
 
 // Components
 import Header, { HeaderNav, Menu, MobileMenu } from '../../Components/Header/Header'
-import BucklerMenuData from '../../Components/Header/BucklerMenuData'
+import PropertiesMenuData from '../../Components/Header/PropertiesMenuData'
 import InteractiveBanners01 from '../../Components/InteractiveBanners/InteractiveBanners01'
 import SocialIcons from '../../Components/SocialIcon/SocialIcons'
 import { fadeIn } from '../../Functions/GlobalAnimations'
@@ -88,7 +88,7 @@ const DigitalagencyPage = (props) => {
                             <span className="navbar-toggler-line"></span>
                         </Navbar.Toggle>
                         <Navbar.Collapse className="col-auto justify-center px-lg-0">
-                            <Menu {...props} data={BucklerMenuData} />
+                            <Menu {...props} data={PropertiesMenuData} />
                         </Navbar.Collapse>
                         <MobileMenu className="order-last d-lg-none" type="full" {...props} />
                         <Col lg={2} xs={"auto"} className="justify-end pe-0 flex items-center">

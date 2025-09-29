@@ -89,17 +89,12 @@ const BnbServiceSelectionModal = ({
       localStorage.setItem('selectedBnbServices', JSON.stringify(selectedServices));
 
       if (isAuthenticated) {
-        // User is already logged in, redirect to host application
-        navigate('/become-host', { 
-          state: { 
-            selectedServices,
-            step: 'application' 
-          }
-        });
+        // User is already logged in, show message or redirect to existing page
+        alert('Thank you for your interest! Host applications will be available soon.');
       } else {
-        // User needs to authenticate, redirect to BnB auth page
-        navigate('/auth/bnb-signup', { 
-          state: { 
+        // User needs to authenticate, redirect to BnB auth page (preserve selection)
+        navigate('/auth/bnb-signup', {
+          state: {
             selectedServices,
             returnUrl: '/become-host'
           }
@@ -270,22 +265,21 @@ const BnbServiceSelectionModal = ({
           </div>
 
           {/* Action Buttons */}
-          <Buttons 
+          {/* Use a native button here to avoid Link wrapping interfering with onClick */}
+          <button
             type="button"
-            className="btn-fill btn-fancy w-full font-medium font-serif rounded-none uppercase mb-4" 
-            themeColor="#232323" 
-            color="#fff" 
-            size="md" 
-            title={
-              isSubmitting 
-                ? 'Processing...' 
-                : isAuthenticated 
-                  ? 'Continue to Application'
-                  : 'Continue to Sign Up'
-            }
+            className="btn-fill btn-fancy w-full font-medium font-serif rounded-none uppercase mb-4"
+            style={{
+              background: '#232323',
+              color: '#fff',
+              border: '2px solid #232323'
+            }}
             disabled={selectedServices.length === 0 || isSubmitting}
             onClick={handleContinue}
-          />
+            aria-label={isSubmitting ? 'processing' : (isAuthenticated ? 'continue to application' : 'continue to sign up')}
+          >
+            {isSubmitting ? 'Processing...' : (isAuthenticated ? 'Continue to Application' : 'Continue to Sign Up')}
+          </button>
 
           {/* Help Text */}
           <div className="text-center">

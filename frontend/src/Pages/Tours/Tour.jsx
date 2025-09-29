@@ -12,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 // Components
 import Header, { HeaderNav, Menu } from "../../Components/Header/Header";
-import BucklerMenuData from '../../Components/Header/BucklerMenuData';
+import ToursMenuData from '../../Components/Header/ToursMenuData';
 import CustomModal from "../../Components/CustomModal";
 import InteractiveBanners07 from "../../Components/InteractiveBanners/InteractiveBanners07";
 import InteractiveBanners08 from "../../Components/InteractiveBanners/InteractiveBanners08";
@@ -28,6 +28,9 @@ import MessageBox from "../../Components/MessageBox/MessageBox";
 import Overlap from "../../Components/Overlap/Overlap";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import { fadeIn, fadeInLeft, zoomIn } from "../../Functions/GlobalAnimations";
+import AttractionsFiltersBar from "../../Components/Tours/AttractionsFiltersBar";
+import CuratedCollection from "../../Components/Tours/CuratedCollection";
+import TopDestinations from "../../Components/Tours/TopDestinations";
 import InfoBannerStyle05 from "../../Components/InfoBanner/InfoBannerStyle05";
 import InfoBannerWithBadges from "../../Components/InfoBanner/InfoBannerWithBadges";
 import { resetForm, sendEmail } from "../../Functions/Utilities";
@@ -141,6 +144,20 @@ const TravelAgencyPage = (props) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [unifiedResults, setUnifiedResults] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [filterBar, setFilterBar] = useState({});
+
+  // Map UI filter chips to API params
+  const mapFilterBarToApi = useMemo(() => (fb) => {
+    const params = {};
+    if (!fb) return params;
+    if (fb.freeCancellation) params.free_cancellation = true;
+    if (fb.instantConfirmation) params.instant_confirmation = true;
+    if (fb.bestSeller) params.is_best_seller = true;
+    if (fb.topRated) params.rating_gte = 4.5;
+    if (fb.familyFriendly) params.family_friendly = true;
+    if (fb.sort) params.sort = fb.sort; // e.g., rating_desc | price_asc | price_desc | popular
+    return params;
+  }, []);
   
   // Map API data to InfoBannerStyle05 format with rating badges
   const featuredItems = Array.isArray(featuredData)
@@ -476,7 +493,7 @@ const TravelAgencyPage = (props) => {
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
           <Navbar.Collapse className="col-xs-auto col-lg-8 menu-order px-lg-0 justify-center">
-            <Menu {...props} data={BucklerMenuData} />
+            <Menu {...props} data={ToursMenuData} />
           </Navbar.Collapse>
           <Col
             xs="auto"
@@ -649,6 +666,39 @@ const TravelAgencyPage = (props) => {
           </Container>
         </section>
         {/* Smart Search Section End */}
+
+        {/* Attractions-like Filters Bar */}
+        <AttractionsFiltersBar value={filterBar} onChange={(v) => setFilterBar(v)} />
+
+        {/* Curated Collections similar to Booking Attractions */}
+        <CuratedCollection
+          title="Best sellers in Kenya"
+          subtitle="Highly booked experiences this week"
+          filters={{ sort: 'popular', country: 'Kenya', ...mapFilterBarToApi(filterBar) }}
+          limit={8}
+        />
+        <CuratedCollection
+          title="Top rated activities"
+          subtitle="Loved by travelers (4.5+)"
+          filters={{ rating_gte: 4.5, ...mapFilterBarToApi(filterBar) }}
+          limit={8}
+        />
+        <CuratedCollection
+          title="Budget-friendly picks"
+          subtitle="Great experiences under KES 10,000"
+          filters={{ max_price: 10000, currency: 'KES', ...mapFilterBarToApi(filterBar) }}
+          limit={8}
+        />
+
+        {/* Top destinations grid */}
+        <TopDestinations
+          items={[
+            { title: 'Nairobi', activities: 120, img: 'https://via.placeholder.com/400x250?text=Nairobi', link: '/tours?location=Nairobi' },
+            { title: 'Diani Beach', activities: 85, img: 'https://via.placeholder.com/400x250?text=Diani+Beach', link: '/tours?location=Diani' },
+            { title: 'Masai Mara', activities: 60, img: 'https://via.placeholder.com/400x250?text=Masai+Mara', link: '/tours?location=Masai%20Mara' },
+            { title: 'Amboseli', activities: 40, img: 'https://via.placeholder.com/400x250?text=Amboseli', link: '/tours?location=Amboseli' },
+          ]}
+        />
 
         {/* Section Start  */}
         <section className="py-[80px] border-b border-mediumgray bg-white md:py-[40px]">

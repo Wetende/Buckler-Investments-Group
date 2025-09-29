@@ -42,6 +42,7 @@ const InvestHomePage = lazy(() => import("./Pages/Invest/Invest"));
 const SlugPageComponent = lazy(() => import("./Pages/Blogs/SlugPage"));
 const AccountPage = lazy(() => import("./Pages/Account/Account"));
 const HostDashboard = lazy(() => import("./Pages/Host/HostDashboard"));
+const BnbAuthPage = lazy(() => import("./Pages/BnbAuth"));
 
   // Pages
   // const LandingPage = lazy(() => import("./Pages/Landing"));
@@ -475,8 +476,9 @@ function App() {
                   <Route path="/invest" element={<InvestComingSoon />} />
                   <Route path="/blogs/:slug" element={<SlugPageComponent />} />
                   
-                  {/* Auth Routes */}
-                  <Route path="/password-reset" element={<PasswordReset />} />
+                      {/* Auth Routes */}
+                      <Route path="/password-reset" element={<PasswordReset />} />
+                      <Route path="/auth/bnb-signup" element={<BnbAuthPage />} />
                   
                   {/* Protected Routes - Require Login (Booking/Personal Data) */}
                   <Route element={<ProtectedRoute />}>

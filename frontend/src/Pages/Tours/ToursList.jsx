@@ -6,8 +6,10 @@ import { m } from "framer-motion";
 
 // Components
 import Header, { HeaderNav, Menu } from "../../Components/Header/Header";
+import ToursMenuData from "../../Components/Header/ToursMenuData";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import InfoBannerStyle05 from "../../Components/InfoBanner/InfoBannerStyle05";
+import ToursSideFilters from "../../Components/Tours/ToursSideFilters";
 import Buttons from "../../Components/Button/Buttons";
 import { fadeIn } from "../../Functions/GlobalAnimations";
 
@@ -59,99 +61,72 @@ const ToursList = (props) => {
             </a>
           </Col>
           <div className="navbar-collapse col-xs-auto col-lg-8 menu-order px-lg-0 justify-center">
-            <Menu {...props} />
+            <Menu data={ToursMenuData} {...props} />
           </div>
         </HeaderNav>
       </Header>
       {/* Header End */}
 
       <div className="bg-white">
-        {/* Page Title Section */}
-        <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] bg-lightgray">
+        {/* Page Title */}
+        <section className="py-[60px] bg-lightgray">
           <Container>
             <Row className="justify-center">
-              <Col lg={6} className="text-center">
-                <h1 className="heading-3 font-serif font-semibold text-darkgray mb-[20px] -tracking-[1px]">
-                  All Tours
-                </h1>
-                <p className="text-lg leading-[28px] lg:text-xmd">
-                  Discover amazing tours and adventures across Kenya
-                </p>
-              </Col>
-            </Row>
-            {/* Simple Filters */}
-            <Row className="justify-center mt-8">
-              <Col lg={10}>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Max price (KES)"
-                    className="w-full p-3 border border-gray-300 rounded-md"
-                    onChange={(e) => setFilters((f) => ({ ...f, max_price: e.target.value ? Number(e.target.value) : undefined }))}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Operator ID"
-                    className="w-full p-3 border border-gray-300 rounded-md"
-                    onChange={(e) => setFilters((f) => ({ ...f, operator_id: e.target.value ? Number(e.target.value) : undefined }))}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Category"
-                    className="w-full p-3 border border-gray-300 rounded-md"
-                    onChange={(e) => setFilters((f) => ({ ...f, category: e.target.value || undefined }))}
-                  />
-                  <Buttons
-                    className="btn-fancy btn-outline"
-                    title="Clear Filters"
-                    onClick={() => setFilters({})}
-                  />
-                </div>
+              <Col lg={8} className="text-center">
+                <h1 className="heading-3 font-serif font-semibold text-darkgray mb-[10px] -tracking-[1px]">All Tours</h1>
+                <p className="text-lg leading-[28px] lg:text-xmd">Discover amazing tours and adventures across Kenya</p>
               </Col>
             </Row>
           </Container>
         </section>
 
-        {/* Tours Grid Section */}
-        <section className="py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px]">
+        {/* Sidebar + Results */}
+        <section className="py-[60px]">
           <Container>
-            {isLoading ? (
-              <div className="text-center py-20">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-neonorange"></div>
-                <p className="mt-4 text-lg">Loading tours...</p>
-              </div>
-            ) : isError ? (
-              <div className="text-center py-20">
-                <p className="text-lg text-red-600">Error loading tours. Please try again.</p>
-              </div>
-            ) : (
-              <>
-                <m.div className="row" {...fadeIn}>
-                  <InfoBannerStyle05
-                    grid="row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-y-10"
-                    data={toursItems}
-                  />
-                </m.div>
-
-                {/* Load More Button */}
-                {hasNextPage && (
-                  <Row className="mt-16">
-                    <Col className="text-center">
-                      <Buttons
-                        ariaLabel="Load more tours"
-                        onClick={() => fetchNextPage()}
-                        disabled={isFetchingNextPage}
-                        className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase"
-                        themeColor="#232323"
-                        color="#fff"
-                        size="lg"
-                        title={isFetchingNextPage ? "Loading..." : "Load More Tours"}
+            <Row>
+              {/* Sidebar */}
+              <Col lg={3} md={4} className="sm:mb-[30px]">
+                <ToursSideFilters value={filters} onChange={setFilters} />
+              </Col>
+              {/* Results */}
+              <Col lg={9} md={8}>
+                {isLoading ? (
+                  <div className="text-center py-20">
+                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-neonorange"></div>
+                    <p className="mt-4 text-lg">Loading tours...</p>
+                  </div>
+                ) : isError ? (
+                  <div className="text-center py-20">
+                    <p className="text-lg text-red-600">Error loading tours. Please try again.</p>
+                  </div>
+                ) : (
+                  <>
+                    <m.div className="row" {...fadeIn}>
+                      <InfoBannerStyle05
+                        grid="row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 gap-y-10"
+                        data={toursItems}
                       />
-                    </Col>
-                  </Row>
+                    </m.div>
+                    {hasNextPage && (
+                      <Row className="mt-10">
+                        <Col className="text-center">
+                          <Buttons
+                            ariaLabel="Load more tours"
+                            onClick={() => fetchNextPage()}
+                            disabled={isFetchingNextPage}
+                            className="btn-fancy btn-fill font-medium font-serif rounded-none uppercase"
+                            themeColor="#232323"
+                            color="#fff"
+                            size="lg"
+                            title={isFetchingNextPage ? "Loading..." : "Load More Tours"}
+                          />
+                        </Col>
+                      </Row>
+                    )}
+                  </>
                 )}
-              </>
-            )}
+              </Col>
+            </Row>
           </Container>
         </section>
       </div>

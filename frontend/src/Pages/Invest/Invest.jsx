@@ -10,7 +10,7 @@ import { m } from "framer-motion";
 // Components
 import { fadeIn, zoomIn } from '../../Functions/GlobalAnimations';
 import Buttons from '../../Components/Button/Buttons'
-import BucklerMenuData from '../../Components/Header/BucklerMenuData'
+import InvestMenuData from '../../Components/Header/InvestMenuData'
 import InteractiveBanners02 from '../../Components/InteractiveBanners/InteractiveBanners02';
 import Clients from '../../Components/Clients/Clients';
 import Piechart from '../../Components/PieChart/PieChart';
@@ -182,7 +182,7 @@ const HomeBusinessPage = (props) => {
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
           <Navbar.Collapse className="col-auto justify-center p-0">
-            <Menu {...props} data={BucklerMenuData} />
+            <Menu {...props} data={InvestMenuData} />
           </Navbar.Collapse>
           <Col className="col-auto text-right !pr-0 pl-[15px] md:pl-0 md:pr-[15px] sm:pr-0">
             <SearchBar className="pl-[17px] xs:px-[15px]" />

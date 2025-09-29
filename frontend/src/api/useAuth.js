@@ -1,8 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { axiosInstance, axiosPrivate } from './axios'
-import axios from 'axios';
-
-const API_BASE = '/api/v1';
 
 // Auth API functions
 const login = async (credentials) => {
@@ -95,17 +92,20 @@ export const useAuth = () => {
 
     const getToken = () => localStorage.getItem('authToken');
 
+    // Check if token exists (move outside hook configuration)
+    const hasToken = !!localStorage.getItem('authToken');
+
     // Get current user query
     const { data: user, isLoading: userLoading, error } = useQuery({
         queryKey: ['auth', 'user'],
         queryFn: getCurrentUser,
-        enabled: !!localStorage.getItem('authToken'), // Only run if token exists
+        enabled: hasToken, // Use the boolean variable instead of function call
         staleTime: 5 * 60 * 1000, // 5 minutes
         gcTime: 10 * 60 * 1000, // 10 minutes
         retry: false, // Don't retry auth failures
     })
 
-    const isAuthenticated = !!user && !!localStorage.getItem('authToken')
+    const isAuthenticated = !!user && hasToken
     const isLoading = loginMutation.isPending || registerMutation.isPending || userLoading
 
     return { 

@@ -9,7 +9,7 @@ import { Link as ScrollTo } from "react-scroll"
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import BucklerMenuData from '../../Components/Header/BucklerMenuData'
+import CarsMenuData from '../../Components/Header/CarsMenuData'
 import Buttons from '../../Components/Button/Buttons'
 import Overlap from '../../Components/Overlap/Overlap'
 import Tab03 from '../../Components/Tab/Tab03'
@@ -64,7 +64,7 @@ const CarHirePage = (props) => {
             <span className="navbar-toggler-line"></span>
           </Navbar.Toggle>
           <Navbar.Collapse className="col-auto justify-center menu-order px-lg-0 restaurant-header-menu">
-            <Menu {...props} data={BucklerMenuData} />
+            <Menu {...props} data={CarsMenuData} />
           </Navbar.Collapse>
           <Col className="col-auto col-lg-2 text-right pe-0 font-size-0 sm:hidden">
             <ScrollTo href="#" to="experience" offset={0} delay={0} spy={true} smooth={true} duration={800}>

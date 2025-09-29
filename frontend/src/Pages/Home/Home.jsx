@@ -410,16 +410,17 @@ const HomeDecorPage = (props) => {
   ];
 
 
-  // Transform tour data for InfoBannerStyle05
-  const toursToDisplay = featuredTours && featuredTours.length > 0 ? featuredTours : mockTourData;
-  const transformedTours = toursToDisplay?.map(tour => ({
+  // Transform tour data for InfoBannerStyle05 (API-only)
+  // Use only real API data to display featured tours; show empty/skeleton if none
+  const toursToDisplay = Array.isArray(featuredTours) ? featuredTours : [];
+  const transformedTours = toursToDisplay.map(tour => ({
     img: tour.image || "https://via.placeholder.com/263x216",
-    packageprice: tour.price ? `$${tour.price}` : "From $299",
-    days: tour.duration || "3 Days",
-    title: tour.title || tour.name || "Safari Adventure",
-    reviews: tour.reviews ? `${tour.reviews} Reviews` : "25 Reviews",
+    packageprice: tour.price ? `${tour.currency ? tour.currency + ' ' : ''}${tour.price}` : "",
+    days: tour.duration || (tour.duration_hours ? `${tour.duration_hours} hrs` : ""),
+    title: tour.title || tour.name || "",
+    reviews: tour.reviews ? `${tour.reviews} Reviews` : "",
     link: `/tours/${tour.id}`
-  })) || [];
+  }));
 
   // Transform BnB data for InteractiveBanners04
   const bnbToDisplay = featuredBnb && featuredBnb.length > 0 ? featuredBnb : mockBnbData;
@@ -881,7 +882,7 @@ const HomeDecorPage = (props) => {
           <Row className="justify-center mt-12">
             <Col className="text-center">
               <Buttons 
-                to="/tours" 
+                to="/tours/list" 
                 className="btn-fancy btn-fill font-medium font-serif uppercase rounded-none" 
                 themeColor="#232323" 
                 color="#fff" 

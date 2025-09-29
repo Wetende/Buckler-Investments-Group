@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 
 // Libraries
-import { Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row, Navbar } from 'react-bootstrap'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import HeaderData from '../../Components/Header/HeaderData'
+import { BnbMenuData } from '../../Components/Header/BnbMenuData'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 import Buttons from '../../Components/Button/Buttons'
 import MessageBox from '../../Components/MessageBox/MessageBox'
@@ -53,14 +53,43 @@ const BookingConfirmation = () => {
   if (error || !booking) {
     return (
       <div className="bg-lightgray min-h-screen">
-        <Header topSpace={{ md: true }} type="reverse-scroll">
-          <HeaderNav theme="light" expand="lg" menu="light" className="px-[35px] py-[0px] md:px-0">
-            <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
-              <Link aria-label="header logo" className="flex items-center" to="/">
-                <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-black.webp' data-rjs='/assets/img/webp/logo-black@2x.webp' alt='logo' />
+        {/* Header with Center Navigation */}
+        <Header topSpace={{ md: true }} type="header-always-fixed">
+          <HeaderNav
+            theme="dark"
+            fluid="fluid"
+            bg="dark"
+            expand="lg"
+            containerClass="sm:!px-0"
+            className="py-[0px] border-b border-[#ffffff1a] px-[35px] md:pr-[15px] md:pl-0 md:py-[20px] bg-[#23262d]"
+          >
+            <Col xs="auto" lg={2} sm={6} className="me-auto ps-lg-0">
+              <Link aria-label="header logo link" className="flex items-center" to="/">
+                <Navbar.Brand className="inline-block p-0 m-0">
+                  <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
+                  <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
+                  <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler</span>
+                </Navbar.Brand>
               </Link>
             </Col>
-            <Menu {...HeaderData} />
+            <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+              <span className="navbar-toggler-line"></span>
+            </Navbar.Toggle>
+            <Navbar.Collapse className="col-auto justify-center">
+              <Menu {...BnbMenuData} />
+            </Navbar.Collapse>
+            <Col className="col-auto text-right pe-0">
+              <div className="header-icon">
+                <div className="header-button">
+                  <Link aria-label="account" to="/account">
+                    <i className="feather-user text-white"></i>
+                  </Link>
+                </div>
+              </div>
+            </Col>
           </HeaderNav>
         </Header>
 
@@ -103,25 +132,43 @@ const BookingConfirmation = () => {
 
   return (
     <div className="bg-lightgray">
-      <Header topSpace={{ md: true }} type="reverse-scroll">
-        <HeaderNav theme="light" expand="lg" menu="light" className="px-[35px] py-[0px] md:px-0">
-          <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
-            <Link aria-label="header logo" className="flex items-center" to="/">
-              <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-black.webp' data-rjs='/assets/img/webp/logo-black@2x.webp' alt='logo' />
-              <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-black.webp' data-rjs='/assets/img/webp/logo-black@2x.webp' alt='logo' />
-              <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-black.webp' data-rjs='/assets/img/webp/logo-black@2x.webp' alt='logo' />
+      {/* Header with Center Navigation */}
+      <Header topSpace={{ md: true }} type="header-always-fixed">
+        <HeaderNav
+          theme="dark"
+          fluid="fluid"
+          bg="dark"
+          expand="lg"
+          containerClass="sm:!px-0"
+          className="py-[0px] border-b border-[#ffffff1a] px-[35px] md:pr-[15px] md:pl-0 md:py-[20px] bg-[#23262d]"
+        >
+          <Col xs="auto" lg={2} sm={6} className="me-auto ps-lg-0">
+            <Link aria-label="header logo link" className="flex items-center" to="/">
+              <Navbar.Brand className="inline-block p-0 m-0">
+                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
+                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
+                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler</span>
+              </Navbar.Brand>
             </Link>
           </Col>
-          <div className="col-auto">
+          <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+            <span className="navbar-toggler-line"></span>
+          </Navbar.Toggle>
+          <Navbar.Collapse className="col-auto justify-center">
+            <Menu {...BnbMenuData} />
+          </Navbar.Collapse>
+          <Col className="col-auto text-right pe-0">
             <div className="header-icon">
               <div className="header-button">
                 <Link aria-label="account" to="/account">
-                  <i className="feather-user text-[#828282]"></i>
+                  <i className="feather-user text-white"></i>
                 </Link>
               </div>
             </div>
-          </div>
-          <Menu {...HeaderData} />
+          </Col>
         </HeaderNav>
       </Header>
 

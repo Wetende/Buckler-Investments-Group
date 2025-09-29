@@ -5,7 +5,7 @@ import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import BucklerMenuData from '../../Components/Header/BucklerMenuData'
+import CarsMenuData from '../../Components/Header/CarsMenuData'
 import Buttons from '../../Components/Button/Buttons'
 import FooterStyle01 from '../../Components/Footers/FooterStyle01'
 import CarBookingModal from '../../Components/BookingModal/CarBookingModal'
@@ -145,7 +145,7 @@ const VehicleDetail = () => {
                             Buckler Investment Group
                         </span>
                     </Col>
-                    <Menu data={BucklerMenuData} />
+                    <Menu data={CarsMenuData} />
                 </HeaderNav>
             </Header>
 

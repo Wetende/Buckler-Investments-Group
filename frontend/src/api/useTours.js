@@ -1,10 +1,19 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { getFeaturedTours, getTour, getTourAvailability, listTours, searchTours, getTourCategories, getCategoryTours } from './toursService'
+import { buildListParams, chooseEndpoint, extractCategory } from './toursParamMapper'
 
 export const useTours = (filters = {}, pageSize = 20) => {
   return useInfiniteQuery({
     queryKey: ['tours', filters, pageSize],
-    queryFn: ({ pageParam = 0 }) => listTours({ ...filters, offset: pageParam, limit: pageSize }),
+    queryFn: ({ pageParam = 0 }) => {
+      const endpoint = chooseEndpoint(filters)
+      const params = buildListParams(filters, pageParam, pageSize)
+      if (endpoint === 'byCategory') {
+        const category = extractCategory(filters)
+        return getCategoryTours(category, params)
+      }
+      return listTours(params)
+    },
     getNextPageParam: (lastPage, allPages) => (Array.isArray(lastPage) && lastPage.length === pageSize ? allPages.length * pageSize : undefined),
     staleTime: 5 * 60 * 1000,
   })
