@@ -1,6 +1,6 @@
 from domain.entities.bnb import ShortTermListing, Booking
 from infrastructure.database.models.bnb_listing import StListing as StListingModel
-from infrastructure.database.models.booking import Booking as BookingModel
+from infrastructure.database.models.bnb_listing import Booking as BookingModel
 from domain.value_objects.money import Money
 
 class BnbMapper:

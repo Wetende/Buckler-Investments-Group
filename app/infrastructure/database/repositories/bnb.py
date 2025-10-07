@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 from domain.repositories.bnb import BnbRepository, BookingRepository
 from domain.entities.bnb import ShortTermListing, Booking
 from infrastructure.database.models.bnb_listing import StListing as StListingModel
-from infrastructure.database.models.booking import Booking as BookingModel
+from infrastructure.database.models.bnb_listing import Booking as BookingModel
 from infrastructure.database.models.user import User as UserModel
 from shared.mappers.bnb import BnbMapper
 from infrastructure.config.database import AsyncSessionLocal

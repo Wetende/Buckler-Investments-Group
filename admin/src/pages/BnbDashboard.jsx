@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "@/layout/head/Head";
 import Content from "@/layout/content/Content";
 import {
@@ -17,6 +17,7 @@ import {
 import { Card } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { useBnbListings, useBnbBookings, useBnbEarnings } from "@/hooks/useBnb";
+import { axiosPrivate } from "@/api/axios";
 import { 
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
   Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell,
@@ -25,6 +26,7 @@ import {
 
 const BnbDashboard = () => {
   const [sm, updateSm] = useState(false);
+  const [role, setRole] = useState('USER');
   const navigate = useNavigate();
 
   // Analytics data and helper functions
@@ -72,6 +74,15 @@ const BnbDashboard = () => {
 
   // Loading states
   const isLoading = listingsLoading || bookingsLoading || earningsLoading;
+
+  useEffect(() => {
+    // Fetch current user to determine role (lightweight)
+    axiosPrivate.get('/auth/me').then((res) => {
+      setRole(res.data.role || 'USER')
+    }).catch(() => {
+      // ignore
+    })
+  }, [])
 
   // Calculate metrics from real data
   const bnbMetrics = {
@@ -126,6 +137,13 @@ const BnbDashboard = () => {
               <BlockDes className="text-soft">
                 <p>Manage short-term rentals, hosts, and bookings</p>
               </BlockDes>
+              {role !== 'HOST' && (
+                <div className="mt-2">
+                  <Button color="warning" onClick={() => navigate('/dashboard/auth-success?become_host=1')}>
+                    <Icon name="star" /> Become a Host
+                  </Button>
+                </div>
+              )}
             </BlockHeadContent>
             <BlockHeadContent>
               <div className="toggle-wrap nk-block-tools-toggle">

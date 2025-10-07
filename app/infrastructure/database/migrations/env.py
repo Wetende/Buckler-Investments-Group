@@ -26,7 +26,7 @@ from infrastructure.database.models import (
     Project,
     StListing,
     StAvailability,
-    StBooking,
+    Booking,
     StMessage,
     StPayout,
     StTaxJurisdiction,

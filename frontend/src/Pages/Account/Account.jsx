@@ -5,6 +5,7 @@ import { m } from 'framer-motion'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
+import Brand from '../../Components/Header/Brand'
 import getBnbMenuData, { BnbMenuData } from '../../Components/Header/BnbMenuData'
 import PageTitle from '../../Components/PageTitle/PageTitle'
 import Buttons from '../../Components/Button/Buttons'
@@ -167,9 +168,11 @@ const Account = (props) => {
         >
           <Col xs="auto" lg={2} className="me-auto ps-lg-0">
             <Link aria-label="header logo link" className="flex items-center" to="/">
-              <span className="font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">
-                Buckler Investment Group
-              </span>
+              <Brand
+                theme="dark"
+                size="default"
+                className="text-white"
+              />
             </Link>
           </Col>
           <Menu {...props} data={BnbMenuData} />

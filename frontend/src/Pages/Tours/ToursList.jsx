@@ -6,6 +6,7 @@ import { m } from "framer-motion";
 
 // Components
 import Header, { HeaderNav, Menu } from "../../Components/Header/Header";
+import Brand from "../../Components/Header/Brand";
 import ToursMenuData from "../../Components/Header/ToursMenuData";
 import FooterStyle01 from "../../Components/Footers/FooterStyle01";
 import InfoBannerStyle05 from "../../Components/InfoBanner/InfoBannerStyle05";
@@ -55,9 +56,11 @@ const ToursList = (props) => {
         >
           <Col xs="auto" lg={2} sm={6} className="me-auto ps-lg-0">
             <a aria-label="header logo" className="flex items-center" href="/">
-              <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">
-                Buckler Investment Group
-              </span>
+              <Brand
+                theme="dark"
+                size="large"
+                className="text-white"
+              />
             </a>
           </Col>
           <div className="navbar-collapse col-xs-auto col-lg-8 menu-order px-lg-0 justify-center">

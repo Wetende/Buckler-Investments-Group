@@ -79,8 +79,8 @@ class StAvailability(Base):
     )
 
 
-class StBooking(Base):
-    __tablename__ = "st_bookings"
+class Booking(Base):
+    __tablename__ = "bookings"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     guest_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="RESTRICT"), nullable=False)
@@ -99,9 +99,9 @@ class StBooking(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
     __table_args__ = (
-        Index("ix_st_bookings_guest_id", "guest_id"),
-        Index("ix_st_bookings_listing_id", "listing_id"),
-        Index("ix_st_bookings_status", "status"),
+        Index("ix_bookings_guest_id", "guest_id"),
+        Index("ix_bookings_listing_id", "listing_id"),
+        Index("ix_bookings_status", "status"),
     )
 
 

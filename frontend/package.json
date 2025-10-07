@@ -49,6 +49,7 @@
     "yup": "^1.4.0"
   },
   "scripts": {
+    "dev": "npm-run-all -p start scss",
     "start": "react-scripts start",
     "build": "craco build",
     "test": "react-scripts test",

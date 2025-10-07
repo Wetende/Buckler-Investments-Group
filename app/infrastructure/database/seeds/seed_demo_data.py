@@ -27,7 +27,7 @@ from infrastructure.config.auth import get_password_hash
 from infrastructure.database.models.bnb_listing import (
     StListing as StListingModel,
     StAvailability as StAvailabilityModel,
-    StBooking as StBookingModel,
+    Booking as StBookingModel,
 )
 from domain.value_objects.booking_status import StListingType, CancellationPolicy, BookingStatus
 

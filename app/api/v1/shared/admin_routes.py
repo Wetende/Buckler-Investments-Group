@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from infrastructure.config.database import get_async_session
 from infrastructure.config.dependencies import current_active_user, require_admin
 from infrastructure.database.models.user import User, UserRole
-from infrastructure.database.models import Property, InvOrder, StBooking
+from infrastructure.database.models import Property, InvOrder, Booking
 from application.dto.user import AdminUserCreateUpdate, UserRead
 from application.dto.settings import SystemSettingsOut
 
@@ -26,7 +26,7 @@ async def get_dashboard_stats(
     property_count = await session.scalar(select(func.count(Property.id)))
     user_count = await session.scalar(select(func.count(User.id)))
     order_count = await session.scalar(select(func.count(InvOrder.id)))
-    booking_count = await session.scalar(select(func.count(StBooking.id)))
+    booking_count = await session.scalar(select(func.count(Booking.id)))
     
     return {
         "total_properties": property_count or 0,

@@ -5,15 +5,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 ENV_FILE_PATH = BASE_DIR / ".env"
 
+
 class Settings(BaseSettings):
     """
     Application settings.
 
     These settings are loaded from the .env file.
     """
-    DATABASE_URL: str
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:root@localhost:5432/buckler"
     SECRET_KEY: str = "a_very_secret_key"
-
     # Email settings
     MAIL_USERNAME: str = "your-email@example.com"
     MAIL_PASSWORD: str = "your-email-password"
@@ -27,11 +27,25 @@ class Settings(BaseSettings):
     KES_PER_USD: float = 130.0
 
     # CORS
-    CORS_ALLOW_ORIGINS: str = "*"  # comma-separated origins; set to specific hosts in production
+    # Comma-separated origins; set to specific hosts in production
+    CORS_ALLOW_ORIGINS: str = "*"
 
     # Analytics/Webhooks
     ANALYTICS_WEBHOOK_URL: str | None = None
 
-    model_config = SettingsConfigDict(env_file=ENV_FILE_PATH, extra="ignore")
+    # OAuth / Frontend
+    GOOGLE_CLIENT_ID: str | None = None
+    GOOGLE_CLIENT_SECRET: str | None = None
+    GOOGLE_REDIRECT_URI: str | None = None
+    FRONTEND_BASE_URL: str = "http://localhost:3000"
+    # Optional admin UI base URL for redirects and CORS allowlisting
+    ADMIN_URL: str | None = None
 
+    model_config = SettingsConfigDict(
+        env_file=ENV_FILE_PATH,
+        extra="ignore",
+    )
+
+
+# Instantiate settings from .env
 settings = Settings()

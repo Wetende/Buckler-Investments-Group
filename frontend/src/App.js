@@ -2,6 +2,7 @@ import React, { Suspense, useEffect, useState, lazy } from "react";
 
 // Libraries
 import { Routes, Route, useLocation } from "react-router-dom";
+import { setAuthTokens } from "./api/axios";
 import retina from "retinajs";
 import { AnimatePresence } from "framer-motion";
 
@@ -397,6 +398,21 @@ function App() {
         module.setDocumentFullHeight();
       });
     }, 1000);
+  }, [location]);
+
+  // Capture OAuth tokens from URL hash globally (e.g., after Google login)
+  useEffect(() => {
+    if (window.location.hash && window.location.hash.includes("access_token=")) {
+      const params = new URLSearchParams(window.location.hash.slice(1));
+      const accessToken = params.get("access_token");
+      const refreshToken = params.get("refresh_token");
+      if (accessToken) {
+        setAuthTokens({ accessToken, refreshToken: refreshToken || undefined });
+        localStorage.setItem("authToken", accessToken);
+        const cleanUrl = window.location.pathname + window.location.search;
+        window.history.replaceState(null, "", cleanUrl);
+      }
+    }
   }, [location]);
 
   useEffect(() => {

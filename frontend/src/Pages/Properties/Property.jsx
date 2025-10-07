@@ -8,6 +8,7 @@ import { Parallax } from "react-scroll-parallax";
 
 // Components
 import Header, { HeaderNav, Menu, MobileMenu } from '../../Components/Header/Header'
+import Brand from '../../Components/Header/Brand'
 import PropertiesMenuData from '../../Components/Header/PropertiesMenuData'
 import InteractiveBanners01 from '../../Components/InteractiveBanners/InteractiveBanners01'
 import SocialIcons from '../../Components/SocialIcon/SocialIcons'
@@ -74,11 +75,11 @@ const DigitalagencyPage = (props) => {
                     <HeaderNav fluid="fluid" theme="dark" bg="dark" expand="lg" className="digital-agency-header py-[0px] px-[35px] md:px-[15px] md:py-[20px] sm:px-0 bg-[#23262d]" containerClass="md:pr-0">
                         <Col lg={2} sm={6} xs={"auto"} className="mr-auto ps-0">
                             <Link aria-label="header logo" className="flex items-center" to="/">
-                                <Navbar.Brand className="inline-block p-0 m-0">
-                                    <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-                                    <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
-                                    <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
-                                </Navbar.Brand>
+                                <Brand
+                                    theme="dark"
+                                    size="default"
+                                    className="text-white"
+                                />
                             </Link>
                         </Col>
                         <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">

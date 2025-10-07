@@ -2,18 +2,18 @@ import React from 'react';
 import BnbServiceSelectionModal from '../HostApplication/BnbServiceSelectionModal';
 import Buttons from '../Button/Buttons';
 
-const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173'
+const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173/dashboard'
 
 // Role-based dashboard routing
 const getDashboardUrl = (userRole) => {
   const roleRoutes = {
     'USER': `${ADMIN_BASE_URL}`,
-    'HOST': `${ADMIN_BASE_URL}/bnb`,
-    'TOUR_OPERATOR': `${ADMIN_BASE_URL}/tours`, 
-    'VEHICLE_OWNER': `${ADMIN_BASE_URL}/cars`,
-    'AGENT': `${ADMIN_BASE_URL}/properties`,
-    'ADMIN': `${ADMIN_BASE_URL}/main`,
-    'SUPER_ADMIN': `${ADMIN_BASE_URL}/main`
+    'HOST': `${ADMIN_BASE_URL}/bnb/my-listings`,
+    'TOUR_OPERATOR': `${ADMIN_BASE_URL}/tours/my-tours`, 
+    'VEHICLE_OWNER': `${ADMIN_BASE_URL}/cars/my-vehicles`,
+    'AGENT': `${ADMIN_BASE_URL}/properties/my-properties`,
+    'ADMIN': `${ADMIN_BASE_URL}`,
+    'SUPER_ADMIN': `${ADMIN_BASE_URL}`
   }
   return roleRoutes[userRole] || `${ADMIN_BASE_URL}`
 }

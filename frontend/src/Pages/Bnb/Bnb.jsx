@@ -1,22 +1,21 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 // Libraries
 import { Col, Container, Navbar, Row } from 'react-bootstrap'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, EffectFade, Keyboard, Navigation } from "swiper/modules";
 import { m } from 'framer-motion'
+
+// Assets
+import bnbHeroImage from '../../Assets/img/bnb-hero.jpg'
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
-import getBnbMenuData, { BnbMenuData } from '../../Components/Header/BnbMenuData'
+import Brand from '../../Components/Header/Brand'
+import { BnbMenuData } from '../../Components/Header/BnbMenuData'
 import EnhancedBnbSearch from '../../Components/BnbSearch/EnhancedBnbSearch'
 import BnbCategoriesGrid from '../../Components/BnbCategories/BnbCategoriesGrid'
-import SocialIcons from '../../Components/SocialIcon/SocialIcons'
 import Buttons from '../../Components/Button/Buttons'
 import Clients from '../../Components/Clients/Clients'
-import Overlap from '../../Components/Overlap/Overlap'
-import CustomModal from '../../Components/CustomModal'
 import BlogMetro from '../../Components/Blogs/BlogMetro'
 import InteractiveBanners15 from '../../Components/InteractiveBanners/InteractiveBanners15'
 import LocationGroupedListings from '../../Components/LocationGroupedListings/LocationGroupedListings'
@@ -25,38 +24,22 @@ import { fadeIn, zoomIn } from '../../Functions/GlobalAnimations'
 
 // Data
 import { blogData } from '../../Components/Blogs/BlogData';
-import { InteractiveBannersData15 } from '../../Components/InteractiveBanners/InteractiveBannersData';
 
 // API Hooks
 import { useFeaturedListings, useListings, useNearbyListings, useMyBookings, useSearchListings } from '../../api/useBnb';
 import { useListingsGroupedByLocation } from '../../hooks/useBnbLocation';
 import { getRefreshToken } from '../../api/axios'
-import { Formik, Form } from 'formik'
-import * as Yup from 'yup'
-import { Input } from '../../Components/Form/Form'
 import BnbBookingModal from '../../Components/BookingModal/BnbBookingModal'
 import WishlistButton from '../../Components/Wishlist/WishlistButton'
 
 // Skeletons and States
 import {
-  FeaturedListingsSkeleton,
   LatestListingsSkeleton,
   NearbyListingsSkeleton,
   SearchResultsSkeleton,
   EmptyListingsState,
   ErrorState
 } from '../../Components/Skeletons/BnbSkeletons'
-
-const SwiperData = [
-  {
-    number: "01",
-    img: "https://via.placeholder.com/1920x1080",
-    title: "Mombasa",
-    subtitle: "coastal villas",
-    btnName: "explore bnbs",
-    btnLink: "/bnb/list"
-  }
-]
 
 const ClientData = [
   {
@@ -66,22 +49,6 @@ const ClientData = [
   }
 ]
 
-const selecteworkData = [
-  {
-    title: "Cultural centre",
-    subtitle: "Landscape",
-    img: "https://via.placeholder.com/818x1048",
-    link: "/portfolio/single-project-page-01"
-  }
-]
-
-const FooterIconData = [
-  {
-    color: "#828282",
-    link: "https://www.facebook.com/",
-    icon: "fab fa-facebook-f"
-  }
-]
 
 // Filter the blog data category wise
 const blogMetroData = blogData.filter((item) => item.blogType === "metro").filter(item => item.category.includes("architecture"));
@@ -125,11 +92,10 @@ const transformListingToPortfolio = (listing) => ({
 });
 
 const ArchitecturePage = (props) => {
-  const [activeSlide, setActiveSlide] = useState(0)
   const [searchParams, setSearchParams] = useSearchParams()
   
   // Initialize search criteria from URL params
-  const getSearchCriteriaFromURL = () => {
+  const getSearchCriteriaFromURL = useCallback(() => {
     const params = {}
     if (searchParams.get('location')) params.location = searchParams.get('location')
     if (searchParams.get('check_in')) params.check_in = searchParams.get('check_in')
@@ -138,7 +104,7 @@ const ArchitecturePage = (props) => {
     if (searchParams.get('min_price')) params.price_min = parseInt(searchParams.get('min_price'))
     if (searchParams.get('max_price')) params.price_max = parseInt(searchParams.get('max_price'))
     return Object.keys(params).length > 0 ? params : null
-  }
+  }, [searchParams])
 
   // Hero search state and hook
   const [searchCriteria, setSearchCriteriaState] = useState(getSearchCriteriaFromURL())
@@ -161,12 +127,12 @@ const ArchitecturePage = (props) => {
   }
 
   // Fetch API data
-  const { data: featuredListings, isLoading: featuredLoading, isError: featuredError } = useFeaturedListings(8);
+  const { data: featuredListings } = useFeaturedListings(8);
   const { data: latestListings, isLoading: latestLoading, isError: latestError } = useListings({}, 6);
   const { data: searchResults, isLoading: searchLoading, isError: searchError } = useSearchListings(searchCriteria || {}, !!searchCriteria)
-  
+
   // Location-based grouping data (Airbnb-style)
-  const { data: locationGroupedData, isLoading: locationGroupedLoading, isError: locationGroupedError } = useListingsGroupedByLocation({
+  const { data: locationGroupedData, isLoading: locationGroupedLoading } = useListingsGroupedByLocation({
     limitPerGroup: 4,
     maxGroups: 5
   });
@@ -182,7 +148,7 @@ const ArchitecturePage = (props) => {
     if (urlCriteria) {
       setSearchCriteriaState(urlCriteria)
     }
-  }, []) // Only run on mount
+  }, [searchParams, getSearchCriteriaFromURL]) // Include dependencies
 
   // Nearby listings via geolocation
   const [coords, setCoords] = useState(null)
@@ -234,11 +200,11 @@ const ArchitecturePage = (props) => {
         >
           <Col xs="auto" lg={2} sm={6} className="me-auto ps-lg-0 me-auto ps-lg-0">
             <Link aria-label="header logo link" className="flex items-center" to="/">
-              <Navbar.Brand className="inline-block p-0 m-0">
-                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-              </Navbar.Brand>
+              <Brand
+                theme="dark"
+                size="large"
+                className="text-white"
+              />
             </Link>
           </Col>
           <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
@@ -275,64 +241,45 @@ const ArchitecturePage = (props) => {
 
       <div className="bg-white">
         <div className="relative">
-          {/* Section Start */}
-          <section className="overflow-hidden h-[800px] md:h-[500px] sm:h-[400px]">
-            <Swiper
-              className="white-move swiper-pagination-light swiper-pagination-medium h-full relative swiper-navigation-04 swiper-navigation-dark travel-agency-slider"
-              slidesPerView={1}
-              loop={true}
-              keyboard={true}
-              navigation={true}
-              modules={[Autoplay, Keyboard, Navigation]}
-              autoplay={{ delay: 4500, disableOnInteraction: false }}
-              onSlideChange={(swiperCore) => {
-                const { realIndex } = swiperCore;
-                setActiveSlide(realIndex)
-              }}>
-              {
-                SwiperData.map((item, i) => {
-                  return (
-                    <SwiperSlide key={i} className="overflow-hidden h-full relative bg-cover bg-no-repeat bg-center min-h-[-webkit-fill-available]" style={{ backgroundImage: `url(${item.img})` }}>
-                      <div className="absolute h-full w-full top-0 left-0 opacity-[0.01] bg-black"></div>
-                      <Container fluid className="relative h-full">
-                        <Row className="justify-center h-full items-center">
-                          <Col xs={12} xl={7} className="flex xs:justify-center xs:text-center pl-[65px] lg:pl-[120px] md:pl-[30px]">
-                            <div className="w-[144px] h-[221px] lg:w-[130px] lg:h-[198px] md:w-[165px] md:h-[255px] relative sm:hidden mr-[55px]">
-                              <m.div
-                                animate={activeSlide === i ? { scaleX: [0, 1], originX: ["0%", "0%"] } : { scaleX: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.6, ease: "linear" }}
-                                className="bg-basecolor absolute top-0 h-full w-full"></m.div>
-                              <h2 className="heading-4 text-darkgray text-[85px] font-serif opacity-100 absolute top-[50px] -left-[7px] font-semibold lg:text-[75px] md:text-[87px] md:top-[70px]">0{i + 1}</h2>
-                            </div>
-                            <div className="flex flex-col items-start justify-center xs:items-center">
-                              <h2 className="heading-5 text-white text-[67px] leading-none tracking-[-2px] font-serif font-semibold text-shadow-small lg:text-[60px] md:text-[34px] sm:text-[75px] relative mb-[15px] xs:text-[45px]">
-                                {item.title}<br></br>{item.subtitle}
-                                <m.span
-                                  animate={activeSlide === i ? { scaleX: [0, 1, 1, 0], originX: ["0%", "0%", "100%", "100%"] } : { scaleX: 1 }}
-                                  exit={{ opacity: 0 }}
-                                  transition={{ duration: 0.6, ease: "linear" }}
-                                  className="bg-white list-block absolute top-0 left-0 h-full w-full"></m.span>
-                              </h2>
-                              <div className="relative inline-block">
-                                <m.div
-                                  animate={activeSlide === i ? { scaleX: [0, 1, 1, 0], originX: ["0%", "0%", "100%", "100%"] } : { scaleX: 1 }}
-                                  exit={{ opacity: 0 }}
-                                  transition={{ duration: 0.6, ease: "linear" }}
-                                  className="bg-white list-block absolute top-0 h-full w-full"></m.div>
-                                <Buttons ariaLabel="link for btn" to={item.btnLink} className="font-medium font-serif uppercase btn-link after:h-[1px] text-base leading-[20px] md:text-md md:mb-[15px] after:bg-[#fff] hover:text-[#fff]" color="#fff" size="xlg" title={item.btnName} />
-                              </div>
-                            </div>
-                          </Col>
-                        </Row>
-                      </Container>
-                    </SwiperSlide>
-                  )
-                })
-              }
-            </Swiper>
+          {/* Simple Hero Section Start */}
+          <section className="overflow-hidden h-[500px] md:h-[500px] sm:h-[400px] relative">
+            <div className="h-full relative bg-cover bg-no-repeat bg-center min-h-[-webkit-fill-available]" style={{ backgroundImage: `url(${bnbHeroImage})` }}>
+              <div className="absolute h-full w-full top-0 left-0 opacity-[0.6] bg-black"></div>
+              <Container fluid className="relative h-full">
+                <Row className="justify-center h-full items-center">
+                  <Col xs={12} xl={7} className="flex xs:justify-center xs:text-center pl-[65px] lg:pl-[120px] md:pl-[30px]">
+                    <div className="flex flex-col items-start justify-center xs:items-center">
+                      <m.h2
+                        className="heading-5 text-white text-[67px] leading-none tracking-[-2px] font-serif font-semibold text-shadow-small lg:text-[60px] md:text-[34px] sm:text-[75px] relative mb-[15px] xs:text-[45px]"
+                        {...{ ...fadeIn, transition: { delay: 0.3 } }}
+                      >
+                        Exceptional BnB Stays<br />Across Kenya
+                      </m.h2>
+                      <m.p
+                        className="text-white text-lg mb-[25px] w-[80%] md:w-full"
+                        {...{ ...fadeIn, transition: { delay: 0.5 } }}
+                      >
+                        From Nairobi apartments to Mombasa beach houses, discover verified stays for every journey.
+                      </m.p>
+                      <m.div
+                        {...{ ...fadeIn, transition: { delay: 0.7 } }}
+                      >
+                        <Buttons
+                          ariaLabel="explore bnbs"
+                          to="/bnb/list"
+                          className="font-medium font-serif uppercase btn-link after:h-[1px] text-base leading-[20px] md:text-md md:mb-[15px] after:bg-[#fff] hover:text-[#fff]"
+                          color="#fff"
+                          size="xlg"
+                          title="Explore Stays"
+                        />
+                      </m.div>
+                    </div>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
           </section>
-          {/* Section End */}
+          {/* Simple Hero Section End */}
 
           {/* Enhanced BnB Search Section Start */}
           <EnhancedBnbSearch onSearch={setSearchCriteria} />
@@ -638,27 +585,20 @@ const ArchitecturePage = (props) => {
                     message="We're having trouble loading our latest properties. Please try again."
                   />
                 ) : portfolioData.length > 0 ? (
-                  <Swiper className="work-architecture-slider"
-                    spaceBetween={26}
-                    slidesPerView="auto"
-                    autoplay={{ delay: 3000, disableOnInteraction: false }}
-                    loop={false}
-                    modules={[Autoplay, Keyboard]}
-                    keyboard={{ enabled: true, onlyInViewport: true }}
-                    breakpoints={{
-                      1200: { slidesPerView: 4 }, 992: { slidesPerView: 3 }, 768: { slidesPerView: 2 }
-                    }} >
+                  <Row>
                     {
                       portfolioData.map((item, i) => {
                         return (
-                          <SwiperSlide key={i} className="architecture-portfolio-slider">
+                          <Col key={i} xl={3} lg={4} md={6} sm={6} className="mb-6">
                             <div className="portfolio-box">
                               <div className="portfolio-image flex relative">
                                 <Link aria-label="link for img" to={item.link}>
-                                  <img width={405} height={518} src={item.img} alt="slider" />
+                                  <img width={405} height={518} src={item.img} alt={item.title} className="w-full h-auto" />
                                 </Link>
                                 <div className="portfolio-hover absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                                  <Link aria-label="link for button" className="bg-white w-[40px] h-[40px] inline-block align-middle leading-[40px] text-center mx-[3px] z-[3] relative border-white border-[2px] rounded-full" to={item.link}><i className="ti-arrow-right inline-block text-darkgray text-center"></i></Link>
+                                  <Link aria-label="link for button" className="bg-white w-[40px] h-[40px] inline-block align-middle leading-[40px] text-center mx-[3px] z-[3] relative border-white border-[2px] rounded-full" to={item.link}>
+                                    <i className="ti-arrow-right inline-block text-darkgray text-center"></i>
+                                  </Link>
                                 </div>
                               </div>
                               <div className="portfolio-caption justify-center text-center py-[30px]">
@@ -666,11 +606,11 @@ const ArchitecturePage = (props) => {
                                 <span className="block uppercase text-sm">{item.subtitle}</span>
                               </div>
                             </div>
-                          </SwiperSlide>
+                          </Col>
                         )
                       })
                     }
-                  </Swiper>
+                  </Row>
                 ) : (
                   <EmptyListingsState 
                     title="No latest stays available" 

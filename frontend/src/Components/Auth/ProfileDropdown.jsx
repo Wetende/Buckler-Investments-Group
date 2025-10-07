@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../api/useAuth'
 
+const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173/dashboard'
+
 const ProfileDropdown = ({ className = '', style = {} }) => {
   const { user, logout } = useAuth()
 
@@ -26,14 +28,16 @@ const ProfileDropdown = ({ className = '', style = {} }) => {
       </button>
       <ul id="profileDropdown" className="dropdown-menu block profile-menu !left-auto !right-0 !transform !translate-x-0 min-w-[240px]">
         <li className="profile-item border-b border-[#ededed]">
-          <Link
+          <a
             aria-label="dashboard-link"
             className="profile-link flex items-center p-[15px] text-[13px] text-[#333] hover:text-basecolor"
-            to="/dashboard/"
+            href={ADMIN_BASE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <i className="feather-grid text-[14px] mr-[8px]"></i>
             Dashboard
-          </Link>
+          </a>
         </li>
         <li className="profile-item border-b border-[#ededed] p-[15px]">
           <div className="flex items-center">

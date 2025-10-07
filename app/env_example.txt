@@ -1,5 +1,5 @@
 # Database Configuration
-DATABASE_URL=postgresql+asyncpg://postgres:root@localhost:5432/property
+DATABASE_URL=postgresql+asyncpg://postgres:root@localhost:5432/buckler
 
 # Security
 SECRET_KEY=your-secret-key-here-change-in-production
@@ -21,3 +21,9 @@ CORS_ALLOW_ORIGINS=*
 
 # Analytics (optional)
 ANALYTICS_WEBHOOK_URL=
+
+# Google OAuth (for social login)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://localhost:8000/api/v1/auth/google/callback
+FRONTEND_BASE_URL=http://localhost:3000

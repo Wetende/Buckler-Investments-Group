@@ -10,6 +10,7 @@ if str(_APP_ROOT) not in sys.path:
     sys.path.insert(0, str(_APP_ROOT))
 
 from infrastructure.config.database import AsyncSessionLocal  # noqa: E402
+from infrastructure.config.config import settings  # noqa: E402
 
 # Repositories
 from domain.repositories.bnb import (  # noqa: E402
@@ -208,6 +209,9 @@ from application.use_cases.investment.make_investment import (  # noqa: E402
 from application.use_cases.user.create_user import (  # noqa: E402
     CreateUserUseCase,
 )
+from application.use_cases.user.enable_host import (  # noqa: E402
+    EnableHostUseCase,
+)
 from application.use_cases.auth.refresh_token import (  # noqa: E402
     RefreshTokenUseCase,
 )
@@ -307,6 +311,7 @@ class AuthUseCases(containers.DeclarativeContainer):
     """Container for authentication use cases."""
     user_repository: providers.Dependency = providers.Dependency()
     password_service: providers.Dependency = providers.Dependency()
+    google_auth_service: providers.Dependency = providers.Dependency()
 
     refresh_token_use_case = providers.Factory(
         RefreshTokenUseCase,
@@ -335,6 +340,23 @@ class AuthUseCases(containers.DeclarativeContainer):
         password_service=password_service,
     )
 
+    # Social auth - Google
+    from application.use_cases.auth.social_google import (  # type: ignore  # noqa: E402, E501
+        StartGoogleOAuthUseCase,
+        HandleGoogleCallbackUseCase,
+    )
+
+    start_google_oauth_use_case = providers.Factory(
+        StartGoogleOAuthUseCase,
+        google_service=google_auth_service,
+    )
+
+    handle_google_callback_use_case = providers.Factory(
+        HandleGoogleCallbackUseCase,
+        user_repository=user_repository,
+        google_service=google_auth_service,
+    )
+
 
 class UserUseCases(containers.DeclarativeContainer):
     """Container for user module use cases."""
@@ -345,6 +367,11 @@ class UserUseCases(containers.DeclarativeContainer):
         CreateUserUseCase,
         user_repository=user_repository,
         password_service=password_service,
+    )
+
+    enable_host_use_case = providers.Factory(
+        EnableHostUseCase,
+        user_repository=user_repository,
     )
 
 
@@ -414,6 +441,25 @@ class AppContainer(containers.DeclarativeContainer):
     # Services
     password_service: providers.Factory[PasswordService] = providers.Factory(
         BcryptPasswordService
+    )
+
+    # OAuth Providers
+    from infrastructure.external_services.oauth.google_oauth import (  # type: ignore  # noqa: E402, E501
+        GoogleOAuthService,
+    )
+
+    GOOGLE_CLIENT_ID = settings.GOOGLE_CLIENT_ID or ""
+    GOOGLE_CLIENT_SECRET = settings.GOOGLE_CLIENT_SECRET or ""
+    GOOGLE_REDIRECT_URI = (
+        settings.GOOGLE_REDIRECT_URI
+        or "http://localhost:8000/api/v1/auth/google/callback"
+    )
+
+    google_oauth_service = providers.Singleton(
+        GoogleOAuthService,
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        default_redirect_uri=GOOGLE_REDIRECT_URI,
     )
 
     # Payment Services
@@ -785,6 +831,7 @@ class AppContainer(containers.DeclarativeContainer):
         AuthUseCases,
         user_repository=user_repository,
         password_service=password_service,
+        google_auth_service=google_oauth_service,
     )
 
     # User Use Cases

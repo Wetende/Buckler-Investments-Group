@@ -21,6 +21,7 @@ import BlogClassic from '../../Components/Blogs/BlogClassic';
 import SocialIcons from '../../Components/SocialIcon/SocialIcons';
 import CustomModal from '../../Components/CustomModal'
 import Header, { HeaderLanguage, HeaderNav, Menu, SearchBar } from '../../Components/Header/Header';
+import Brand from '../../Components/Header/Brand';
 import FooterStyle01 from '../../Components/Footers/FooterStyle01';
 
 // Data
@@ -168,11 +169,11 @@ const HomeBusinessPage = (props) => {
         <HeaderNav fluid="fluid" theme="dark" bg="dark" menu="dark" className="px-[35px] py-[0px] md:px-[15px] sm:px-0 bg-[#23262d]" containerClass="md:px-0">
           <Col className="col-auto col-sm-6 col-lg-2 me-auto ps-lg-0">
             <Link aria-label="header logo" className="flex items-center" to="/">
-              <Navbar.Brand className="inline-block p-0 m-0">
-                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
-                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
-                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
-              </Navbar.Brand>
+              <Brand
+                theme="light"
+                size="default"
+                className="text-darkgray"
+              />
             </Link>
           </Col>
           <Navbar.Toggle className="order-last md:mx-[15px]">

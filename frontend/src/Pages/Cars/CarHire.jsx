@@ -9,6 +9,7 @@ import { Link as ScrollTo } from "react-scroll"
 
 // Components
 import Header, { HeaderNav, Menu } from '../../Components/Header/Header'
+import Brand from '../../Components/Header/Brand'
 import CarsMenuData from '../../Components/Header/CarsMenuData'
 import Buttons from '../../Components/Button/Buttons'
 import Overlap from '../../Components/Overlap/Overlap'
@@ -50,11 +51,11 @@ const CarHirePage = (props) => {
         <HeaderNav fluid="fluid" theme="dark" bg="dark" expand="lg" className="px-[35px] py-[0px] md:pr-[15px] sm:pr-0 md:pl-0 md:py-[20px] bg-[#23262d]">
           <Col lg={2} sm={6} className="col-auto me-auto ps-lg-0 sm:!pl-0">
             <Link aria-label="header home link" className="flex items-center" to="/">
-              <Navbar.Brand className="inline-block p-0 m-0">
-                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
-                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-darkgray whitespace-nowrap">Buckler Investment Group</span>
-              </Navbar.Brand>
+              <Brand
+                theme="dark"
+                size="default"
+                className="text-white"
+              />
             </Link>
           </Col>
           <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">

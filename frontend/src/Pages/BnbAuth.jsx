@@ -8,10 +8,12 @@ import { fadeIn } from '../Functions/GlobalAnimations';
 import Buttons from '../Components/Button/Buttons';
 import MessageBox from '../Components/MessageBox/MessageBox';
 import Header, { HeaderNav, Menu } from '../Components/Header/Header';
+import Brand from '../Components/Header/Brand';
 import { BnbMenuData } from '../Components/Header/BnbMenuData';
 
 // Auth
 import { useAuth } from '../api/useAuth';
+import { setAuthTokens } from '../api/axios';
 
 const BnbAuth = () => {
   // ALL HOOKS MUST BE CALLED AT TOP LEVEL - NO EXCEPTIONS
@@ -36,14 +38,20 @@ const BnbAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Get state data from navigation (memoized for performance)
-  const selectedServices = React.useMemo(() =>
-    location.state?.selectedServices || [],
-    [location.state?.selectedServices]
-  );
-  const returnUrl = React.useMemo(() =>
-    location.state?.returnUrl || '/become-host',
-    [location.state?.returnUrl]
-  );
+  const selectedServices = React.useMemo(() => {
+    const fromState = location.state?.selectedServices || [];
+    if (fromState && fromState.length) return fromState;
+    try {
+      const stored = JSON.parse(localStorage.getItem('selectedBnbServices') || '[]');
+      return Array.isArray(stored) ? stored : [];
+    } catch {
+      return [];
+    }
+  }, [location.state?.selectedServices]);
+  const returnUrl = React.useMemo(() => {
+    const nextParam = new URLSearchParams(location.search || '').get('next');
+    return nextParam || location.state?.returnUrl || '/become-host';
+  }, [location.search, location.state?.returnUrl]);
 
   // EFFECT HOOK - ONLY USES TOP-LEVEL VALUES
   useEffect(() => {
@@ -53,6 +61,26 @@ const BnbAuth = () => {
       });
     }
   }, [isAuthenticated, navigate, returnUrl, selectedServices]);
+
+  // Parse OAuth tokens from URL hash (after Google callback) and store them
+  useEffect(() => {
+    if (location.hash && location.hash.includes('access_token=')) {
+      const params = new URLSearchParams(location.hash.slice(1));
+      const accessToken = params.get('access_token');
+      const refreshToken = params.get('refresh_token');
+      if (accessToken) {
+        // Set tokens for axios interceptors
+        setAuthTokens({ accessToken, refreshToken: refreshToken || undefined });
+        // Also set authToken for useAuth's isAuthenticated logic
+        localStorage.setItem('authToken', accessToken);
+        // Clean the hash from the URL
+        const cleanUrl = window.location.pathname + window.location.search;
+        window.history.replaceState(null, '', cleanUrl);
+        // Continue to the intended destination; include selected services if available
+        navigate(returnUrl, { replace: true, state: { selectedServices } });
+      }
+    }
+  }, [location.hash, navigate, returnUrl, selectedServices]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -94,22 +122,15 @@ const BnbAuth = () => {
   };
 
   const handleSocialAuth = (provider) => {
-    setIsLoading(true);
-    // Mock social auth - in real app, this would trigger OAuth flow
-    setTimeout(() => {
-      setAuthProvider(provider);
-      setCurrentForm('finish');
-      // Pre-fill some data from social provider
-      if (provider === 'google') {
-        setFormData(prev => ({
-          ...prev,
-          firstName: 'Cyprian',
-          lastName: 'Wetende',
-          email: 'cyprianwetende@gmail.com'
-        }));
-      }
-      setIsLoading(false);
-    }, 1000);
+    if (provider === 'google') {
+      // Redirect to backend OAuth start endpoint and return to BnbAuth with next param
+      const apiBase = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api/v1';
+      const returnTo = `/auth/bnb-signup?next=${encodeURIComponent(returnUrl)}`;
+      const params = new URLSearchParams({ return_url: returnTo });
+      window.location.href = `${apiBase}/auth/google?${params.toString()}`;
+      return;
+    }
+    // Other providers can be added later
   };
 
   const handleEmailSignup = async () => {
@@ -185,11 +206,11 @@ const BnbAuth = () => {
         >
           <Col xs="auto" lg={2} sm={6} className="me-auto ps-lg-0">
             <Link aria-label="header logo link" className="flex items-center" to="/">
-              <Navbar.Brand className="inline-block p-0 m-0">
-                <span className="default-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-                <span className="alt-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-                <span className="mobile-logo font-serif font-semibold text-[18px] tracking-[-.2px] text-white whitespace-nowrap">Buckler Investment Group</span>
-              </Navbar.Brand>
+              <Brand
+                theme="dark"
+                size="default"
+                className="text-white"
+              />
             </Link>
           </Col>
           <Navbar.Toggle className="order-last md:ml-[25px] sm:ml-[17px]">
@@ -323,20 +344,23 @@ const BnbAuth = () => {
                         disabled={isLoading}
                       />
 
-                      <Buttons
-                        type="button"
-                        className="btn-outline w-full font-medium flex items-center justify-center"
-                        themeColor="#000"
-                        color="#000"
-                        title={
-                          <div className="flex items-center justify-center space-x-3">
-                            <i className="fab fa-apple text-lg"></i>
-                            <span>Continue with Apple</span>
-                          </div>
-                        }
-                        onClick={() => handleSocialAuth('apple')}
-                        disabled={isLoading}
-                      />
+                      {/* Apple sign-in temporarily disabled */}
+                      {false && (
+                        <Buttons
+                          type="button"
+                          className="btn-outline w-full font-medium flex items-center justify-center"
+                          themeColor="#000"
+                          color="#000"
+                          title={
+                            <div className="flex items-center justify-center space-x-3">
+                              <i className="fab fa-apple text-lg"></i>
+                              <span>Continue with Apple</span>
+                            </div>
+                          }
+                          onClick={() => handleSocialAuth('apple')}
+                          disabled={isLoading}
+                        />
+                      )}
 
                       <Buttons
                         type="button"
@@ -353,20 +377,23 @@ const BnbAuth = () => {
                         disabled={isLoading}
                       />
 
-                      <Buttons
-                        type="button"
-                        className="btn-outline w-full font-medium flex items-center justify-center"
-                        themeColor="#000"
-                        color="#000"
-                        title={
-                          <div className="flex items-center justify-center space-x-3">
-                            <i className="fab fa-facebook text-lg"></i>
-                            <span>Continue with Facebook</span>
-                          </div>
-                        }
-                        onClick={() => handleSocialAuth('facebook')}
-                        disabled={isLoading}
-                      />
+                      {/* Facebook sign-in temporarily disabled */}
+                      {false && (
+                        <Buttons
+                          type="button"
+                          className="btn-outline w-full font-medium flex items-center justify-center"
+                          themeColor="#000"
+                          color="#000"
+                          title={
+                            <div className="flex items-center justify-center space-x-3">
+                              <i className="fab fa-facebook text-lg"></i>
+                              <span>Continue with Facebook</span>
+                            </div>
+                          }
+                          onClick={() => handleSocialAuth('facebook')}
+                          disabled={isLoading}
+                        />
+                      )}
                     </div>
                   </div>
                 )}

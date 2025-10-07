@@ -7,15 +7,16 @@ import AuthFooter from "./AuthFooter";
 import { Block, BlockContent, BlockDes, BlockHead, BlockTitle } from "@/components/Component";
 import { Link } from "react-router-dom";
 import {Button} from "@/components/Component";
+import { handleAuthFragmentAndMaybeEnableHost } from "@/services/authSuccessHandler";
 
 const Success = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const returnTo = params.get("return_to");
   React.useEffect(() => {
-    if (returnTo) {
-      window.location.href = returnTo;
-    }
+    // Handle OAuth hash tokens and optional become_host flow
+    handleAuthFragmentAndMaybeEnableHost();
+    if (returnTo) window.location.href = returnTo;
   }, [returnTo]);
   return (
     <>
