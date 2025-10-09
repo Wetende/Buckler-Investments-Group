@@ -15,7 +15,7 @@ const BnbAuthModal = ({
   triggerButton, 
   className = "",
   selectedServices = [],
-  returnUrl = '/become-host',
+  returnUrl = `${process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173'}/dashboard/bnb-dashboard`,
   onAuthSuccess 
 }) => {
   const navigate = useNavigate();

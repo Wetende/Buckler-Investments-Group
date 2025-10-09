@@ -400,18 +400,29 @@ function App() {
     }, 1000);
   }, [location]);
 
-  // Capture OAuth tokens from URL hash globally (e.g., after Google login)
+  // Capture OAuth tokens from URL hash globally (e.g., after Google login or returning from admin)
   useEffect(() => {
-    if (window.location.hash && window.location.hash.includes("access_token=")) {
+    if (window.location.hash && (window.location.hash.includes("access_token=") || window.location.hash.includes("refresh_token="))) {
       const params = new URLSearchParams(window.location.hash.slice(1));
       const accessToken = params.get("access_token");
       const refreshToken = params.get("refresh_token");
+      const syncAuth = params.get("sync_auth");
+      
       if (accessToken) {
         setAuthTokens({ accessToken, refreshToken: refreshToken || undefined });
         localStorage.setItem("authToken", accessToken);
-        const cleanUrl = window.location.pathname + window.location.search;
-        window.history.replaceState(null, "", cleanUrl);
+        if (refreshToken) {
+          localStorage.setItem("refreshToken", refreshToken);
+        }
+      } else if (refreshToken && syncAuth === '1') {
+        // Coming back from admin with just refresh token - store it
+        localStorage.setItem("refreshToken", refreshToken);
+        // Access token will be refreshed on next API call
       }
+      
+      // Clean the hash from URL
+      const cleanUrl = window.location.pathname + window.location.search;
+      window.history.replaceState(null, "", cleanUrl);
     }
   }, [location]);
 

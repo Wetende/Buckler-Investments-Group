@@ -397,7 +397,7 @@ const Account = (props) => {
                                 </div>
                                 <Buttons
                                   ariaLabel="become host"
-                                  to="/host/dashboard"
+                                  href={`${process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173'}/dashboard/bnb-dashboard`}
                                   className="btn-fancy btn-outline font-medium font-serif rounded-none uppercase"
                                   themeColor="#cee002"
                                   color="#cee002"

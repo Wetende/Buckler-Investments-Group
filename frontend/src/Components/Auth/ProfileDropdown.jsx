@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../api/useAuth'
 
-const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173/dashboard'
+const ADMIN_BASE_URL = `${process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173'}/dashboard/bnb-dashboard`
 
 const ProfileDropdown = ({ className = '', style = {} }) => {
   const { user, logout } = useAuth()

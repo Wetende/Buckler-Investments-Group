@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState } from "react";
 import UserAvatar from "@/components/user/UserAvatar";
 import { DropdownToggle, DropdownMenu, Dropdown } from "reactstrap";
 import { Icon } from "@/components/Component";
@@ -41,8 +41,37 @@ const User = () => {
                   const rt = decodeURIComponent(params.get("return_to"));
                   backToSiteHref = (/^https?:\/\//i.test(rt)) ? rt : `${publicAppUrl.replace(/\/$/, "")}${rt.startsWith("/") ? "" : "/"}${rt}`;
                 }
+                
+                const handleBackToSite = (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  
+                  console.log('Back to site clicked (dropdown), redirecting to:', backToSiteHref);
+                  
+                  try {
+                    const refreshToken = localStorage.getItem('refresh_token');
+                    let targetUrl = backToSiteHref;
+                    
+                    if (refreshToken) {
+                      const tokenParams = new URLSearchParams({
+                        refresh_token: refreshToken,
+                        sync_auth: '1'
+                      });
+                      targetUrl = `${backToSiteHref}#${tokenParams.toString()}`;
+                    }
+                    
+                    console.log('Redirecting to:', targetUrl);
+                    
+                    // Force full page navigation
+                    window.location.replace(targetUrl);
+                  } catch (error) {
+                    console.error('Error during back to site:', error);
+                    window.location.replace(backToSiteHref);
+                  }
+                };
+                
                 return (
-                  <a href={backToSiteHref} className="link-item">
+                  <a href={backToSiteHref} onClick={handleBackToSite} className="link-item">
                     <em className="icon ni ni-arrow-left"></em>
                     <span>Back to site</span>
                   </a>

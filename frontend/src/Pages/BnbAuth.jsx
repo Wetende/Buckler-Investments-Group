@@ -50,15 +50,36 @@ const BnbAuth = () => {
   }, [location.state?.selectedServices]);
   const returnUrl = React.useMemo(() => {
     const nextParam = new URLSearchParams(location.search || '').get('next');
-    return nextParam || location.state?.returnUrl || '/become-host';
+    const adminUrl = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173';
+    return nextParam || location.state?.returnUrl || `${adminUrl}/dashboard/bnb-dashboard`;
   }, [location.search, location.state?.returnUrl]);
 
   // EFFECT HOOK - ONLY USES TOP-LEVEL VALUES
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(returnUrl, {
-        state: { selectedServices }
-      });
+      // Check if returnUrl is an external URL (starts with http:// or https://)
+      if (returnUrl.startsWith('http://') || returnUrl.startsWith('https://')) {
+        // External URL - pass auth tokens via URL hash for admin to pick up
+        const accessToken = localStorage.getItem('authToken');
+        const refreshToken = localStorage.getItem('refreshToken');
+        
+        if (accessToken) {
+          // Append tokens as URL hash (like OAuth callback pattern)
+          const tokenParams = new URLSearchParams({
+            access_token: accessToken,
+            ...(refreshToken && { refresh_token: refreshToken }),
+            token_type: 'Bearer'
+          });
+          window.location.href = `${returnUrl}#${tokenParams.toString()}`;
+        } else {
+          window.location.href = returnUrl;
+        }
+      } else {
+        // Internal route - use navigate
+        navigate(returnUrl, {
+          state: { selectedServices }
+        });
+      }
     }
   }, [isAuthenticated, navigate, returnUrl, selectedServices]);
 
@@ -77,7 +98,19 @@ const BnbAuth = () => {
         const cleanUrl = window.location.pathname + window.location.search;
         window.history.replaceState(null, '', cleanUrl);
         // Continue to the intended destination; include selected services if available
-        navigate(returnUrl, { replace: true, state: { selectedServices } });
+        // Check if returnUrl is an external URL
+        if (returnUrl.startsWith('http://') || returnUrl.startsWith('https://')) {
+          // External URL - pass tokens via URL hash for admin to pick up
+          const tokenParams = new URLSearchParams({
+            access_token: accessToken,
+            ...(refreshToken && { refresh_token: refreshToken }),
+            token_type: 'Bearer'
+          });
+          window.location.href = `${returnUrl}#${tokenParams.toString()}`;
+        } else {
+          // Internal route - use navigate
+          navigate(returnUrl, { replace: true, state: { selectedServices } });
+        }
       }
     }
   }, [location.hash, navigate, returnUrl, selectedServices]);

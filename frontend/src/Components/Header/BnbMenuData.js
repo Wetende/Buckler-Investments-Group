@@ -2,7 +2,7 @@ import React from 'react';
 import BnbServiceSelectionModal from '../HostApplication/BnbServiceSelectionModal';
 import Buttons from '../Button/Buttons';
 
-const ADMIN_BASE_URL = process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173/dashboard'
+const ADMIN_BASE_URL = `${process.env.REACT_APP_ADMIN_BASE_URL || 'http://localhost:5173'}/dashboard/bnb-dashboard`
 
 // Role-based dashboard routing
 const getDashboardUrl = (userRole) => {
@@ -84,7 +84,7 @@ const getBnbMenuData = (user = null) => [
   },
   {
     title: "Host",
-    link: "/host/dashboard",
+    link: ADMIN_BASE_URL,
     dropdown: [
       {
         title: "List your space",
@@ -93,7 +93,7 @@ const getBnbMenuData = (user = null) => [
       },
       {
         title: "Host dashboard",
-        link: "/host/dashboard", 
+        link: ADMIN_BASE_URL, 
         megamenu: false
       },
       {
@@ -184,7 +184,7 @@ const getBnbMenuData = (user = null) => [
       },
       {
         title: "Host dashboard",
-        link: "/host/dashboard",
+        link: ADMIN_BASE_URL,
         megamenu: false
       }
     ]
